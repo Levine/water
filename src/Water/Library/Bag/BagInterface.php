@@ -39,6 +39,22 @@ interface BagInterface extends ArrayAccess, Countable, IteratorAggregate, Serial
     public function set($index, $value);
 
     /**
+     * Change values for another array and returns the old array.
+     *
+     * @param array $input
+     * @return array
+     */
+    public function fromArray(array $input);
+
+    /**
+     * Change values for query string and returns the old array.
+     *
+     * @param string $input
+     * @return array
+     */
+    public function fromString($input);
+
+    /**
      * Returns a array copy of the BagInterface.
      *
      * @return array

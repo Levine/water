@@ -53,6 +53,19 @@ class SimpleBagTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $bag->get('newIndex'));
     }
 
+    public function testFromArrayAndFromString()
+    {
+        $bag = new SimpleBag($expected1 = array('index' => 'value'));
+
+        $old = $bag->fromArray($expected2 = array('otherIndex' => 'otherValue'));
+        $this->assertEquals($expected1, $old);
+        $this->assertEquals($expected2, (array) $bag);
+
+        $old = $bag->fromString(http_build_query($expected1));
+        $this->assertEquals($expected2, $old);
+        $this->assertEquals($expected1, (array) $bag);
+    }
+
     public function testToArray()
     {
         $bag = new SimpleBag(array('index' => 'value'));

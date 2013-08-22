@@ -20,7 +20,7 @@ class SimpleBag extends ArrayObject implements BagInterface
      *
      * @param object|array $input
      */
-    public function __construct($input)
+    public function __construct($input = array())
     {
         if (empty($input)) {
             $input = array();
@@ -58,6 +58,24 @@ class SimpleBag extends ArrayObject implements BagInterface
     {
         $this->offsetSet($index, $value);
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fromArray(array $input)
+    {
+        return $this->exchangeArray($input);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fromString($input)
+    {
+        $array = array();
+        parse_str($input, $array);
+        return $this->fromArray($array);
     }
 
     /**
