@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./vendor/autoload.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         strict="true"
+         verbose="true"
+         timeoutForSmallTests="5">
+
+    <logging>
+        <log type="coverage-text"
+             target="php://stdout"
+             showUncoveredFiles="false"/>
+    </logging>
+
+    <testsuites>
+        <testsuite name="Water Test Suite">
+            <directory suffix="Test.php">./src/Water/Library/*/Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/Water</directory>
+            <exclude>
+                <directory>./src/Water/Library/*/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
