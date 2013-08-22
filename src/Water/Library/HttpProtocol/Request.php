@@ -6,6 +6,11 @@
  */
 namespace Water\Library\HttpProtocol;
 
+use Water\Library\HttpProtocol\Bag\CookieBag;
+use Water\Library\HttpProtocol\Bag\FileBag;
+use Water\Library\HttpProtocol\Bag\ParameterBag;
+use Water\Library\HttpProtocol\Bag\ServerBag;
+
 /**
  * Class Request
  *
@@ -14,17 +19,137 @@ namespace Water\Library\HttpProtocol;
 class Request
 {
     /**
-     * @var array
+     * @var ServerBag
      */
-    private $server = array();
+    private $server = null;
 
     /**
-     * @var array
+     * @var FileBag
      */
-    private $queryData = array();
+    private $files = null;
 
     /**
-     * @var array
+     * @var CookieBag
      */
-    private $postData = array();
+    private $cookie = null;
+
+    /**
+     * @var ParameterBag
+     */
+    private $queryData = null;
+
+    /**
+     * @var ParameterBag
+     */
+    private $postData = null;
+
+    /**
+     * @var string
+     */
+    private $content = '';
+
+    /**
+     * Constructor.
+     *
+     * @param array  $queryData
+     * @param array  $postData
+     * @param array  $cookie
+     * @param array  $file
+     * @param array  $server
+     * @param string $content
+     */
+    public function __construct(array $queryData, array $postData, array $cookie, array $file, array $server, $content = '')
+    {
+        $this->queryData = new ParameterBag($queryData);
+        $this->postData  = new ParameterBag($postData);
+        $this->cookie    = new CookieBag($cookie);
+        $this->files     = new FileBag($file);
+        $this->server    = new ServerBag($server);
+
+        $this->content   = '';
+    }
+
+    /**
+     * Returns a Request created from de Globals variables.
+     *
+     * @return Request
+     */
+    public static function createFromGlobals()
+    {
+        return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER, '');
+    }
+
+    /**
+     * Returns the value of a specified index, if the index not exists return a default value.
+     *
+     * @param mixed $index
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get($index, $default = ParameterBag::DEFAULT_VALUE)
+    {
+        return $this->queryData->get(
+            $index,
+            $this->postData->get(
+                $index,
+                $this->cookie->get(
+                    $index,
+                    $this->files->get(
+                        $index,
+                        $default
+                    )
+                )
+            )
+        );
+    }
+
+    // @codeCoverageIgnoreStart
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @return \Water\Library\HttpProtocol\Bag\CookieBag
+     */
+    public function getCookie()
+    {
+        return $this->cookie;
+    }
+
+    /**
+     * @return \Water\Library\HttpProtocol\Bag\FileBag
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @return \Water\Library\HttpProtocol\Bag\ParameterBag
+     */
+    public function getPostData()
+    {
+        return $this->postData;
+    }
+
+    /**
+     * @return \Water\Library\HttpProtocol\Bag\ParameterBag
+     */
+    public function getQueryData()
+    {
+        return $this->queryData;
+    }
+
+    /**
+     * @return \Water\Library\HttpProtocol\Bag\ServerBag
+     */
+    public function getServer()
+    {
+        return $this->server;
+    }
+    // @codeCoverageIgnoreEnd
 }
