@@ -8,6 +8,7 @@ namespace Water\Library\HttpProtocol;
 
 use Water\Library\HttpProtocol\Bag\CookieBag;
 use Water\Library\HttpProtocol\Bag\FileBag;
+use Water\Library\HttpProtocol\Bag\HeaderBag;
 use Water\Library\HttpProtocol\Bag\ParameterBag;
 use Water\Library\HttpProtocol\Bag\ServerBag;
 
@@ -22,6 +23,11 @@ class Request
      * @var ServerBag
      */
     private $server = null;
+
+    /**
+     * @var null|HeaderBag
+     */
+    private $headers = null;
 
     /**
      * @var FileBag
@@ -65,6 +71,7 @@ class Request
         $this->cookie    = new CookieBag($cookie);
         $this->files     = new FileBag($file);
         $this->server    = new ServerBag($server);
+        $this->headers   = new HeaderBag($this->server->getHeaders());
 
         $this->content   = '';
     }
@@ -183,6 +190,14 @@ class Request
     public function getFiles()
     {
         return $this->files;
+    }
+
+    /**
+     * @return \Water\Library\HttpProtocol\Bag\HeaderBag
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 
     /**
