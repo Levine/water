@@ -103,6 +103,63 @@ class Request
         );
     }
 
+    /**
+     * TRUE if the method is a Request Method, otherwise FALSE.
+     *
+     * @param string $method
+     * @return bool
+     */
+    public function isMethod($method)
+    {
+        if ($this->server->get('REQUEST_METHOD') == strtoupper($method)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * TRUE if the Request Method is GET, otherwise FALSE.
+     *
+     * @return bool
+     */
+    public function isGet()
+    {
+        return $this->isMethod('GET');
+    }
+
+    /**
+     * TRUE if the Request Method is POST, otherwise FALSE.
+     *
+     * @return bool
+     */
+    public function isPost()
+    {
+        return $this->isMethod('POST');
+    }
+
+    /**
+     * TRUE if the request is a XmlHttpRequest.
+     *
+     * @return bool
+     */
+    public function isXmlHttpRequest()
+    {
+        if ($this->server->get('X-Requested-With') == 'XMLHttpRequest') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Alias of isXmlHttpRequest method.
+     *
+     * @return bool
+     */
+    public function isAjax()
+    {
+        return $this->isXmlHttpRequest();
+    }
+
     // @codeCoverageIgnoreStart
     /**
      * @return string
