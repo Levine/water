@@ -18,14 +18,10 @@ class SimpleBag extends ArrayObject implements BagInterface
     /**
      * Construct a SimpleBag.
      *
-     * @param object|array $input
+     * @param array $input
      */
-    public function __construct($input = array())
+    public function __construct(array $input = array())
     {
-        if (empty($input)) {
-            $input = array();
-        }
-
         parent::__construct($input, ArrayObject::ARRAY_AS_PROPS);
     }
 
