@@ -25,7 +25,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'get'       => $_GET,
             'post'      => $_POST,
             'cookie'    => $_COOKIE,
-            'file'      => $_FILES,
+            'files'     => $_FILES,
             'server'    => $_SERVER
         );
 
@@ -45,7 +45,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $_GET    = $this->originalGlobals['get'];
         $_POST   = $this->originalGlobals['post'];
         $_COOKIE = $this->originalGlobals['cookie'];
-        $_FILES  = $this->originalGlobals['file'];
+        $_FILES  = $this->originalGlobals['files'];
         $_SERVER = $this->originalGlobals['server'];
 
         parent::tearDown();
@@ -59,6 +59,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('postValue', $request->get('postIndex'));
         $this->assertEquals('cookieValue', $request->get('cookieIndex'));
         $this->assertEquals('fileValue', $request->get('fileIndex'));
+    }
+
+    public function testCreate()
+    {
+        $url     = '/some/path';
+        $method  = 'GET';
+        $_get    = array('getIndex' => 'getValue');
+        $_post   = array('postIndex' => 'postValue');
+        $_cookie = array('cookieIndex' => 'cookieValue');
+        $_files  = array('fileIndex' => 'fileValue');
+        $_server = array();
+        $content = '';
+
+        $request = Request::create($url, $method, $_get, $_post, $_cookie, $_files, $_server, $content);
     }
 
     public function testGet()
@@ -76,6 +90,18 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('postValue', $request->get('postIndex'));
         $this->assertEquals('cookieValue', $request->get('cookieIndex'));
         $this->assertEquals('fileValue', $request->get('fileIndex'));
+    }
+
+    public function testIsSecure()
+    {
+        $request = Request::createFromGlobals();
+
+        $this->assertFalse($request->isSecure());
+
+        $_SERVER['HTTPS'] = 'on';
+        $request = Request::createFromGlobals();
+
+        $this->assertTrue($request->isSecure());
     }
 
     public function testIsMethod()

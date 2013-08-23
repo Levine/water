@@ -60,16 +60,16 @@ class Request
      * @param array  $queryData
      * @param array  $postData
      * @param array  $cookie
-     * @param array  $file
+     * @param array  $files
      * @param array  $server
      * @param string $content
      */
-    public function __construct(array $queryData, array $postData, array $cookie, array $file, array $server, $content = '')
+    public function __construct(array $queryData, array $postData, array $cookie, array $files, array $server, $content = '')
     {
         $this->queryData = new ParameterBag($queryData);
         $this->postData  = new ParameterBag($postData);
         $this->cookie    = new CookieBag($cookie);
-        $this->files     = new FileBag($file);
+        $this->files     = new FileBag($files);
         $this->server    = new ServerBag($server);
         $this->headers   = new HeaderBag($this->server->getHeaders());
 
@@ -77,7 +77,7 @@ class Request
     }
 
     /**
-     * Returns a Request created from de Globals variables.
+     * Return a Request created from de Globals variables.
      *
      * @return Request
      */
@@ -87,11 +87,67 @@ class Request
     }
 
     /**
+     * Return a Request create from parameters.
+     *
+     * @param string $url
+     * @param string $method
+     * @param array  $get
+     * @param array  $post
+     * @param array  $cookie
+     * @param array  $files
+     * @param array  $server
+     * @param string $content
+     * @return Request
+     */
+    public static function create(
+        $url = '/',
+        $method = 'GET',
+        array $get = array(),
+        array $post = array(),
+        array $cookie = array(),
+        array $files = array(),
+        array $server = array(),
+        $content = ''
+    ) {
+        $_server = array(
+            'HTTP_HOST'             => 'localhost',
+            'HTTP_USER_AGENT'       => 'Water/1.0',
+            'HTTP_ACCEPT'           => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'HTTP_ACCEPT_LANGUAGE'  => 'pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4',
+            'HTTP_ACCEPT_CHARSET'   => 'utf-8,ISO-8859-1;q=0.7,*;q=0.7',
+            'SERVER_NAME'           => 'localhost',
+            'SERVER_PORT'           => 80,
+            'REMOTE_ADDR'           => '127.0.0.1',
+            'SCRIPT_NAME'           => '',
+            'SCRIPT_FILENAME'       => '',
+            'SERVER_PROTOCOL'       => 'HTTP/1.1',
+            'REQUEST_TIME'          => time(),
+        );
+
+        $_server = array_merge($_server, $server);
+
+        $components = parse_url($url);
+
+        if (isset($components['scheme']) && $components['scheme'] == 'https') {
+            $_server['HTTPS'] = 'on';
+        }
+
+        if (isset($components['host'])) {
+            $_server['HTTP_HOST']   = $components['host'];
+            $_server['SERVER_NAME'] = $components['host'];
+        }
+
+        if (isset($components['port'])) {
+            $_server['SERVER_PORT'] = $components['port'];
+        }
+    }
+
+    /**
      * Returns the value of a specified index, if the index not exists return a default value.
      *
      * @param mixed $index
      * @param mixed $default
-     * @return mixed
+     * @return mixed|null
      */
     public function get($index, $default = ParameterBag::DEFAULT_VALUE)
     {
@@ -108,6 +164,19 @@ class Request
                 )
             )
         );
+    }
+
+    /**
+     * TRUE if the Request Protocol is HTTPS, otherwise FALSE
+     *
+     * @return bool
+     */
+    public function isSecure()
+    {
+        if ($this->server->get('HTTPS') !== null) {
+            return true;
+        }
+        return false;
     }
 
     /**
