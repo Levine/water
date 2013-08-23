@@ -61,18 +61,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fileValue', $request->get('fileIndex'));
     }
 
+    // TODO - implement more tests cases
     public function testCreate()
     {
         $url     = '/some/path';
         $method  = 'GET';
-        $_get    = array('getIndex' => 'getValue');
-        $_post   = array('postIndex' => 'postValue');
-        $_cookie = array('cookieIndex' => 'cookieValue');
-        $_files  = array('fileIndex' => 'fileValue');
-        $_server = array();
+        $request = array('index' => 'value');
+        $cookie  = array('cookieIndex' => 'cookieValue');
+        $files   = array('fileIndex' => 'fileValue');
+        $server  = array();
         $content = '';
 
-        $request = Request::create($url, $method, $_get, $_post, $_cookie, $_files, $_server, $content);
+        $request = Request::create($url, $method, $request, $cookie, $files, $server, $content);
+
+        $this->assertEquals('value', $request->get('index'));
     }
 
     public function testGet()

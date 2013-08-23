@@ -91,8 +91,7 @@ class Request
      *
      * @param string $url
      * @param string $method
-     * @param array  $get
-     * @param array  $post
+     * @param array  $request
      * @param array  $cookie
      * @param array  $files
      * @param array  $server
@@ -102,8 +101,7 @@ class Request
     public static function create(
         $url = '/',
         $method = 'GET',
-        array $get = array(),
-        array $post = array(),
+        array $request = array(),
         array $cookie = array(),
         array $files = array(),
         array $server = array(),
@@ -124,22 +122,67 @@ class Request
             'REQUEST_TIME'          => time(),
         );
 
-        $_server = array_merge($_server, $server);
+        $server = array_merge($_server, $server);
 
         $components = parse_url($url);
 
         if (isset($components['scheme']) && $components['scheme'] == 'https') {
-            $_server['HTTPS'] = 'on';
+            $server['HTTPS']       = 'on';
+            $server['SERVER_PORT'] = 443;
+        } else {
+            unset($server['HTTPS']);
+            $server['SERVER_PORT'] = 80;
         }
 
         if (isset($components['host'])) {
-            $_server['HTTP_HOST']   = $components['host'];
-            $_server['SERVER_NAME'] = $components['host'];
+            $server['HTTP_HOST']   = $components['host'];
+            $server['SERVER_NAME'] = $components['host'];
         }
 
         if (isset($components['port'])) {
-            $_server['SERVER_PORT'] = $components['port'];
+            $server['SERVER_PORT'] = $components['port'];
+            $server['HTTP_HOST']   = $server['HTTP_HOST'].':'.$components['port'];
         }
+
+        if (isset($components['user'])) {
+            $server['PHP_AUTH_USER'] = $components['user'];
+        }
+
+        if (isset($components['pass'])) {
+            $server['PHP_AUTH_PW'] = $components['pass'];
+        }
+
+        if (!isset($components['path'])) {
+            $components['path'] = '/';
+        }
+
+        $server['REQUEST_METHOD'] = $method = strtoupper($method);
+        switch ($method) {
+            case 'POST':
+            case 'PUT':
+            case 'DELETE':
+                $post  = $request;
+                $query = array();
+                if (!isset($server['CONTENT_TYPE'])) {
+                    $server['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
+                }
+                break;
+            default:
+                $post  = array();
+                $query = $request;
+                break;
+        }
+
+        if (isset($components['query'])) {
+            parse_str(html_entity_decode($components['query']), $qs);
+            $query = array_replace($qs, $query);
+        }
+        $queryString = http_build_query($query, '', '&');
+
+        $server['REQUEST_URI']  = $components['path'].('' !== $queryString ? '?'.$queryString : '');
+        $server['QUERY_STRING'] = $queryString;
+
+        return new static($query, $post, $cookie, $files, $server, $content);
     }
 
     /**
