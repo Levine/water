@@ -26,6 +26,14 @@ class SimpleBag extends ArrayObject implements BagInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function has($index)
+    {
+        return parent::offsetExists($index);
+    }
+
+    /**
      * Returns the value of a specified index, if the index not exists return a default value.
      *
      * @param mixed $index

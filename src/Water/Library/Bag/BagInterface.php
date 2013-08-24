@@ -21,6 +21,14 @@ interface BagInterface extends ArrayAccess, Countable, IteratorAggregate, Serial
     const DEFAULT_VALUE = null;
 
     /**
+     * TRUE if the index exists, otherwise FALSE.
+     *
+     * @param $index
+     * @return bool
+     */
+    public function has($index);
+
+    /**
      * Returns the value of a specified index, if the index not exists return a default value.
      *
      * @param mixed $index

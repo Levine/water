@@ -24,6 +24,14 @@ class SimpleBagTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    public function testHas()
+    {
+        $bag = new SimpleBag(array('index' => 'value'));
+
+        $this->assertTrue($bag->has('index'));
+        $this->assertFalse($bag->has('otherIndex'));
+    }
+
     public function testOffsetGet()
     {
         $bag = new SimpleBag(array('index' => 'value'));
