@@ -52,7 +52,7 @@ class SimpleBag extends ArrayObject implements BagInterface
      */
     public function set($index, $value)
     {
-        $this->offsetSet($index, $value);
+        parent::offsetSet($index, $value);
         return $this;
     }
 
