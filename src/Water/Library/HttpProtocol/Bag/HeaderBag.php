@@ -5,7 +5,6 @@
  * Time: 22:27
  */
 namespace Water\Library\HttpProtocol\Bag;
-use ArrayObject;
 
 /**
  * Class HeaderBag
@@ -19,11 +18,52 @@ class HeaderBag extends ParameterBag
      */
     public function __construct(array $input = array())
     {
-        $this->normalizeHeadersName($input);
+        $input = $this->normalizeHeadersName($input);
         parent::__construct($input);
     }
 
-    public function normalizeHeadersName()
+    /**
+     * Return normalized header name.
+     *
+     * @param string $headerName
+     * @return string
+     */
+    private function normalizeHeaderName($headerName)
     {
+        $headerName = str_replace('_', '-', strtolower($headerName));
+        return $headerName;
+    }
+
+    /**
+     * Returns normalized headers name.
+     *
+     * @param array $input
+     * @return array
+     */
+    private function normalizeHeadersName(array $input)
+    {
+        $headers = array();
+        foreach ($input as $key => $value) {
+            $headerName = $this->normalizeHeaderName($key);
+            $headers[$headerName] = $value;
+        }
+        return $headers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($index, $newval)
+    {
+        $this->set($index, $newval);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set($index, $value)
+    {
+        $headerName = $this->normalizeHeaderName($index);
+        return parent::set($headerName, $value);
     }
 }
