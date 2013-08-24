@@ -24,19 +24,45 @@ class ServerBag extends ParameterBag
             return $this->header;
         }
 
-        $header = array();
+        $headers = array();
         foreach ($this as $key => $value) {
             if (preg_match('/^HTTP_.*$/', $key)) {
-                $header[substr($key, 5)] = $value;
+                $headers[substr($key, 5)] = $value;
             } elseif (
                 $key == 'CONTENT_LENGTH'
                 || $key == 'CONTENT_MD5'
                 || $key == 'CONTENT_TYPE'
             ) {
-                $header[$key] = $value;
+                $headers[$key] = $value;
             }
         }
 
-        return $this->header = $header;
+        /**
+         * Symfony2 implementation.
+         */
+        if ($this->has('PHP_AUTH_USER')) {
+            $headers['PHP_AUTH_USER'] = $this->get('PHP_AUTH_USER');
+            $headers['PHP_AUTH_PW']   = $this->get('PHP_AUTH_PW','');
+        } else {
+            $authorizationHeader = null;
+            if ($this->has('HTTP_AUTHORIZATION')) {
+                $authorizationHeader = $this->get('HTTP_AUTHORIZATION');
+            } elseif ($this->has('REDIRECT_HTTP_AUTHORIZATION')) {
+                $authorizationHeader = $this->get('REDIRECT_HTTP_AUTHORIZATION');
+            }
+
+            if ((null !== $authorizationHeader) && (0 === stripos($authorizationHeader, 'basic'))) {
+                $exploded = explode(':', base64_decode(substr($authorizationHeader, 6)));
+                if (count($exploded) == 2) {
+                    list($headers['PHP_AUTH_USER'], $headers['PHP_AUTH_PW']) = $exploded;
+                }
+            }
+        }
+
+        if (isset($headers['PHP_AUTH_USER'])) {
+            $headers['AUTHORIZATION'] = 'Basic '.base64_encode($headers['PHP_AUTH_USER'].':'.$headers['PHP_AUTH_PW']);
+        }
+
+        return $this->header = $headers;
     }
 }
