@@ -96,6 +96,24 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('localhost', $request->getHost());
     }
 
+    public function testOverrideGlobals()
+    {
+        $url     = '/some/path';
+        $method  = 'GET';
+        $get     = array('index' => 'value');
+        $cookie  = array('cookieIndex' => 'cookieValue');
+        $files   = array('fileIndex' => 'fileValue');
+        $server  = array();
+        $content = '';
+        $request = Request::create($url, $method, $get, $cookie, $files, $server, $content);
+        $request->overrideGlobals();
+
+        $this->assertEquals($get, $_GET);
+        $this->assertEquals(array(), $_POST);
+        $this->assertEquals($cookie, $_COOKIE);
+        $this->assertEquals($files, $_FILES);
+    }
+
     public function testGetScheme()
     {
         $url     = '/some/path';

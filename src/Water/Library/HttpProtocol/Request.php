@@ -186,6 +186,18 @@ class Request
     }
 
     /**
+     * Override the global variables.
+     */
+    public function overrideGlobals()
+    {
+        $_GET    = $this->queryData->toArray();
+        $_POST   = $this->postData->toArray();
+        $_COOKIE = $this->cookie->toArray();
+        $_FILES  = $this->files->toArray();
+        $_SERVER = $this->server->toArray();
+    }
+
+    /**
      * Return the URL scheme.
      *
      * @return string
