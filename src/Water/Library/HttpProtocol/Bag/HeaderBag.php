@@ -66,4 +66,18 @@ class HeaderBag extends ParameterBag
         $headerName = $this->normalizeHeaderName($index);
         return parent::set($headerName, $value);
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $string = '';
+        foreach ($this as $key => $value) {
+            $header = str_replace('-', ' ', $key);
+            $header = str_replace(' ', '-', ucwords($header));
+            $string .= sprintf("%s: %s\r\n", $header, $value);
+        }
+        return $string;
+    }
 }

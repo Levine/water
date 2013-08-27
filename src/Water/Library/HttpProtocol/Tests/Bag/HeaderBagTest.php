@@ -49,4 +49,16 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4', $headerBag->get('accept-language'));
         $this->assertEquals('utf-8,ISO-8859-1;q=0.7,*;q=0.7', $headerBag->get('accept-charset'));
     }
+
+    public function testToString()
+    {
+        $headerBag = new HeaderBag(array(
+            'HOST'              => 'localhost',
+            'USER_AGENT'        => 'Water/1.0',
+        ));
+        $string = "Host: localhost\r\n";
+        $string .= "User-Agent: Water/1.0\r\n";
+
+        $this->assertEquals($string, (string) $headerBag);
+    }
 }
