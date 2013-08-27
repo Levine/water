@@ -186,6 +186,39 @@ class Request
     }
 
     /**
+     * Return the URL host.
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        $host = ($this->isSecure()) ? 'https://' : 'http://';
+        if ($this->server->has('PHP_AUTH_USER')) {
+            $host .= $this->server->get('PHP_AUTH_USER');
+            $host .= ($this->server->has('PHP_AUTH_PW'))
+                  ? ':' . $this->server->get('PHP_AUTH_PW')
+                  : '';
+            $host .= '@';
+        }
+        $host .= $this->server->get('HTTP_HOST');
+        return $host;
+    }
+
+    /**
+     * Return the URL path.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        $requestUri = $this->server->get('REQUEST_URI', '/');
+        if ($pos = strpos($requestUri, '?')) {
+            $requestUri = substr($requestUri, 0, $pos);
+        }
+        return $requestUri;
+    }
+
+    /**
      * Returns the value of a specified index, if the index not exists return a default value.
      *
      * @param mixed $index
@@ -194,19 +227,20 @@ class Request
      */
     public function get($index, $default = ParameterBag::DEFAULT_VALUE)
     {
-        return $this->queryData->get(
-            $index,
-            $this->postData->get(
+        return
+            $this->queryData->get(
                 $index,
-                $this->cookie->get(
+                $this->postData->get(
                     $index,
-                    $this->files->get(
+                    $this->cookie->get(
                         $index,
-                        $default
+                        $this->files->get(
+                            $index,
+                            $default
+                        )
                     )
                 )
-            )
-        );
+            );
     }
 
     /**

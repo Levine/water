@@ -66,15 +66,60 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $url     = '/some/path';
         $method  = 'GET';
-        $request = array('index' => 'value');
+        $get     = array('index' => 'value');
         $cookie  = array('cookieIndex' => 'cookieValue');
         $files   = array('fileIndex' => 'fileValue');
         $server  = array();
         $content = '';
 
-        $request = Request::create($url, $method, $request, $cookie, $files, $server, $content);
+        $request = Request::create($url, $method, $get, $cookie, $files, $server, $content);
 
         $this->assertEquals('value', $request->get('index'));
+
+        $url     = 'http://localhost';
+        $request = Request::create($url);
+
+        $this->assertFalse($request->isSecure());
+
+        $url     = 'http://localhost';
+        $post    = array('postIndex' => 'postValue');
+        $request = Request::create($url, 'post', $post);
+
+        $this->assertFalse($request->isSecure());
+        $this->assertEquals('postValue', $request->get('postIndex'));
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path?index=value';
+        $request = Request::create($url);
+
+        $this->assertTrue($request->isSecure());
+        $this->assertEquals('value', $request->get('index'));
+        $this->assertEquals('https://pombaCorp:pombaCorpPassword@localhost:555', $request->getHost());
+    }
+
+    public function testGetHost()
+    {
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('http://localhost', $request->getHost());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('https://pombaCorp:pombaCorpPassword@localhost:555', $request->getHost());
+    }
+
+    public function testGetPath()
+    {
+        $url     = '/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('/some/path', $request->getPath());
+
+        $url     = '/some/path?some=query';
+        $request = Request::create($url);
+
+        $this->assertEquals('/some/path', $request->getPath());
     }
 
     public function testGet()
