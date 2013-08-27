@@ -61,7 +61,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('fileValue', $request->get('fileIndex'));
     }
 
-    // TODO - implement more tests cases
     public function testCreate()
     {
         $url     = '/some/path';
