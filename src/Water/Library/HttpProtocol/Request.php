@@ -52,7 +52,7 @@ class Request
     /**
      * @var string
      */
-    private $content = '';
+    private $content = null;
 
     /**
      * Constructor.
@@ -186,22 +186,53 @@ class Request
     }
 
     /**
+     * Return the URL scheme.
+     *
+     * @return string
+     */
+    public function getScheme()
+    {
+        return ($this->isSecure()) ? 'https' : 'http';
+    }
+
+    /**
      * Return the URL host.
      *
      * @return string
      */
     public function getHost()
     {
-        $host = ($this->isSecure()) ? 'https://' : 'http://';
-        if ($this->server->has('PHP_AUTH_USER')) {
-            $host .= $this->server->get('PHP_AUTH_USER');
-            $host .= ($this->server->has('PHP_AUTH_PW'))
-                  ? ':' . $this->server->get('PHP_AUTH_PW')
-                  : '';
-            $host .= '@';
-        }
-        $host .= $this->server->get('HTTP_HOST');
-        return $host;
+        return $this->server->get('SERVER_NAME', '');
+    }
+
+    /**
+     * Return the URL port.
+     *
+     * @return integer
+     */
+    public function getPort()
+    {
+        return $this->server->get('SERVER_PORT', 0);
+    }
+
+    /**
+     * Return the URL user.
+     *
+     * @return string
+     */
+    public function getUser()
+    {
+        return $this->server->get('PHP_AUTH_USER', '');
+    }
+
+    /**
+     * Return the URL password.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->server->get('PHP_AUTH_PW', '');
     }
 
     /**
@@ -216,6 +247,49 @@ class Request
             $requestUri = substr($requestUri, 0, $pos);
         }
         return $requestUri;
+    }
+
+    /**
+     * Return the URL query.
+     *
+     * @return string
+     */
+    public function getQuery()
+    {
+        return $this->server->get('QUERY_STRING', '');
+    }
+
+    /**
+     * Return the URL host.
+     *
+     * @return string
+     */
+    public function getSchemeHost()
+    {
+        $host = ($this->isSecure()) ? 'https://' : 'http://';
+        if ($this->server->has('PHP_AUTH_USER')) {
+            $host .= $this->server->get('PHP_AUTH_USER');
+            $host .= ($this->server->has('PHP_AUTH_PW'))
+                ? ':' . $this->server->get('PHP_AUTH_PW')
+                : '';
+            $host .= '@';
+        }
+        $host .= $this->server->get('HTTP_HOST');
+        return $host;
+    }
+
+    /**
+     * Return the request url.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        $url = $this->getSchemeHost() . $this->getPath();
+        if ('' !== $query = $this->getQuery()) {
+            $url .= '?' . $query;
+        }
+        return $url;
     }
 
     /**
@@ -319,6 +393,9 @@ class Request
      */
     public function getContent()
     {
+        if ($this->content === null) {
+            $this->content = file_get_contents('php://input');
+        }
         return $this->content;
     }
 

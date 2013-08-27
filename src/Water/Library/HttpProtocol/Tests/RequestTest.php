@@ -93,7 +93,51 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($request->isSecure());
         $this->assertEquals('value', $request->get('index'));
-        $this->assertEquals('https://pombaCorp:pombaCorpPassword@localhost:555', $request->getHost());
+        $this->assertEquals('localhost', $request->getHost());
+    }
+
+    public function testGetScheme()
+    {
+        $url     = '/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('http', $request->getScheme());
+
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('http', $request->getScheme());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('https', $request->getScheme());
+    }
+
+    public function testGetUser()
+    {
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('', $request->getUser());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('pombaCorp', $request->getUser());
+    }
+
+    public function testGetPassword()
+    {
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('', $request->getPassword());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('pombaCorpPassword', $request->getPassword());
     }
 
     public function testGetHost()
@@ -101,12 +145,30 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $url     = 'http://localhost/some/path';
         $request = Request::create($url);
 
-        $this->assertEquals('http://localhost', $request->getHost());
+        $this->assertEquals('localhost', $request->getHost());
 
         $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
         $request = Request::create($url);
 
-        $this->assertEquals('https://pombaCorp:pombaCorpPassword@localhost:555', $request->getHost());
+        $this->assertEquals('localhost', $request->getHost());
+    }
+
+    public function testGetPort()
+    {
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals(80, $request->getPort());
+
+        $url     = 'https://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals(443, $request->getPort());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals(555, $request->getPort());
     }
 
     public function testGetPath()
@@ -120,6 +182,45 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = Request::create($url);
 
         $this->assertEquals('/some/path', $request->getPath());
+    }
+
+    public function testGetQuery()
+    {
+        $url     = '/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('', $request->getQuery());
+
+        $url     = '/some/path?some=query';
+        $request = Request::create($url);
+
+        $this->assertEquals('some=query', $request->getQuery());
+    }
+
+    public function testGetSchemeHost()
+    {
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('http://localhost', $request->getSchemeHost());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals('https://pombaCorp:pombaCorpPassword@localhost:555', $request->getSchemeHost());
+    }
+
+    public function testGetUrl()
+    {
+        $url     = 'http://localhost/some/path';
+        $request = Request::create($url);
+
+        $this->assertEquals($url, $request->getUrl());
+
+        $url     = 'https://pombaCorp:pombaCorpPassword@localhost:555/some/path?index=value';
+        $request = Request::create($url);
+
+        $this->assertEquals($url, $request->getUrl());
     }
 
     public function testGet()
