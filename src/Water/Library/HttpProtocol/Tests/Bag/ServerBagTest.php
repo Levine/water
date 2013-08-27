@@ -60,5 +60,23 @@ class ServerBagTest extends \PHPUnit_Framework_TestCase
             'Basic '.base64_encode($server->get('PHP_AUTH_USER').':'.$server->get('PHP_AUTH_PW')),
             $headers['AUTHORIZATION']
         );
+
+        $_server = array(
+            'HTTP_AUTHORIZATION' => 'Basic '.base64_encode('pombaCorp:pombaCorpPassword')
+        );
+        $server = new ServerBag($_server);
+
+        $headers = $server->getHeaders();
+        $this->assertEquals('pombaCorp', $headers['PHP_AUTH_USER']);
+        $this->assertEquals('pombaCorpPassword', $headers['PHP_AUTH_PW']);
+
+        $_server = array(
+            'REDIRECT_HTTP_AUTHORIZATION' => 'Basic '.base64_encode('pombaCorp:pombaCorpPassword')
+        );
+        $server = new ServerBag($_server);
+
+        $headers = $server->getHeaders();
+        $this->assertEquals('pombaCorp', $headers['PHP_AUTH_USER']);
+        $this->assertEquals('pombaCorpPassword', $headers['PHP_AUTH_PW']);
     }
 }
