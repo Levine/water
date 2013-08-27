@@ -4,8 +4,8 @@
  * Date: 22/08/13
  * Time: 14:37
  */
-namespace Water\Library\HttpProtocol\Tests;
-use Water\Library\HttpProtocol\Request;
+namespace Water\Library\Http\Tests;
+use Water\Library\Http\Request;
 
 /**
  * Class RequestTest

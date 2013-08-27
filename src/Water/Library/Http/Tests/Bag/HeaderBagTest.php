@@ -4,8 +4,8 @@
  * Date: 23/08/13
  * Time: 21:41
  */
-namespace Water\Library\HttpProtocol\Tests\Bag;
-use Water\Library\HttpProtocol\Bag\HeaderBag;
+namespace Water\Library\Http\Tests\Bag;
+use Water\Library\Http\Bag\HeaderBag;
 
 /**
  * TestCase HeaderBagTest

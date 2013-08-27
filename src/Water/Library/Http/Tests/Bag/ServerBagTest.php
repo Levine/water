@@ -4,8 +4,8 @@
  * Date: 22/08/13
  * Time: 22:39
  */
-namespace Water\Library\HttpProtocol\Tests\Bag;
-use Water\Library\HttpProtocol\Bag\ServerBag;
+namespace Water\Library\Http\Tests\Bag;
+use Water\Library\Http\Bag\ServerBag;
 
 /**
  * TestCase ServerBagTest

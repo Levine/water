@@ -4,7 +4,7 @@
  * Date: 22/08/13
  * Time: 14:22
  */
-namespace Water\Library\HttpProtocol\Bag;
+namespace Water\Library\Http\Bag;
 
 use Water\Library\Bag\SimpleBag;
 

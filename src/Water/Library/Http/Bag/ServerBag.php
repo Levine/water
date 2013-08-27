@@ -4,7 +4,7 @@
  * Date: 22/08/13
  * Time: 14:23
  */
-namespace Water\Library\HttpProtocol\Bag;
+namespace Water\Library\Http\Bag;
 
 /**
  * Class ServerBag

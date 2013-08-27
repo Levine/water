@@ -4,8 +4,8 @@
  * Date: 27/08/13
  * Time: 14:48
  */
-namespace Water\Library\HttpProtocol;
-use Water\Library\HttpProtocol\Bag\HeaderBag;
+namespace Water\Library\Http;
+use Water\Library\Http\Bag\HeaderBag;
 
 /**
  * Class Response

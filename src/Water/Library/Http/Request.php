@@ -4,13 +4,13 @@
  * Date: 21/08/13
  * Time: 22:41
  */
-namespace Water\Library\HttpProtocol;
+namespace Water\Library\Http;
 
-use Water\Library\HttpProtocol\Bag\CookieBag;
-use Water\Library\HttpProtocol\Bag\FileBag;
-use Water\Library\HttpProtocol\Bag\HeaderBag;
-use Water\Library\HttpProtocol\Bag\ParameterBag;
-use Water\Library\HttpProtocol\Bag\ServerBag;
+use Water\Library\Http\Bag\CookieBag;
+use Water\Library\Http\Bag\FileBag;
+use Water\Library\Http\Bag\HeaderBag;
+use Water\Library\Http\Bag\ParameterBag;
+use Water\Library\Http\Bag\ServerBag;
 
 /**
  * Class Request
@@ -412,7 +412,7 @@ class Request
     }
 
     /**
-     * @return \Water\Library\HttpProtocol\Bag\CookieBag
+     * @return \Water\Library\Http\Bag\CookieBag
      */
     public function getCookie()
     {
@@ -420,7 +420,7 @@ class Request
     }
 
     /**
-     * @return \Water\Library\HttpProtocol\Bag\FileBag
+     * @return \Water\Library\Http\Bag\FileBag
      */
     public function getFiles()
     {
@@ -428,7 +428,7 @@ class Request
     }
 
     /**
-     * @return \Water\Library\HttpProtocol\Bag\HeaderBag
+     * @return \Water\Library\Http\Bag\HeaderBag
      */
     public function getHeaders()
     {
@@ -436,7 +436,7 @@ class Request
     }
 
     /**
-     * @return \Water\Library\HttpProtocol\Bag\ParameterBag
+     * @return \Water\Library\Http\Bag\ParameterBag
      */
     public function getPostData()
     {
@@ -444,7 +444,7 @@ class Request
     }
 
     /**
-     * @return \Water\Library\HttpProtocol\Bag\ParameterBag
+     * @return \Water\Library\Http\Bag\ParameterBag
      */
     public function getQueryData()
     {
@@ -452,7 +452,7 @@ class Request
     }
 
     /**
-     * @return \Water\Library\HttpProtocol\Bag\ServerBag
+     * @return \Water\Library\Http\Bag\ServerBag
      */
     public function getServer()
     {

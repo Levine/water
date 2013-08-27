@@ -4,8 +4,8 @@
  * Date: 27/08/13
  * Time: 15:14
  */
-namespace Water\Library\HttpProtocol\Tests;
-use Water\Library\HttpProtocol\Response;
+namespace Water\Library\Http\Tests;
+use Water\Library\Http\Response;
 
 /**
  * Class ResponseTest
