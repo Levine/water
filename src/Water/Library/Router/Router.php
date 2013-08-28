@@ -13,5 +13,4 @@ namespace Water\Library\Router;
  */
 class Router
 {
-
 }

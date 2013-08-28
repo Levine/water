@@ -6,12 +6,16 @@
  */
 namespace Water\Library\Router;
 
+use \ArrayIterator;
+use \Countable;
+use \IteratorAggregate;
+
 /**
  * Class RouteCollection
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class RouteCollection
+class RouteCollection implements IteratorAggregate, Countable
 {
     /**
      * @var array
@@ -42,6 +46,22 @@ class RouteCollection
     {
         unset($this->routes[$name]);
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->routes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->routes);
     }
 
     // @codeCoverageIgnoreStart
