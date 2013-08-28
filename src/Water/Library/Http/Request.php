@@ -20,6 +20,11 @@ use Water\Library\Http\Bag\ServerBag;
 class Request
 {
     /**
+     * @var bool
+     */
+    private static $allowOverrideMethod = false;
+
+    /**
      * @var ServerBag
      */
     private $server = null;
@@ -28,6 +33,11 @@ class Request
      * @var null|HeaderBag
      */
     private $headers = null;
+
+    /**
+     * @var string
+     */
+    private $method = '';
 
     /**
      * @var FileBag
@@ -282,8 +292,8 @@ class Request
         if ($this->server->has('PHP_AUTH_USER')) {
             $host .= $this->server->get('PHP_AUTH_USER');
             $host .= ($this->server->has('PHP_AUTH_PW'))
-                ? ':' . $this->server->get('PHP_AUTH_PW')
-                : '';
+                   ? ':' . $this->server->get('PHP_AUTH_PW')
+                   : '';
             $host .= '@';
         }
         $host .= $this->server->get('HTTP_HOST');
@@ -343,6 +353,36 @@ class Request
     }
 
     /**
+     * Return the simulated request method.
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+        if ($this->method !== '') {
+            return $this->method;
+        }
+
+        $this->method = $this->getRealMethod();
+        if ($this->method == 'POST') {
+            if (self::$allowOverrideMethod) {
+                $this->method = strtoupper($this->postData->get('_method', 'POST'));
+            }
+        }
+        return $this->method;
+    }
+
+    /**
+     * Return the real request method.
+     *
+     * @return string|null
+     */
+    public function getRealMethod()
+    {
+        return strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
+    }
+
+    /**
      * TRUE if the method is a Request Method, otherwise FALSE.
      *
      * @param string $method
@@ -350,7 +390,7 @@ class Request
      */
     public function isMethod($method)
     {
-        if ($this->server->get('REQUEST_METHOD') == strtoupper($method)) {
+        if ($this->getMethod() == strtoupper($method)) {
             return true;
         }
         return false;
@@ -400,6 +440,16 @@ class Request
     }
 
     // @codeCoverageIgnoreStart
+    public static function enableOverrideMethod()
+    {
+        self::$allowOverrideMethod = true;
+    }
+
+    public static function unableOverrideMethod()
+    {
+        self::$allowOverrideMethod = false;
+    }
+
     /**
      * @return string
      */

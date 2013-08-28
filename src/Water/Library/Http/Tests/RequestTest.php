@@ -269,6 +269,44 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($request->isSecure());
     }
 
+    public function testGetMethod()
+    {
+        Request::enableOverrideMethod();
+
+        $_SERVER = array('REQUEST_METHOD' => 'GET');
+        $_POST   = array('_method' => 'PUT');
+        $request = Request::createFromGlobals();
+
+        $this->assertEquals('GET', $request->getMethod());
+
+        $_SERVER = array('REQUEST_METHOD' => 'POST');
+        $_POST   = array('_method' => 'PUT');
+        $request = Request::createFromGlobals();
+
+        $this->assertEquals('PUT', $request->getMethod());
+
+        Request::unableOverrideMethod();
+    }
+
+    public function getRealMethod()
+    {
+        Request::enableOverrideMethod();
+
+        $_SERVER = array('REQUEST_METHOD' => 'GET');
+        $_POST   = array('_method' => 'PUT');
+        $request = Request::createFromGlobals();
+
+        $this->assertEquals('GET', $request->getRealMethod());
+
+        $_SERVER = array('REQUEST_METHOD' => 'POST');
+        $_POST   = array('_method' => 'PUT');
+        $request = Request::createFromGlobals();
+
+        $this->assertEquals('POST', $request->getRealMethod());
+
+        Request::unableOverrideMethod();
+    }
+
     public function testIsMethod()
     {
         $_SERVER = array('REQUEST_METHOD' => 'GET');
