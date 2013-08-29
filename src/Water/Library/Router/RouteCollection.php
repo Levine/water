@@ -48,6 +48,7 @@ class RouteCollection implements IteratorAggregate, Countable
         return $this;
     }
 
+    // @codeCoverageIgnoreStart
     /**
      * {@inheritdoc}
      */
@@ -64,7 +65,6 @@ class RouteCollection implements IteratorAggregate, Countable
         return new ArrayIterator($this->routes);
     }
 
-    // @codeCoverageIgnoreStart
     /**
      * @return array
      */
