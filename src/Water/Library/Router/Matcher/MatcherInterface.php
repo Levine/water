@@ -17,7 +17,7 @@ interface MatcherInterface
      * Match the resources by path.
      *
      * @param string $path
-     * @return mixed|void
+     * @return mixed|bool
      */
     public function match($path);
 }
