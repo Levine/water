@@ -29,10 +29,10 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
     public function testMatch()
     {
         $routes = new RouteCollection();
-        $routes->add('home', $routeIndex = new Route('/', array('_controller' => 'IndexController::index()')));
+        $routes->add('home', new Route('/', $expectedResource = array('_controller' => 'IndexController::index()')));
 
         $urlMatcher = new UrlMatcher($routes);
-        $this->assertArrayHasKey('name', $urlMatcher->match('/'));
+        $this->assertEquals($expectedResource, $urlMatcher->match('/'));
 
         $this->assertFalse($urlMatcher->match('/blog'));
     }

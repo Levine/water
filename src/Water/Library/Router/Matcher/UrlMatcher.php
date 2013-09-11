@@ -37,10 +37,7 @@ class UrlMatcher implements MatcherInterface
     {
         foreach ($this->routes as $name => $route) {
             if ($route->getPath() == $path) {
-                $return = array();
-                $return['name']  = $name;
-                $return['route'] = $route;
-                return $return;
+                return $route->getResource();
             }
         }
         return false;
