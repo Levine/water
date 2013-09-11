@@ -67,6 +67,15 @@ class RouteCollection implements IteratorAggregate, Countable
 
     /**
      * @param string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return (isset($this->routes[$name]));
+    }
+
+    /**
+     * @param string $name
      * @return null|Route
      */
     public function get($name)
