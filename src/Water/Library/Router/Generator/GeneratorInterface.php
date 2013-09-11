@@ -6,6 +6,8 @@
  */
 namespace Water\Library\Router\Generator;
 
+use Water\Library\Router\RouteCollection;
+
 /**
  * Interface GeneratorInterface
  *
@@ -13,6 +15,13 @@ namespace Water\Library\Router\Generator;
  */
 interface GeneratorInterface
 {
+    /**
+     * Constructor.
+     *
+     * @param RouteCollection $routes
+     */
+    public function __construct(RouteCollection $routes);
+
     /**
      * Return the URL specified by name. Otherwise, return ''.
      *

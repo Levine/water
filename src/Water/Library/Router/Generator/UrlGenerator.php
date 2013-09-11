@@ -21,9 +21,7 @@ class UrlGenerator implements GeneratorInterface
     private $routes = null;
 
     /**
-     * Constructor.
-     *
-     * @param RouteCollection $routes
+     * {@inheritdoc}
      */
     public function __construct(RouteCollection $routes)
     {

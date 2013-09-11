@@ -5,6 +5,7 @@
  * Time: 08:59
  */
 namespace Water\Library\Router\Matcher;
+use Water\Library\Router\RouteCollection;
 
 /**
  * Interface MatcherInterface
@@ -13,6 +14,13 @@ namespace Water\Library\Router\Matcher;
  */
 interface MatcherInterface
 {
+    /**
+     * Constructor.
+     *
+     * @param RouteCollection $routes
+     */
+    public function __construct(RouteCollection $routes);
+
     /**
      * Match the resources by path.
      *
