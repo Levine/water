@@ -6,6 +6,7 @@
  */
 namespace Water\Library\Router;
 
+use Water\Library\Router\Exception\InvalidArgumentException;
 use Water\Library\Router\Generator\GeneratorInterface;
 use Water\Library\Router\Matcher\MatcherInterface;
 
@@ -55,7 +56,7 @@ class Router
             'matcher_class'     => 'Water\Library\Router\Matcher\UrlMatcher',
         );
 
-        $this->options = array_merge($options, $default);
+        $this->options = array_merge($default, $options);
     }
 
     /**
@@ -76,23 +77,41 @@ class Router
 
     /**
      * @return MatcherInterface
+     *
+     * @throws InvalidArgumentException
      */
     private function getMatcher()
     {
         if ($this->matcher !== null) {
             return $this->matcher;
         }
+
+        if (!is_a($this->options['matcher_class'], '\Water\Library\Router\Matcher\MatcherInterface', true)) {
+            throw new InvalidArgumentException(
+                'The option "matcher_class" has to be a instance of "Water\Library\Router\Matcher\MatcherInterface".'
+            );
+        }
+
         return $this->matcher = new $this->options['matcher_class']($this->routes);
     }
 
     /**
      * @return GeneratorInterface
+     *
+     * @throws InvalidArgumentException
      */
     private function getGenerator()
     {
         if ($this->generator !== null) {
             return $this->generator;
         }
+
+        if (!is_a($this->options['generator_class'], '\Water\Library\Router\Generator\GeneratorInterface', true)) {
+            throw new InvalidArgumentException(
+                'The option "generator_class" has to be a instance of "Water\Library\Router\Generator\GeneratorInterface".'
+            );
+        }
+
         return $this->generator = new $this->options['generator_class']($this->routes);
     }
 
