@@ -117,16 +117,6 @@ class Router
 
     // @codeCoverageIgnoreStart
     /**
-     * @param \Water\Library\Router\RouteCollection $routes
-     * @return Router
-     */
-    public function setRoutes($routes)
-    {
-        $this->routes = $routes;
-        return $this;
-    }
-
-    /**
      * @return \Water\Library\Router\RouteCollection
      */
     public function getRoutes()
