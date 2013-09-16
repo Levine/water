@@ -1,3 +1,6 @@
+# PHPUnit
+/coverage/
+
 # Composer
 /bin/
 /vendor/
