@@ -57,6 +57,11 @@ class Request
     /**
      * @var ParameterBag
      */
+    private $resource = null;
+
+    /**
+     * @var ParameterBag
+     */
     private $postData = null;
 
     /**
@@ -69,15 +74,17 @@ class Request
      *
      * @param array  $queryData
      * @param array  $postData
+     * @param array  $resource
      * @param array  $cookie
      * @param array  $files
      * @param array  $server
      * @param string $content
      */
-    public function __construct(array $queryData, array $postData, array $cookie, array $files, array $server, $content = '')
+    public function __construct(array $queryData, array $postData, array $resource, array $cookie, array $files, array $server, $content = '')
     {
         $this->queryData = new ParameterBag($queryData);
         $this->postData  = new ParameterBag($postData);
+        $this->resource  = new ParameterBag($resource);
         $this->cookie    = new CookieBag($cookie);
         $this->files     = new FileBag($files);
         $this->server    = new ServerBag($server);
@@ -93,7 +100,7 @@ class Request
      */
     public static function createFromGlobals()
     {
-        return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER, '');
+        return new static($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER, '');
     }
 
     /**
@@ -102,6 +109,7 @@ class Request
      * @param string $url
      * @param string $method
      * @param array  $request
+     * @param array  $resource
      * @param array  $cookie
      * @param array  $files
      * @param array  $server
@@ -112,6 +120,7 @@ class Request
         $url = '/',
         $method = 'GET',
         array $request = array(),
+        array $resource = array(),
         array $cookie = array(),
         array $files = array(),
         array $server = array(),
@@ -192,7 +201,7 @@ class Request
         $server['REQUEST_URI']  = $components['path'].('' !== $queryString ? '?'.$queryString : '');
         $server['QUERY_STRING'] = $queryString;
 
-        return new static($query, $post, $cookie, $files, $server, $content);
+        return new static($query, $post, $resource, $cookie, $files, $server, $content);
     }
 
     /**
@@ -499,6 +508,14 @@ class Request
     public function getQueryData()
     {
         return $this->queryData;
+    }
+
+    /**
+     * @return \Water\Library\Http\Bag\ParameterBag
+     */
+    public function getResource()
+    {
+        return $this->resource;
     }
 
     /**

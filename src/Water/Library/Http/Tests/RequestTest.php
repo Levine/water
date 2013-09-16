@@ -71,7 +71,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $server  = array();
         $content = '';
 
-        $request = Request::create($url, $method, $get, $cookie, $files, $server, $content);
+        $request = Request::create($url, $method, $get, array(), $cookie, $files, $server, $content);
 
         $this->assertEquals('value', $request->get('index'));
 
@@ -104,7 +104,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $files   = array('fileIndex' => 'fileValue');
         $server  = array();
         $content = '';
-        $request = Request::create($url, $method, $get, $cookie, $files, $server, $content);
+        $request = Request::create($url, $method, $get, array(), $cookie, $files, $server, $content);
         $request->overrideGlobals();
 
         $this->assertEquals($get, $_GET);
@@ -245,6 +245,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = new Request(
             array('getIndex' => 'getValue'),
             array('postIndex' => 'postValue'),
+            array(),
             array('cookieIndex' => 'cookieValue'),
             array('fileIndex' => 'fileValue'),
             array(),
