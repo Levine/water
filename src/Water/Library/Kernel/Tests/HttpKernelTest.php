@@ -31,5 +31,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $response = $kernel->handle(Request::create('/'));
 
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+
+        $kernel   = new HttpKernel(null, include __DIR__ . '/Resource/app.config.php');
+        $response = $kernel->handle(Request::create('/notExist'));
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
     }
 }

@@ -19,4 +19,9 @@ class IndexController extends ServiceLocatorAware
     {
         return Response::create('Test');
     }
+
+    public function exceptionAction()
+    {
+        return Response::create('Exception');
+    }
 }

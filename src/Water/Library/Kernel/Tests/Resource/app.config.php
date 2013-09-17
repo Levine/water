@@ -5,6 +5,10 @@
  * Time: 09:36
  */
 return array(
+    'framework' => array(
+        'error_handler' => '\Water\Library\Kernel\Tests\Resource\Controller\IndexController::exceptionAction',
+    ),
+
     'router' => array(
         'routes' => array(
             'home' => array(
