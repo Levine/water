@@ -171,7 +171,7 @@ class ServiceManager implements ServiceLocatorInterface
 
     /**
      * @param string $name
-     * @param array $options
+     * @param array  $options
      * @return bool|object
      */
     private function createInstance($name, array $options = array())
