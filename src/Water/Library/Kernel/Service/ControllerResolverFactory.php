@@ -22,6 +22,8 @@ class ControllerResolverFactory implements FactoryInterface
      */
     public static function create(ServiceLocatorInterface $sm = null)
     {
-        return new ControllerResolver();
+        $resolver = new ControllerResolver();
+        $resolver->setServiceLocator($sm);
+        return $resolver;
     }
 }

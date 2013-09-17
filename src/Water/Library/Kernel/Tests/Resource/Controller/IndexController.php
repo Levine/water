@@ -6,13 +6,14 @@
  */
 namespace Water\Library\Kernel\Tests\Resource\Controller;
 use Water\Library\Http\Response;
+use Water\Library\ServiceManager\ServiceLocatorAware;
 
 /**
  * Class IndexController
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class IndexController
+class IndexController extends ServiceLocatorAware
 {
     public function indexAction()
     {

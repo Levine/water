@@ -9,6 +9,7 @@ namespace Water\Library\Kernel;
 use Water\Library\Http\Response;
 use Water\Library\Http\Request;
 use Water\Library\Kernel\Service\ServiceManagerConfig;
+use Water\Library\ServiceManager\ServiceLocatorAwareInterface;
 use Water\Library\ServiceManager\ServiceLocatorInterface;
 use Water\Library\ServiceManager\ServiceManager;
 
@@ -17,12 +18,12 @@ use Water\Library\ServiceManager\ServiceManager;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class HttpKernel implements HttpKernelInterface
+class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
 {
     /**
      * @var ServiceManager
      */
-    private $container = null;
+    protected $container = null;
 
     /**
      * Constructor.
@@ -31,6 +32,14 @@ class HttpKernel implements HttpKernelInterface
     {
         $this->container = ($sm !== null) ? $sm : new ServiceManager(new ServiceManagerConfig($config));
         $this->container->set('appConfig', $config);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setServiceLocator(ServiceLocatorInterface $sm)
+    {
+        $this->container = $sm;
     }
 
     /**
@@ -47,7 +56,7 @@ class HttpKernel implements HttpKernelInterface
         return $response;
     }
 
-    private function handleRequest(Request $request)
+    protected function handleRequest(Request $request)
     {
         $this->container->set('request', $request);
 
@@ -68,7 +77,7 @@ class HttpKernel implements HttpKernelInterface
         return $response;
     }
 
-    private function handleException(Exception $e)
+    protected function handleException(Exception $e)
     {
         // TODO - Handle de exception.
     }

@@ -8,13 +8,15 @@ namespace Water\Library\Kernel\Resolver;
 
 use Water\Library\Http\Request;
 use Water\Library\Kernel\Exception\ControllerNotFoundException;
+use Water\Library\ServiceManager\ServiceLocatorAware;
+use Water\Library\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
  * Class ControllerResolver
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class ControllerResolver
+class ControllerResolver extends ServiceLocatorAware
 {
     public function getController(Request $request)
     {
@@ -24,7 +26,13 @@ class ControllerResolver
             $method = substr($controller, $pos + 2);
 
             if (class_exists($class, true)) {
-                return array(new $class(), $method);
+                $class = new $class();
+
+                if ($class instanceof ServiceLocatorAwareInterface) {
+                    $class->setServiceLocator($this->container);
+                }
+
+                return array($class, $method);
             }
         }
 
