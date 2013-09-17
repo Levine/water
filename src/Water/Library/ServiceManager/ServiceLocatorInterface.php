@@ -7,6 +7,7 @@
 namespace Water\Library\ServiceManager;
 
 use Water\Library\ServiceManager\Exception\ServiceNotFoundException;
+use Water\Library\ServiceManager\Exception\ServiceOverrideDisabledException;
 
 /**
  * Interface ServiceLocatorInterface
@@ -15,6 +16,15 @@ use Water\Library\ServiceManager\Exception\ServiceNotFoundException;
  */
 interface ServiceLocatorInterface
 {
+    /**
+     * @param string $index
+     * @param mixed  $value
+     * @return ServiceManager
+     *
+     * @throws ServiceOverrideDisabledException
+     */
+    public function set($index, $value);
+
     /**
      * Returns if the specified service exists.
      *

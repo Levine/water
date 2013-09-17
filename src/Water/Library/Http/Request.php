@@ -337,11 +337,14 @@ class Request
                 $index,
                 $this->postData->get(
                     $index,
-                    $this->cookie->get(
+                    $this->resource->get(
                         $index,
-                        $this->files->get(
+                        $this->cookie->get(
                             $index,
-                            $default
+                            $this->files->get(
+                                $index,
+                                $default
+                            )
                         )
                     )
                 )

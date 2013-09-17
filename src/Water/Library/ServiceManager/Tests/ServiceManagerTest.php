@@ -8,6 +8,7 @@ namespace Water\Library\ServiceManager\Tests;
 
 use Water\Library\ServiceManager\ServiceManager;
 use Water\Library\ServiceManager\Tests\Resource\Service;
+use Water\Library\ServiceManager\Tests\Resource\ServiceManagerConfig;
 
 /**
  * Class ServiceManagerTest
@@ -16,8 +17,14 @@ use Water\Library\ServiceManager\Tests\Resource\Service;
  */
 class ServiceManagerTest extends \PHPUnit_Framework_TestCase 
 {
+    /**
+     * @var ServiceManagerConfig
+     */
+    private $config = null;
+
     protected function setUp()
     {
+        $this->config = new ServiceManagerConfig();
         parent::setUp();
     }
 
@@ -42,14 +49,7 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $sm = new ServiceManager(
-            array(
-                'serviceFactory' => '\Water\Library\ServiceManager\Tests\Resource\ServiceFactory'
-            ),
-            array(
-                'serviceInstantiable' => '\Water\Library\ServiceManager\Tests\Resource\Service'
-            )
-        );
+        $sm = new ServiceManager($this->config);
         $sm->set('service', new Service());
 
         $this->assertTrue($sm->has('service'));
@@ -67,14 +67,7 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $sm = new ServiceManager(
-            array(
-                'serviceFactory' => '\Water\Library\ServiceManager\Tests\Resource\ServiceFactory'
-            ),
-            array(
-                'serviceInstantiable' => '\Water\Library\ServiceManager\Tests\Resource\Service'
-            )
-        );
+        $sm = new ServiceManager($this->config);
         $sm->set('service', new Service());
 
         $this->assertInstanceOf(

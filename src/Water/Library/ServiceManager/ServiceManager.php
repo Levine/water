@@ -38,21 +38,16 @@ class ServiceManager implements ServiceLocatorInterface
      */
     private $alias = array();
 
-    public function __construct(array $factories = array(), array $instantiables = array())
+    public function __construct(ServiceManagerConfigInterface $config = null)
     {
-        $this->allowOverride = false;
-
         $this->container     = new SimpleBag();
-        $this->factories     = $factories;
-        $this->instantiables = $instantiables;
+        if ($config !== null) {
+            $config->configure($this);
+        }
     }
 
     /**
-     * @param string $index
-     * @param mixed  $value
-     * @return ServiceManager
-     *
-     * @throws ServiceOverrideDisabledException
+     * {@inheritdoc}
      */
     public function set($index, $value)
     {
@@ -175,7 +170,7 @@ class ServiceManager implements ServiceLocatorInterface
     }
 
     /**
-     * @param array $name
+     * @param string $name
      * @param array $options
      * @return bool|object
      */
