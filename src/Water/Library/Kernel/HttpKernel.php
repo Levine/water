@@ -8,7 +8,6 @@ namespace Water\Library\Kernel;
 
 use Water\Library\Http\Response;
 use Water\Library\Http\Request;
-use Water\Library\Kernel\Exception\RouteNotFoundException;
 use Water\Library\Kernel\Service\ServiceManagerConfig;
 use Water\Library\ServiceManager\ServiceLocatorInterface;
 use Water\Library\ServiceManager\ServiceManager;
@@ -40,25 +39,37 @@ class HttpKernel implements HttpKernelInterface
     public function handle(Request $request)
     {
         try {
-            $this->container->set('request', $request);
-
-            $this->container->get('router');
-
-            $resolver = $this->container->get('resolver');
-
-            $controller = $resolver->getController($request);
-
-            $response = call_user_func_array($controller, array());
-
-            if ($response instanceof Response) {
-                $this->container->set('response', $response);
-            } else {
-                // TODO - Render view with response parameters.
-            }
-        } catch (RouteNotFoundException $e) {
-            return $e;
+            $response = $this->handleRequest($request);
+        } catch (\Exception $e) {
+            $response = $this->handleException($e);
         }
 
         return $response;
+    }
+
+    private function handleRequest(Request $request)
+    {
+        $this->container->set('request', $request);
+
+        $this->container->get('router');
+
+        $resolver = $this->container->get('resolver');
+
+        $controller = $resolver->getController($request);
+
+        $response = call_user_func_array($controller, array());
+
+        if ($response instanceof Response) {
+            $this->container->set('response', $response);
+        } else {
+            // TODO - Render view with response parameters.
+        }
+
+        return $response;
+    }
+
+    private function handleException(Exception $e)
+    {
+        // TODO - Handle de exception.
     }
 }

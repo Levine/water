@@ -7,6 +7,7 @@
 namespace Water\Library\Kernel\Resolver;
 
 use Water\Library\Http\Request;
+use Water\Library\Kernel\Exception\ControllerNotFoundException;
 
 /**
  * Class ControllerResolver
@@ -17,6 +18,18 @@ class ControllerResolver
 {
     public function getController(Request $request)
     {
-        return $request->getResource()->get('_controller');
+        $controller = $request->getResource()->get('_controller');
+        if (false !== $pos = strpos($controller, '::')) {
+            $class  = substr($controller, 0, $pos);
+            $method = substr($controller, $pos + 2);
+
+            if (class_exists($class, true)) {
+                return array(new $class(), $method);
+            }
+        }
+
+        throw new ControllerNotFoundException(
+            'Controller not found, the controller has to be like that "<ControllerName>::<methodName>".'
+        );
     }
 }
