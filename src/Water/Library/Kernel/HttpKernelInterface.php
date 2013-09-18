@@ -18,7 +18,8 @@ interface HttpKernelInterface
 {
     /**
      * @param Request $request
+     * @param string  $env     Environment: dev, prod
      * @return Response
      */
-    public function handle(Request $request);
+    public function handle(Request $request, $env = 'dev');
 }

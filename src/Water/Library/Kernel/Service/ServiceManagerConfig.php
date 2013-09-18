@@ -19,7 +19,7 @@ class ServiceManagerConfig implements ServiceManagerConfigInterface
     /**
      * @var array
      */
-    private $factories = array(
+    protected $factories = array(
         'resolver'      => '\Water\Library\Kernel\Service\ControllerResolverFactory',
         'router'        => '\Water\Library\Kernel\Service\RouterFactory',
     );
@@ -27,12 +27,12 @@ class ServiceManagerConfig implements ServiceManagerConfigInterface
     /**
      * @var array
      */
-    private $instantiables = array();
+    protected $instantiables = array();
 
     /**
      * @var array
      */
-    private $alias = array();
+    protected $alias = array();
 
     /**
      * Constructor.

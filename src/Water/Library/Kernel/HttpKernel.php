@@ -38,9 +38,10 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request)
+    public function handle(Request $request, $env = 'dev')
     {
         try {
+            $this->container->set('_environment', $env);
             return $this->handleRequest($request);
         } catch (\Exception $e) {
             $response = $this->handleException($e);
