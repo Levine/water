@@ -43,7 +43,11 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
         try {
             return $this->handleRequest($request);
         } catch (\Exception $e) {
-            return $this->handleException($e);
+            $response = $this->handleException($e);
+            if ($response === null) {
+                return $e;
+            }
+            return $response;
         }
     }
 
@@ -85,29 +89,31 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
     {
         $appConfig = $this->container->get('appConfig');
 
-        if (isset($appConfig['framework']['error_handler'])) {
-            $request = Request::create(
-                null,
-                null,
-                array(),
-                array(
-                    '_controller' => $appConfig['framework']['error_handler'],
-                    '_args'       => array($e),
-                )
-            );
-
-            try {
-                $response = $this->handleRequest($request);
-                $response->setStatusCode(500);
-            } catch (\Exception $e) {
-                $response = Response::create(
-                    sprintf('Exception thrown when handling an exception (%s: %s)', get_class($e), $e->getMessage()),
-                    500
-                );
-            }
-
-            return $response;
+        if (!isset($appConfig['framework']['error_handler'])) {
+            return null;
         }
+
+        $request = Request::create(
+            null,
+            null,
+            array(),
+            array(
+                '_controller' => $appConfig['framework']['error_handler'],
+                '_args'       => array($e),
+            )
+        );
+
+        try {
+            $response = $this->handleRequest($request);
+            $response->setStatusCode(500);
+        } catch (\Exception $e) {
+            $response = Response::create(
+                sprintf('Exception thrown when handling an exception (%s: %s)', get_class($e), $e->getMessage()),
+                500
+            );
+        }
+
+        return $response;
     }
 
     // @codeCoverageIgnoreStart

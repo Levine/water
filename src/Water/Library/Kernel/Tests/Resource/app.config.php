@@ -18,5 +18,17 @@ return array(
                 )
             )
         )
+    ),
+
+    'service_manager' => array(
+        'factories' => array(
+
+        ),
+        'instanciables' => array(
+
+        ),
+        'alias' => array(
+
+        )
     )
 );

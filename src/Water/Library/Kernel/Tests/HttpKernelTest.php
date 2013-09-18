@@ -27,13 +27,31 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $kernel   = new HttpKernel(null, include __DIR__ . '/Resource/app.config.php');
+        $kernel   = new HttpKernel(null, array());
         $response = $kernel->handle(Request::create('/'));
+        $this->assertInstanceOf('\Exception', $response);
 
+        $config   = include __DIR__ . '/Resource/app.config.php';
+        $kernel   = new HttpKernel(null, $config);
+        $response = $kernel->handle(Request::create('/'));
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
 
-        $kernel   = new HttpKernel(null, include __DIR__ . '/Resource/app.config.php');
+
+        $config   = include __DIR__ . '/Resource/app.config.php';
+        $kernel   = new HttpKernel(null, $config);
         $response = $kernel->handle(Request::create('/notExist'));
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+
+        $config   = include __DIR__ . '/Resource/app.config.php';
+        $config['framework']['error_handler'] = 'NotExistController::noAction';
+        $kernel   = new HttpKernel(null, $config);
+        $response = $kernel->handle(Request::create('/notExist'));
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+
+        $config   = include __DIR__ . '/Resource/app.config.php';
+        unset($config['framework']['error_handler']);
+        $kernel   = new HttpKernel(null, $config);
+        $response = $kernel->handle(Request::create('/notExist'));
+        $this->assertInstanceOf('\Exception', $response);
     }
 }
