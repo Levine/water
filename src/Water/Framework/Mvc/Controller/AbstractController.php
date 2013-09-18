@@ -22,4 +22,12 @@ class AbstractController extends ServiceLocatorAware
     {
         return $this->container->get('request');
     }
+
+    /**
+     *  @return EntityManager
+     */
+    protected function getDoctrine()
+    {
+        return $this->container->get('doctrine');
+    }
 }
