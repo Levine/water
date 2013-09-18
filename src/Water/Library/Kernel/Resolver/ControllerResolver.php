@@ -40,4 +40,9 @@ class ControllerResolver extends ServiceLocatorAware
             'Controller not found, the controller has to be like that "<ControllerName>::<methodName>".'
         );
     }
+
+    public function getArguments(Request $request)
+    {
+        return $request->getResource()->get('_args', array());
+    }
 }

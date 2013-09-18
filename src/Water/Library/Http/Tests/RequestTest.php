@@ -93,6 +93,18 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($request->isSecure());
         $this->assertEquals('value', $request->get('index'));
         $this->assertEquals('localhost', $request->getHost());
+
+        $url     = null;
+        $method  = null;
+        $get     = array();
+        $cookie  = array();
+        $files   = array();
+        $server  = array();
+        $content = '';
+
+        $request = Request::create($url, $method, $get, array(), $cookie, $files, $server, $content);
+
+        $this->assertEquals('localhost', $request->getHost());
     }
 
     public function testOverrideGlobals()

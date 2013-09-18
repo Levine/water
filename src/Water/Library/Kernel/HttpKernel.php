@@ -38,14 +38,6 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function setServiceLocator(ServiceLocatorInterface $sm)
-    {
-        $this->container = $sm;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function handle(Request $request)
     {
         try {
@@ -55,6 +47,10 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
         }
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     protected function handleRequest(Request $request)
     {
         $this->container->set('request', $request);
@@ -66,8 +62,9 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
         $resolver = $this->container->get('resolver');
 
         $controller = $resolver->getController($request);
+        $args       = $resolver->getArguments($request);
 
-        $response = call_user_func_array($controller, array());
+        $response = call_user_func_array($controller, $args);
 
         if ($response instanceof Response) {
             $this->container->set('response', $response);
@@ -78,6 +75,12 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
         return $response;
     }
 
+    /**
+     * Handle every exception.
+     *
+     * @param \Exception $e
+     * @return Response
+     */
     protected function handleException(\Exception $e)
     {
         $appConfig = $this->container->get('appConfig');
@@ -87,7 +90,10 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
                 null,
                 null,
                 array(),
-                array('_controller' => $appConfig['framework']['error_handler'])
+                array(
+                    '_controller' => $appConfig['framework']['error_handler'],
+                    '_args'       => array($e),
+                )
             );
 
             try {
@@ -103,4 +109,14 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
             return $response;
         }
     }
+
+    // @codeCoverageIgnoreStart
+    /**
+     * {@inheritdoc}
+     */
+    public function setServiceLocator(ServiceLocatorInterface $sm)
+    {
+        $this->container = $sm;
+    }
+    // @codeCoverageIgnoreEnd
 }
