@@ -146,7 +146,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $event->value);
     }
 
-    public function testRemoveSubscriver()
+    public function testRemoveSubscriber()
     {
         $dispatcher = new EventDispatcher();
         $dispatcher->addSubscriber($subscriber = new Subscriber());
