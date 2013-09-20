@@ -32,7 +32,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
     public function testDispatcherClosure()
     {
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener('closure', function (Event $event) { $event; }, 0);
+        $dispatcher->addListener('closure', function (Event $event) { }, 0);
         $event = $dispatcher->dispatch('closure');
 
         $this->assertInstanceOf('\Water\Library\EventDispatcher\Event', $event);
@@ -53,7 +53,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener('test_remove', $method = array(new Listener(), 'someMethod'), $priority);
-        $dispatcher->addListener('test_remove', $closure = function (Event $event) { $event; }, $priority);
+        $dispatcher->addListener('test_remove', $closure = function (Event $event) { }, $priority);
 
         $listeners = $dispatcher->getListeners('test_remove');
 
@@ -87,7 +87,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener('test_method', $method = array(new Listener(), 'someMethod'), 0);
-        $dispatcher->addListener('test_closure', $closure = function (Event $event) { $event; }, 0);
+        $dispatcher->addListener('test_closure', $closure = function (Event $event) { }, 0);
 
         $this->assertCount(2, $dispatcher->getListeners());
 
