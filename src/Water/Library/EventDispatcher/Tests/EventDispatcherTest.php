@@ -97,7 +97,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
     public function testPriority()
     {
         $closure0 = function (IncrementEvent $event) {
-            if ($event->value === 0) {
+            if ($event->value === 1) {
                 $event->value++;
             } else {
                 throw new \Exception();
@@ -105,7 +105,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         };
 
         $closure1 = function (IncrementEvent $event) {
-            if ($event->value === 1) {
+            if ($event->value === 0) {
                 $event->value++;
             } else {
                 throw new \Exception();

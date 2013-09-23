@@ -141,7 +141,7 @@ class EventDispatcher implements EventDispatcherInterface
     private function sortListeners($eventName)
     {
         if (isset($this->listeners[$eventName])) {
-            ksort($this->listeners[$eventName]);
+            krsort($this->listeners[$eventName]);
             $this->sorted[$eventName] = call_user_func_array('array_merge', $this->listeners[$eventName]);
         }
         return $this;
