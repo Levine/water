@@ -15,7 +15,7 @@ use Water\Library\Router\Matcher\MatcherInterface;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class Router
+class Router implements RouterInterface
 {
     /**
      * @var RouteCollection
