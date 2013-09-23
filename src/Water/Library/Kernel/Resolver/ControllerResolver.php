@@ -18,7 +18,7 @@ class ControllerResolver implements ControllerResolverInterface
 {
     public function getController(Request $request)
     {
-        if ($request->getResource()->has('_controller')) {
+        if (!$request->getResource()->has('_controller')) {
             return false;
         }
 
@@ -26,8 +26,7 @@ class ControllerResolver implements ControllerResolverInterface
 
         if (is_array($controller)
             || (is_object($controller) && method_exists($controller, '__invoke')) // Invokable class
-            || (is_string($controller) && function_exists($controller)) // User function
-            || is_callable($controller) // Closure
+            || function_exists($controller) // Function and Closure
         ) {
             return $controller;
         }
@@ -37,14 +36,17 @@ class ControllerResolver implements ControllerResolverInterface
         }
 
         if (false === $pos = strpos($controller, '::')) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException(sprintf(
+                'Controller has to be a "array", "invokable class", "function" or "<ControllerName>::<methodName>" ("%s" given).',
+                $controller
+            ));
         }
 
         $class  = strtok($controller, '::');
         $method = strtok('::');
 
         if (!class_exists($class, true) || !is_callable($controller = array(new $class(), $method))) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException("Controller isn't a valid class or isn't callable.");
         }
 
         return $controller;
