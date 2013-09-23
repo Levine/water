@@ -20,7 +20,7 @@ use Water\Library\Kernel\Resolver\ControllerResolverInterface;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
+class HttpKernel implements HttpKernelInterface
 {
     /**
      * @var EventDispatcher
@@ -49,11 +49,7 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
         try {
             return $this->handleRequest($request);
         } catch (\Exception $e) {
-            $response = $this->handleException($e);
-            if ($response === null) {
-                return $e;
-            }
-            return $response;
+            return (null !== $response = $this->handleException($e)) ? $response : $e;
         }
     }
 
@@ -85,7 +81,7 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
 
             if (!$event->hasResponse()) {
                 throw new LogicException(sprintf(
-                    'Controller must return "array" or "Response" (%s given).',
+                    'Controller must return "array" or "Response" ("%s" given).',
                     (is_object($response)) ? get_class($response) : gettype($response)
                 ));
             }
