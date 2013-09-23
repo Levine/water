@@ -38,10 +38,7 @@ class Router
     private $options = array();
 
     /**
-     * Constructor.
-     *
-     * @param RouteCollection $routes
-     * @param array           $options
+     * {@inheritdoc}
      */
     public function __construct(RouteCollection $routes, array $options = array())
     {
@@ -49,6 +46,11 @@ class Router
         $this->setOptions($options);
     }
 
+    /**
+     * Define default options.
+     *
+     * @param array $options
+     */
     private function setOptions(array $options)
     {
         $default = array(
@@ -60,7 +62,7 @@ class Router
     }
 
     /**
-     * @see \Water\Library\Router\Matcher\MatcherInterface::match($path)
+     * {@inheritdoc}
      */
     public function match($path)
     {
@@ -68,7 +70,7 @@ class Router
     }
 
     /**
-     * @see \Water\Library\Router\Generator\GeneratorInterface::generate($name)
+     * {@inheritdoc}
      */
     public function generate($name)
     {
