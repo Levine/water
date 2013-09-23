@@ -1,8 +1,8 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 17/09/13
- * Time: 09:28
+ * Date: 22/09/13
+ * Time: 22:07
  */
 namespace Water\Library\Kernel\Exception;
 

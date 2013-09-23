@@ -7,38 +7,47 @@
 namespace Water\Library\Kernel\Resolver;
 
 use Water\Library\Http\Request;
-use Water\Library\Kernel\Exception\ControllerNotFoundException;
-use Water\Library\ServiceManager\ServiceLocatorAware;
-use Water\Library\ServiceManager\ServiceLocatorAwareInterface;
+use Water\Library\Kernel\Exception\InvalidArgumentException;
 
 /**
  * Class ControllerResolver
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class ControllerResolver extends ServiceLocatorAware
+class ControllerResolver implements ControllerResolverInterface
 {
     public function getController(Request $request)
     {
-        $controller = $request->getResource()->get('_controller');
-        if (false !== $pos = strpos($controller, '::')) {
-            $class  = substr($controller, 0, $pos);
-            $method = substr($controller, $pos + 2);
-
-            if (class_exists($class, true)) {
-                $class = new $class();
-
-                if ($class instanceof ServiceLocatorAwareInterface) {
-                    $class->setServiceLocator($this->container);
-                }
-
-                return array($class, $method);
-            }
+        if ($request->getResource()->has('_controller')) {
+            return false;
         }
 
-        throw new ControllerNotFoundException(
-            'Controller not found, the controller has to be like that "<ControllerName>::<methodName>".'
-        );
+        $controller = $request->getResource()->get('_controller');
+
+        if (is_array($controller)
+            || (is_object($controller) && method_exists($controller, '__invoke')) // Invokable class
+            || (is_string($controller) && function_exists($controller)) // User function
+            || is_callable($controller) // Closure
+        ) {
+            return $controller;
+        }
+
+        if (is_string($controller) && method_exists($controller, '__invoke')) {
+            return new $controller;
+        }
+
+        if (false === $pos = strpos($controller, '::')) {
+            throw new InvalidArgumentException();
+        }
+
+        $class  = strtok($controller, '::');
+        $method = strtok('::');
+
+        if (!class_exists($class, true) || !is_callable($controller = array(new $class(), $method))) {
+            throw new InvalidArgumentException();
+        }
+
+        return $controller;
     }
 
     public function getArguments(Request $request)

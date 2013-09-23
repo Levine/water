@@ -6,12 +6,14 @@
  */
 namespace Water\Library\Kernel;
 
+use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Response;
 use Water\Library\Http\Request;
-use Water\Library\Kernel\Service\ServiceManagerConfig;
-use Water\Library\ServiceManager\ServiceLocatorAwareInterface;
-use Water\Library\ServiceManager\ServiceLocatorInterface;
-use Water\Library\ServiceManager\ServiceManager;
+use Water\Library\Kernel\Event\ResponseEvent;
+use Water\Library\Kernel\Event\ResponseForControllerEvent;
+use Water\Library\Kernel\Exception\ControllerNotFoundException;
+use Water\Library\Kernel\Exception\LogicException;
+use Water\Library\Kernel\Resolver\ControllerResolverInterface;
 
 /**
  * Class HttpKernel
@@ -21,27 +23,30 @@ use Water\Library\ServiceManager\ServiceManager;
 class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
 {
     /**
-     * @var ServiceManager
+     * @var EventDispatcher
      */
-    protected $container = null;
+    protected $dispatcher = null;
+
+    /**
+     * @var ControllerResolverInterface
+     */
+    protected $resolver = null;
 
     /**
      * Constructor.
      */
-    public function __construct(ServiceLocatorInterface $sm = null, array $config = array())
+    public function __construct(EventDispatcher $dispatcher, ControllerResolverInterface $resolver)
     {
-        $this->container = ($sm !== null) ? $sm : new ServiceManager(new ServiceManagerConfig($config));
-        $this->container->set('appConfig', $config);
-        $this->container->enableOverride();
+        $this->dispatcher = $dispatcher;
+        $this->resolver   = $resolver;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request, $env = 'dev')
+    public function handle(Request $request)
     {
         try {
-            $this->container->set('_environment', $env);
             return $this->handleRequest($request);
         } catch (\Exception $e) {
             $response = $this->handleException($e);
@@ -55,26 +60,37 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
     /**
      * @param Request $request
      * @return Response
+     *
+     * @throws ControllerNotFoundException
+     * @throws LogicException
      */
     protected function handleRequest(Request $request)
     {
-        $this->container->set('request', $request);
+        $event = new ResponseEvent($this, $request);
+        $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
 
-        if (!$request->getResource()->has('_controller')) {
-            $this->container->get('router');
+        if ($event->hasResponse()) {
+            return $event->getResponse();
         }
 
-        $resolver = $this->container->get('resolver');
+        if (false === $controller = $this->resolver->getController($request)) {
+            throw new ControllerNotFoundException(sprintf('Not found controller for path "%s".', $request->getPath()));
+        }
 
-        $controller = $resolver->getController($request);
-        $args       = $resolver->getArguments($request);
+        $response = call_user_func_array($controller, $this->resolver->getArguments($request));
 
-        $response = call_user_func_array($controller, $args);
+        if (!$response instanceof Response) {
+            $event = new ResponseForControllerEvent($this, $request, $response);
+            $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
 
-        if ($response instanceof Response) {
-            $this->container->set('response', $response);
-        } else {
-            // TODO - Render view with response parameters.
+            if (!$event->hasResponse()) {
+                throw new LogicException(sprintf(
+                    'Controller must return "array" or "Response" (%s given).',
+                    (is_object($response)) ? get_class($response) : gettype($response)
+                ));
+            }
+
+            $response = $event->getResponse();
         }
 
         return $response;
@@ -84,46 +100,9 @@ class HttpKernel implements HttpKernelInterface, ServiceLocatorAwareInterface
      * Handle every exception.
      *
      * @param \Exception $e
-     * @return Response
+     * @return Response|\Exception
      */
     protected function handleException(\Exception $e)
     {
-        $appConfig = $this->container->get('appConfig');
-
-        if (!isset($appConfig['framework']['error_handler'])) {
-            return null;
-        }
-
-        $request = Request::create(
-            null,
-            null,
-            array(),
-            array(
-                '_controller' => $appConfig['framework']['error_handler'],
-                '_args'       => array($e),
-            )
-        );
-
-        try {
-            $response = $this->handleRequest($request);
-            $response->setStatusCode(500);
-        } catch (\Exception $e) {
-            $response = Response::create(
-                sprintf('Exception thrown when handling an exception (%s: %s)', get_class($e), $e->getMessage()),
-                500
-            );
-        }
-
-        return $response;
     }
-
-    // @codeCoverageIgnoreStart
-    /**
-     * {@inheritdoc}
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sm)
-    {
-        $this->container = $sm;
-    }
-    // @codeCoverageIgnoreEnd
 }
