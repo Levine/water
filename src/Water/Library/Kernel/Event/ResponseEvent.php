@@ -20,7 +20,6 @@ class ResponseEvent extends KernelEvent
      */
     private $response = null;
 
-    // codeCoverageIgnoreStart
     public function hasResponse()
     {
         if ($this->response !== null && ($this->response instanceof Response)) {
@@ -29,6 +28,7 @@ class ResponseEvent extends KernelEvent
         return false;
     }
 
+    // @codeCoverageIgnoreStart
     /**
      * @param Response $response
      * @return ResponseEvent
@@ -46,5 +46,5 @@ class ResponseEvent extends KernelEvent
     {
         return $this->response;
     }
-    // codeCoverageIgnoreEnd
+    // @codeCoverageIgnoreEnd
 }

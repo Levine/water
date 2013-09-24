@@ -5,15 +5,16 @@
  * Time: 22:34
  */
 namespace Water\Library\Kernel\Event;
+
 use Water\Library\Kernel\HttpKernelInterface;
 use Water\Library\Http\Request;
 
 /**
- * Class ResponseForControllerEvent
+ * Class ResponseFromControllerEvent
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class ResponseForControllerEvent extends ResponseEvent
+class ResponseFromControllerEvent extends ResponseEvent
 {
     /**
      * @var mixed

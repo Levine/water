@@ -10,7 +10,7 @@ use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Response;
 use Water\Library\Http\Request;
 use Water\Library\Kernel\Event\ResponseEvent;
-use Water\Library\Kernel\Event\ResponseForControllerEvent;
+use Water\Library\Kernel\Event\ResponseFromControllerEvent;
 use Water\Library\Kernel\Exception\ControllerNotFoundException;
 use Water\Library\Kernel\Exception\LogicException;
 use Water\Library\Kernel\Resolver\ControllerResolverInterface;
@@ -76,7 +76,7 @@ class HttpKernel implements HttpKernelInterface
         $response = call_user_func_array($controller, $this->resolver->getArguments($request));
 
         if (!$response instanceof Response) {
-            $event = new ResponseForControllerEvent($this, $request, $response);
+            $event = new ResponseFromControllerEvent($this, $request, $response);
             $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
 
             if (!$event->hasResponse()) {

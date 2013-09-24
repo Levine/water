@@ -8,6 +8,7 @@ namespace Water\Library\Kernel\Tests;
 
 use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Request;
+use Water\Library\Http\Response;
 use Water\Library\Kernel\EventListener\RouterListener;
 use Water\Library\Kernel\HttpKernel;
 use Water\Library\Kernel\Resolver\ControllerResolver;
@@ -38,7 +39,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
         $routes = new RouteCollection();
         $routes->add('home', new Route('/', array('_controller' => 'Water\Library\Kernel\Tests\Resource\IndexController::indexAction')));
-        $routes->add('blog', new Route('/blog', array('_controller' => 'BlogController')));
+        $routes->add('blog', new Route('/closure', array('_controller' => function () { return Response::create('Test'); })));
 
         $dispatcher->addSubscriber(new RouterListener(new Router($routes)));
 
@@ -51,5 +52,14 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $response = $kernel->handle(Request::create('/'));
 
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->getContent());
+
+        $kernel = $this->getHttpKernel();
+        $response = $kernel->handle(Request::create('/closure'));
+
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->getContent());
     }
 }
