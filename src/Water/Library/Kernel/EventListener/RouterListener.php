@@ -6,6 +6,7 @@
  */
 namespace Water\Library\Kernel\EventListener;
 
+use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\EventDispatcher\SubscriberInterface;
 use Water\Library\Kernel\Event\ResponseEvent;
 use Water\Library\Kernel\Exception\RouteNotFoundException;
@@ -35,13 +36,15 @@ class RouterListener implements SubscriberInterface
     }
 
     /**
-     * Subscriber method.
+     * Subscribed method.
      *
-     * @param ResponseEvent $event
+     * @param ResponseEvent            $event
+     * @param string                   $eventName
+     * @param EventDispatcherInterface $dispatcher
      *
      * @throws RouteNotFoundException
      */
-    public function onKernelRequest(ResponseEvent $event)
+    public function onKernelRequest(ResponseEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         $request = $event->getRequest();
 

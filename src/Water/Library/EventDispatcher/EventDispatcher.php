@@ -102,7 +102,7 @@ class EventDispatcher implements EventDispatcherInterface
         }
 
         foreach ($this->getListeners($eventName) as $listener) {
-            call_user_func($listener, $event, $eventName, $this);
+            call_user_func_array($listener, array($event, $eventName, $this));
 
             if ($event->isStoppedPropagation()) {
                 break;

@@ -6,6 +6,7 @@
  */
 namespace Water\Library\EventDispatcher\Tests\Resource;
 
+use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\EventDispatcher\SubscriberInterface;
 
 /**
@@ -15,12 +16,12 @@ use Water\Library\EventDispatcher\SubscriberInterface;
  */
 class Subscriber implements SubscriberInterface
 {
-    public function increment(IncrementEvent $event)
+    public function increment(IncrementEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         $event->value++;
     }
 
-    public function decrement(IncrementEvent $event)
+    public function decrement(IncrementEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         $event->value--;
     }
