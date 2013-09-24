@@ -49,7 +49,8 @@ class HttpKernel implements HttpKernelInterface
         try {
             return $this->handleRequest($request);
         } catch (\Exception $e) {
-            return (null !== $response = $this->handleException($e)) ? $response : $e;
+            $response = $this->handleException($e);
+            return ($response instanceof Response) ? $response : $e;
         }
     }
 
@@ -100,5 +101,24 @@ class HttpKernel implements HttpKernelInterface
      */
     protected function handleException(\Exception $e)
     {
+        return $e;
     }
+
+    // @codeCoverageIgnoreStart
+    /**
+     * @return \Water\Library\EventDispatcher\EventDispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
+    }
+
+    /**
+     * @return \Water\Library\Kernel\Resolver\ControllerResolverInterface
+     */
+    public function getResolver()
+    {
+        return $this->resolver;
+    }
+    // @codeCoverageIgnoreEnd
 }

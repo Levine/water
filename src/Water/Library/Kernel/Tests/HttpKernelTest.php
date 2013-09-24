@@ -15,6 +15,7 @@ use Water\Library\Kernel\Resolver\ControllerResolver;
 use Water\Library\Router\Route;
 use Water\Library\Router\RouteCollection;
 use Water\Library\Router\Router;
+use Water\Library\Kernel\Tests\Resource\RouterListener as TestRouterListener;
 
 /**
  * Class HttpKernelTest
@@ -48,18 +49,60 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $kernel = $this->getHttpKernel();
+        $kernel   = $this->getHttpKernel();
         $response = $kernel->handle(Request::create('/'));
 
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotEmpty($response->getContent());
 
-        $kernel = $this->getHttpKernel();
+        $kernel   = $this->getHttpKernel();
         $response = $kernel->handle(Request::create('/closure'));
 
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotEmpty($response->getContent());
+
+        $kernel   = $this->getHttpKernel();
+        $response = $kernel->handle(Request::create(
+            '/closure',
+            'GET',
+            array(),
+            array('_controller' => function () { return Response::create('Test'); })
+        ));
+
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->getContent());
+
+        $kernel = $this->getHttpKernel();
+        $kernel->getDispatcher()->addSubscriber(new TestRouterListener());
+
+        $response = $kernel->handle(Request::create(
+            '/closure',
+            'GET',
+            array(),
+            array('_controller' => function () { return Response::create('Test'); })
+        ));
+
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->getContent());
+    }
+
+    public function testHandleControllerNotFoundException()
+    {
+        $kernel   = new HttpKernel(new EventDispatcher(), new ControllerResolver());
+        $response = $kernel->handle(Request::create('/', 'GET', array(), array()));
+
+        $this->assertInstanceOf('\Water\Library\Kernel\Exception\ControllerNotFoundException', $response);
+    }
+
+    public function testHandleRouteNotFoundException()
+    {
+        $kernel = $this->getHttpKernel();
+        $response = $kernel->handle(Request::create('/not/exist'));
+
+        $this->assertInstanceOf('\Water\Library\Kernel\Exception\RouteNotFoundException', $response);
     }
 }
