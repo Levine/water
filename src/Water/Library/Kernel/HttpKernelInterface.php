@@ -6,8 +6,10 @@
  */
 namespace Water\Library\Kernel;
 
+use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
+use Water\Library\Kernel\Resolver\ControllerResolverInterface;
 
 /**
  * Interface HttpKernelInterface
@@ -21,4 +23,14 @@ interface HttpKernelInterface
      * @return Response
      */
     public function handle(Request $request);
+
+    /**
+     * @return EventDispatcherInterface
+     */
+    public function getDispatcher();
+
+    /**
+     * @return ControllerResolverInterface
+     */
+    public function getControllerResolver();
 }

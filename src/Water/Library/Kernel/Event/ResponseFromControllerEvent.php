@@ -19,7 +19,7 @@ class ResponseFromControllerEvent extends ResponseEvent
     /**
      * @var mixed
      */
-    private $response = null;
+    protected $response = null;
 
     /**
      * {@inheritdoc}
@@ -28,7 +28,7 @@ class ResponseFromControllerEvent extends ResponseEvent
      */
     public function __construct(HttpKernelInterface $kernel, Request $request, $response)
     {
-        $this->response = $response;
         parent::__construct($kernel, $request);
+        $this->response = $response;
     }
 }

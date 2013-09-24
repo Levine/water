@@ -205,6 +205,67 @@ class Request
     }
 
     /**
+     * Duplicate the current request.
+     *
+     * @param array  $request
+     * @param array  $resource
+     * @param array  $cookie
+     * @param array  $files
+     * @param array  $server
+     * @return Request
+     */
+    public function duplicate(
+        array $request = array(),
+        array $resource = array(),
+        array $cookie = array(),
+        array $files = array(),
+        array $server = array()
+    ) {
+        $duplicate = clone $this;
+
+        if (!empty($resource)) {
+            $duplicate->resource = new ParameterBag($resource);
+        }
+
+        if (!empty($cookie)) {
+            $duplicate->cookie = new CookieBag($cookie);
+        }
+
+        if (!empty($files)) {
+            $duplicate->files = new FileBag($files);
+        }
+
+        if (!empty($server)) {
+            $duplicate->server = new ServerBag($server);
+            $duplicate->headers = new HeaderBag($this->server->getHeaders());
+        }
+
+        if (!empty($request)) {
+            if (false !== array_search($this->getMethod(), array('DELETE', 'PUT', 'POST'))) {
+                $duplicate->postData = new ParameterBag($request);
+            } else {
+                $duplicate->queryData = new ParameterBag($request);
+            }
+        }
+
+        return $duplicate;
+    }
+
+    /**
+     * Clones the current request.
+     */
+    public function __clone()
+    {
+        $this->queryData = clone $this->queryData;
+        $this->postData  = clone $this->postData;
+        $this->resource  = clone $this->resource;
+        $this->cookie    = clone $this->cookie;
+        $this->files     = clone $this->files;
+        $this->server    = clone $this->server;
+        $this->headers   = clone $this->headers;
+    }
+
+    /**
      * Override the global variables.
      */
     public function overrideGlobals()

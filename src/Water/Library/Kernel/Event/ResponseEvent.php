@@ -18,7 +18,7 @@ class ResponseEvent extends KernelEvent
     /**
      * @var Response
      */
-    private $response = null;
+    protected $response = null;
 
     public function hasResponse()
     {

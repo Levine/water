@@ -11,6 +11,7 @@ use Water\Library\Http\Response;
 use Water\Library\Http\Request;
 use Water\Library\Kernel\Event\ResponseEvent;
 use Water\Library\Kernel\Event\ResponseFromControllerEvent;
+use Water\Library\Kernel\Event\ResponseFromExceptionEvent;
 use Water\Library\Kernel\Exception\ControllerNotFoundException;
 use Water\Library\Kernel\Exception\LogicException;
 use Water\Library\Kernel\Resolver\ControllerResolverInterface;
@@ -49,7 +50,7 @@ class HttpKernel implements HttpKernelInterface
         try {
             return $this->handleRequest($request);
         } catch (\Exception $e) {
-            $response = $this->handleException($e);
+            $response = $this->handleException($request, $e);
             return ($response instanceof Response) ? $response : $e;
         }
     }
@@ -96,12 +97,19 @@ class HttpKernel implements HttpKernelInterface
     /**
      * Handle every exception.
      *
-     * @param \Exception $e
+     * @param Request    $request
+     * @param \Exception $exception
      * @return Response|\Exception
      */
-    protected function handleException(\Exception $e)
+    protected function handleException(Request $request, \Exception $exception)
     {
-        return $e;
+        $event = new ResponseFromExceptionEvent($this, $request, $exception);
+        $this->dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+
+        if ($event->hasResponse()) {
+            return $event->getResponse();
+        }
+        return $exception;
     }
 
     // @codeCoverageIgnoreStart
@@ -116,7 +124,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * @return \Water\Library\Kernel\Resolver\ControllerResolverInterface
      */
-    public function getResolver()
+    public function getControllerResolver()
     {
         return $this->resolver;
     }

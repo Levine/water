@@ -20,12 +20,12 @@ class KernelEvent extends Event
     /**
      * @var HttpKernelInterface
      */
-    private $kernel = null;
+    protected $kernel = null;
 
     /**
      * @var Request
      */
-    private $request = null;
+    protected $request = null;
 
     /**
      * Constructor.
