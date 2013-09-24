@@ -9,8 +9,10 @@ namespace Water\Library\Kernel\Tests;
 use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
+use Water\Library\Kernel\Event\ResponseFromControllerEvent;
 use Water\Library\Kernel\EventListener\RouterListener;
 use Water\Library\Kernel\HttpKernel;
+use Water\Library\Kernel\KernelEvents;
 use Water\Library\Kernel\Resolver\ControllerResolver;
 use Water\Library\Router\Route;
 use Water\Library\Router\RouteCollection;
@@ -88,6 +90,39 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Water\Library\Http\Response', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotEmpty($response->getContent());
+    }
+
+    public function testHandleResponseFromController()
+    {
+        $kernel = $this->getHttpKernel();
+        $kernel->getDispatcher()->addListener(
+            KernelEvents::VIEW,
+            function(ResponseFromControllerEvent $event) { $event->setResponse(Response::create('Test')); },
+            64
+        );
+
+        $response = $kernel->handle(Request::create(
+            '/test',
+            'GET',
+            array(),
+            array('_controller' => function () { return true; })
+        ));
+
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->getContent());
+
+        $kernel = $this->getHttpKernel();
+        $kernel->getDispatcher()->addListener(KernelEvents::VIEW, function() { return; }, 64);
+
+        $response = $kernel->handle(Request::create(
+            '/test',
+            'GET',
+            array(),
+            array('_controller' => function () { return true; })
+        ));
+
+        $this->assertInstanceOf('\Water\Library\Kernel\Exception\LogicException', $response);
     }
 
     public function testHandleControllerNotFoundException()

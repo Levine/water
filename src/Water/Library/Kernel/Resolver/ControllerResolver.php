@@ -25,8 +25,9 @@ class ControllerResolver implements ControllerResolverInterface
         $controller = $request->getResource()->get('_controller');
 
         if (is_array($controller)
-            || (is_object($controller) && method_exists($controller, '__invoke')) // Invokable class
-            || function_exists($controller) // Function and Closure
+            || (is_object($controller) && method_exists($controller, '__invoke'))
+            || (is_string($controller) && function_exists($controller))
+            || ($controller instanceof \Closure)
         ) {
             return $controller;
         }
