@@ -107,6 +107,32 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('localhost', $request->getHost());
     }
 
+    public function testDuplicate()
+    {
+        $request   = Request::create('/');
+        $duplicate = $request->duplicate();
+
+        $this->assertInstanceOf('\Water\Library\Http\Request', $duplicate);
+
+        $duplicate = $request->duplicate(
+            array('input' => 'value'),
+            array('_controller' => 'SomeController'),
+            array('pombaCorpCookie'),
+            array('file' => 'fileName.txt'),
+            array('HTTP_HOST' => 'localhost')
+        );
+
+        $this->assertInstanceOf('\Water\Library\Http\Request', $duplicate);
+        $this->assertEquals('localhost', $duplicate->getHeaders()->get('host'));
+        $this->assertEquals('value', $duplicate->getQueryData()->get('input'));
+
+        $request   = Request::create('/', 'POST');
+        $duplicate = $request->duplicate(array('input' => 'value'));
+
+        $this->assertInstanceOf('\Water\Library\Http\Request', $duplicate);
+        $this->assertEquals('value', $duplicate->getPostData()->get('input'));
+    }
+
     public function testOverrideGlobals()
     {
         $url     = '/some/path';
