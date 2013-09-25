@@ -5,6 +5,7 @@
  * Time: 14:48
  */
 namespace Water\Library\Http;
+
 use Water\Library\Http\Bag\HeaderBag;
 
 /**
@@ -83,6 +84,11 @@ class Response
      * @var array
      */
     private $headers = array();
+
+    /**
+     * @var string
+     */
+    private $charset = '';
 
     /**
      * @var string
@@ -285,6 +291,24 @@ class Response
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @param string $charset
+     * @return Response
+     */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCharset()
+    {
+        return $this->charset;
     }
     // @codeCoverageIgnoreEnd
 }
