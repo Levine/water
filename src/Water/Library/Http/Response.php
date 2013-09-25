@@ -15,7 +15,7 @@ use Water\Library\Http\Bag\HeaderBag;
  */
 class Response
 {
-    private static $recommendedReasonPhrases = array(
+    protected static $recommendedReasonPhrases = array(
         // INFORMATIONAL CODES
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -83,32 +83,32 @@ class Response
     /**
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * @var string
      */
-    private $charset = '';
+    protected $charset = '';
 
     /**
      * @var string
      */
-    private $version = '';
+    protected $version = '';
 
     /**
      * @var int
      */
-    private $statusCode = 0;
+    protected $statusCode = 0;
 
     /**
      * @var string
      */
-    private $statusPhrase = '';
+    protected $statusPhrase = '';
 
     /**
      * @var string
      */
-    private $content = '';
+    protected $content = '';
 
     /**
      * Constructor.

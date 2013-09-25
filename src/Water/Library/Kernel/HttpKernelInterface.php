@@ -20,9 +20,10 @@ interface HttpKernelInterface
 {
     /**
      * @param Request $request
+     * @param bool    $catch
      * @return Response
      */
-    public function handle(Request $request);
+    public function handle(Request $request, $catch = true);
 
     /**
      * @return EventDispatcherInterface

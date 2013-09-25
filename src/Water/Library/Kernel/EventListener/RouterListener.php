@@ -57,7 +57,11 @@ class RouterListener implements SubscriberInterface
             return;
         }
 
-        throw new RouteNotFoundException();
+        throw new RouteNotFoundException(sprintf(
+            'No route found for "%s %s"',
+            $request->getMethod(),
+            $request->getPath()
+       ));
     }
 
     /**

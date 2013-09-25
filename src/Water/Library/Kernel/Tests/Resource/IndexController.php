@@ -17,6 +17,18 @@ class IndexController
 {
     public function indexAction()
     {
-        return Response::create('Test');
+        $response = Response::create('Test');
+        $response->setCharset('UTF-8');
+        return $response;
+    }
+
+    public function exceptionAction(\Exception $exception)
+    {
+        return Response::create($exception->getMessage(), 500);
+    }
+
+    public function exceptionWithExceptionAction(\Exception $exception)
+    {
+        return true;
     }
 }

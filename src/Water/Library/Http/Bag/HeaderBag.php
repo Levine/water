@@ -30,7 +30,8 @@ class HeaderBag extends ParameterBag
      */
     private function normalizeHeaderName($headerName)
     {
-        $headerName = str_replace('_', '-', strtolower($headerName));
+        $headerName = str_replace('_', ' ', str_replace('-', ' ', strtolower($headerName)));
+        $headerName = str_replace(' ', '-', ucwords($headerName));
         return $headerName;
     }
 
@@ -74,9 +75,7 @@ class HeaderBag extends ParameterBag
     {
         $string = '';
         foreach ($this as $key => $value) {
-            $header = str_replace('-', ' ', $key);
-            $header = str_replace(' ', '-', ucwords($header));
-            $string .= sprintf("%s: %s\r\n", $header, $value);
+            $string .= sprintf("%s: %s\r\n", $key, $value);
         }
         return $string;
     }

@@ -46,13 +46,16 @@ class HttpKernel implements HttpKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request)
+    public function handle(Request $request, $catch = true)
     {
         try {
             return $this->handleRequest($request);
-        } catch (\Exception $e) {
-            $response = $this->handleException($request, $e);
-            return ($response instanceof Response) ? $response : $e;
+        } catch (\Exception $exception) {
+            if ($catch === false) {
+                throw $exception;
+            }
+            $response = $this->handleException($request, $exception);
+            return ($response instanceof Response) ? $response : $exception;
         }
     }
 

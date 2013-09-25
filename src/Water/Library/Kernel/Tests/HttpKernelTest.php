@@ -10,6 +10,8 @@ use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
 use Water\Library\Kernel\Event\ResponseFromControllerEvent;
+use Water\Library\Kernel\EventListener\ExceptionListener;
+use Water\Library\Kernel\EventListener\ResponseListener;
 use Water\Library\Kernel\EventListener\RouterListener;
 use Water\Library\Kernel\HttpKernel;
 use Water\Library\Kernel\KernelEvents;
@@ -41,10 +43,14 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $dispatcher = new EventDispatcher();
 
         $routes = new RouteCollection();
-        $routes->add('home', new Route('/', array('_controller' => 'Water\Library\Kernel\Tests\Resource\IndexController::indexAction')));
-        $routes->add('blog', new Route('/closure', array('_controller' => function () { return Response::create('Test'); })));
+        $routes->add('home', new Route('/', array('_controller' => '\Water\Library\Kernel\Tests\Resource\IndexController::indexAction')));
+        $routes->add('blog', new Route(
+            '/closure',
+            array('_controller' => function () { return Response::create('Test', 200, array('Content-Type' => 'text/html')); })
+        ));
 
         $dispatcher->addSubscriber(new RouterListener(new Router($routes)));
+        $dispatcher->addSubscriber(new ResponseListener('UTF-8'));
 
         return new HttpKernel($dispatcher, new ControllerResolver());
     }
@@ -135,9 +141,33 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleRouteNotFoundException()
     {
-        $kernel = $this->getHttpKernel();
+        $kernel   = $this->getHttpKernel();
         $response = $kernel->handle(Request::create('/not/exist'));
 
         $this->assertInstanceOf('\Water\Library\Kernel\Exception\RouteNotFoundException', $response);
+    }
+
+    public function testHandleException()
+    {
+        $kernel = $this->getHttpKernel();
+        $kernel->getDispatcher()->addSubscriber(
+            new ExceptionListener('\Water\Library\Kernel\Tests\Resource\IndexController::exceptionAction')
+        );
+        $response = $kernel->handle(Request::create('/not/exist'));
+
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertNotEmpty($response->getContent());
+    }
+
+    public function testHandleExceptionWithException()
+    {
+        $kernel = $this->getHttpKernel();
+        $kernel->getDispatcher()->addSubscriber(
+            new ExceptionListener('\Water\Library\Kernel\Tests\Resource\IndexController::exceptionWithExceptionAction')
+        );
+        $response = $kernel->handle(Request::create('/not/exist'));
+
+        $this->assertInstanceOf('\Exception', $response);
     }
 }

@@ -123,7 +123,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf('\Water\Library\Http\Request', $duplicate);
-        $this->assertEquals('localhost', $duplicate->getHeaders()->get('host'));
+        $this->assertEquals('localhost', $duplicate->getHeaders()->get('Host'));
         $this->assertEquals('value', $duplicate->getQueryData()->get('input'));
 
         $request   = Request::create('/', 'POST');

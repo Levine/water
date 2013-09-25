@@ -46,6 +46,7 @@ class ResponseListener implements SubscriberInterface
             return;
         }
 
+        $charset = strtolower($this->charset);
         $headers = $response->getHeaders();
         if (!$headers->has('Content-Type')) {
             $headers->set('Content-Type', 'text/html; charset='.$charset);

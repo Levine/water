@@ -56,6 +56,9 @@ class ControllerResolver implements ControllerResolverInterface
 
     public function getArguments(Request $request)
     {
-        return $request->getResource()->get('_args', array());
+        if (!is_array($args = $request->getResource()->get('_args', array()))) {
+            $args = array($args);
+        }
+        return $args;
     }
 }

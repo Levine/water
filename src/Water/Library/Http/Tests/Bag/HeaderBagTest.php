@@ -35,8 +35,8 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
             'CONTENT_LENGTH'    => 348,
         ));
 
-        $this->assertEquals('localhost', $headerBag->get('host'));
-        $this->assertEquals(348, $headerBag->get('content-length'));
+        $this->assertEquals('localhost', $headerBag->get('Host'));
+        $this->assertEquals(348, $headerBag->get('Content-Length'));
     }
 
     public function testSet()
@@ -46,8 +46,8 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
         $headerBag->offsetSet('ACCEPT_LANGUAGE', 'pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4');
         $headerBag->offsetSet('AccepT-CharseT', 'utf-8,ISO-8859-1;q=0.7,*;q=0.7');
 
-        $this->assertEquals('pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4', $headerBag->get('accept-language'));
-        $this->assertEquals('utf-8,ISO-8859-1;q=0.7,*;q=0.7', $headerBag->get('accept-charset'));
+        $this->assertEquals('pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4', $headerBag->get('Accept-Language'));
+        $this->assertEquals('utf-8,ISO-8859-1;q=0.7,*;q=0.7', $headerBag->get('Accept-Charset'));
     }
 
     public function testToString()
