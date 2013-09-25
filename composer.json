@@ -24,8 +24,7 @@
     },
 
     "require": {
-        "php": "~5.3",
-        "doctrine/orm": "~2.3@stable"
+        "php": "~5.3"
     },
 
     "autoload": {
