@@ -15,16 +15,25 @@ class KernelEvents
 {
     /**
      * Handle the request.
+     * Event passed: \Water\Library\Kernel\Event\ResponseEvent
      */
     const REQUEST = 'kernel.request';
 
     /**
      * Generate view.
+     * Event passed: \Water\Library\Kernel\Event\ResponseFromControllerEvent
      */
     const VIEW = 'kernel.view';
 
     /**
+     * Filter response.
+     * Event passed: \Water\Library\Kernel\Event\FilterResponseEvent
+     */
+    const RESPONSE = 'kernel.response';
+
+    /**
      * Handle exception.
+     * Event passed: \Water\Library\Kernel\Event\ResponseFromExceptionEvent
      */
     const EXCEPTION = 'kernel.exception';
 }

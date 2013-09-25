@@ -43,10 +43,21 @@ class ExceptionListener implements SubscriberInterface
      */
     public function onKernelException(ResponseFromExceptionEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
-        $exception = $event->getException();
-        $request   = $event->getRequest();
+        $request          = $event->getRequest();
+        $exceptionRequest = $request->duplicate(array(),
+            array(
+                '_controller'   => $this->controller,
+                '_args'         => $event->getException(),
+            )
+        );
 
-        // TODO - Duplicate request with exception.
+        try {
+            $response = $event->getKernel()->handle($exceptionRequest);
+        } catch (\Exception $exception) {
+            return;
+        }
+
+        $event->setResponse($response);
     }
 
     /**

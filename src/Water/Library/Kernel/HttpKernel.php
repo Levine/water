@@ -9,6 +9,7 @@ namespace Water\Library\Kernel;
 use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Response;
 use Water\Library\Http\Request;
+use Water\Library\Kernel\Event\FilterResponseEvent;
 use Water\Library\Kernel\Event\ResponseEvent;
 use Water\Library\Kernel\Event\ResponseFromControllerEvent;
 use Water\Library\Kernel\Event\ResponseFromExceptionEvent;
@@ -91,7 +92,7 @@ class HttpKernel implements HttpKernelInterface
             $response = $event->getResponse();
         }
 
-        return $response;
+        return $this->filterResponse($request, $response);
     }
 
     /**
@@ -99,7 +100,7 @@ class HttpKernel implements HttpKernelInterface
      *
      * @param Request    $request
      * @param \Exception $exception
-     * @return Response|\Exception
+     * @return Response
      */
     protected function handleException(Request $request, \Exception $exception)
     {
@@ -107,9 +108,22 @@ class HttpKernel implements HttpKernelInterface
         $this->dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
 
         if ($event->hasResponse()) {
-            return $event->getResponse();
+            return $this->filterResponse($request, $event->getResponse());
         }
         return $exception;
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function filterResponse(Request $request, Response $response)
+    {
+        $event = new FilterResponseEvent($this, $request, $response);
+        $this->dispatcher->dispatch(KernelEvents::RESPONSE, $event);
+
+        return $event->getResponse();
     }
 
     // @codeCoverageIgnoreStart
