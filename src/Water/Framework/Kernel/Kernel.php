@@ -6,9 +6,11 @@
  */
 namespace Water\Framework\Kernel;
 
+use Water\Library\Bag\SimpleBag;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
 use Water\Library\Kernel\HttpKernelInterface;
+use Water\Library\ServiceManager\ServiceManager;
 
 /**
  * Class Kernel
@@ -23,12 +25,17 @@ abstract class Kernel
     private $httpKernel = null;
 
     /**
+     * @var ServiceManager
+     */
+    private $serviceManager = null;
+
+    /**
      * @var \ReflectionClass
      */
     private $reflection = null;
 
     /**
-     * @var array
+     * @var SimpleBag
      */
     private $config = array();
 
@@ -43,6 +50,11 @@ abstract class Kernel
     private $environment = '';
 
     /**
+     * @var bool
+     */
+    private $debug = true;
+
+    /**
      * @var array
      */
     private $modules = array();
@@ -51,13 +63,52 @@ abstract class Kernel
      * Constructor.
      *
      * @param string $environment
+     * @param bool   $debug
      */
-    public function __construct($environment = 'dev')
+    public function __construct($environment = 'dev', $debug = true)
     {
-        $this->environment = $environment;
-        $this->modules     = $this->registerModules();
+        $this->environment = (string) $environment;
+        $this->debug       = (boolean) $debug;
+        $this->modules     = (array) $this->registerModules();
         $this->setOptions();
         $this->setParameters();
+        $this->initialize();
+    }
+
+    /**
+     * Initialize the current Kernel.
+     */
+    private function initialize()
+    {
+        $this->setServiceManager();
+
+        $this->extendServiceManager();
+    }
+
+    /**
+     * Define the service manager instance.
+     */
+    private function setServiceManager()
+    {
+        $frameworkConfig = new SimpleBag($this->config->get('framework', array()));
+
+        if ($frameworkConfig->has('service_manager.class')) {
+            if (is_object($class = $frameworkConfig->get('service_manager.class'))) {
+                $this->serviceManager = $class;
+            } else {
+                $this->serviceManager = new $class();
+            }
+        } else {
+            $this->serviceManager = new ServiceManager();
+        }
+    }
+
+    /**
+     * Extend the container with Module extensions.
+     */
+    private function extendServiceManager()
+    {
+
     }
 
     /**
@@ -83,7 +134,7 @@ abstract class Kernel
     protected function setOptions()
     {
         $configFile   = dirname($this->getReflection()->getFileName()) . '/config/application.config.php';
-        $this->config = (file_exists($configFile)) ? include $configFile : array();
+        $this->config = new SimpleBag((file_exists($configFile)) ? (array) include $configFile : array());
     }
 
     /**
@@ -92,8 +143,10 @@ abstract class Kernel
     public function setParameters()
     {
         $this->parameters['kernel_environment'] = $this->environment;
+        $this->parameters['kernel_debug']       = $this->debug;
         $this->parameters['kernel_dir']         = dirname($this->getReflection()->getFileName());
         $this->parameters['root_dir']           = dirname($this->parameters['kernel_dir']);
+        $this->parameters = array_merge((array) $this->config->get('parameters', array()), $this->parameters);
     }
 
     /**
