@@ -5,8 +5,8 @@
  * Time: 21:18
  */
 namespace Water\Library\DependencyInjection;
+
 use Water\Library\DependencyInjection\Exception\InvalidArgumentException;
-use Water\Library\ServiceManager\Tests\Resource\Service;
 
 /**
  * Class ContainerBuilder
