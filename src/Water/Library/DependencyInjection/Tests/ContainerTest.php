@@ -39,8 +39,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container->addParameter('index', 'value')
                   ->addParameter('otherIndex', 'otherValue');
 
+        $this->assertTrue($container->hasParameter('index'));
         $this->assertEquals('value', $container->getParameter('index'));
         $this->assertEquals('otherValue', $container->getParameter('otherIndex'));
+        $this->assertFalse($container->hasParameter('notExistParameter'));
         $this->assertNull($container->getParameter('notExistParameter'));
 
         $container->setParameters($paramenters = array('index' => 'value'));

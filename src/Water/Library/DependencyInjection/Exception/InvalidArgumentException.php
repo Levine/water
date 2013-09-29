@@ -1,18 +1,18 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 27/09/13
- * Time: 17:25
+ * Date: 28/09/13
+ * Time: 21:59
  */
 namespace Water\Library\DependencyInjection\Exception;
 
 use \InvalidArgumentException as NativeInvalidArgumentException;
 
 /**
- * Class NotAllowOverrideException
+ * Class InvalidArgumentException
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class NotAllowOverrideException extends NativeInvalidArgumentException implements ExceptionInterface
+class InvalidArgumentException extends NativeInvalidArgumentException implements ExceptionInterface
 {
 }

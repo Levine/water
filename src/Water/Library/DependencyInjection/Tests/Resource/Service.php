@@ -21,4 +21,24 @@ class Service
         $this->arg1 = $arg1;
         $this->arg2 = $arg2;
     }
+
+    /**
+     * @param int $arg1
+     * @return Service
+     */
+    public function setArg1($arg1)
+    {
+        $this->arg1 = $arg1;
+        return $this;
+    }
+
+    /**
+     * @param int $arg2
+     * @return Service
+     */
+    public function setArg2($arg2)
+    {
+        $this->arg2 = $arg2;
+        return $this;
+    }
 }

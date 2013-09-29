@@ -24,16 +24,93 @@ class ServiceDefinition
     private $arguments = array();
 
     /**
+     * @var array
+     */
+    private $methodsCall = array();
+    private $tags = array();
+
+    /**
      * Constructor.
      *
      * @param string $class
      * @param array  $args
+     * @param array  $tags
      */
-    public function __construct($class, array $args = array())
+    public function __construct($class, array $args = array(), array $tags = array())
     {
         $this->class     = $class;
         $this->arguments = $args;
+        $this->tags      = $tags;
     }
+
+    // @codeCoverageIgnoreStart
+    /**
+     * @param $methodName
+     * @param array $args
+     * @return ServiceDefinition
+     */
+    public function addMethodCall($methodName, array $args = array())
+    {
+        unset($this->methodsCall[$methodName]);
+        $this->methodsCall[$methodName] = $args;
+        return $this;
+    }
+
+    /**
+     * @param array $methodsCall
+     * @return ServiceDefinition
+     */
+    public function setMethodsCall($methodsCall)
+    {
+        $this->methodsCall = $methodsCall;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMethodsCall()
+    {
+        return $this->methodsCall;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasTag($name)
+    {
+        return (array_search($name, $this->tags) !== false) ? true : false;
+    }
+
+    /**
+     * @param $tag
+     * @return ServiceDefinition
+     */
+    public function addTag($tag)
+    {
+        $this->tags[] = $tag;
+        return $this;
+    }
+
+    /**
+     * @param array $tags
+     * @return ServiceDefinition
+     */
+    public function setTags($tags)
+    {
+        $this->tags = (array) $tags;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
 
     /**
      * Define argument to the service constructor.
@@ -59,7 +136,6 @@ class ServiceDefinition
         return $this;
     }
 
-    // @codeCoverageIgnoreStart
     /**
      * @return array
      */

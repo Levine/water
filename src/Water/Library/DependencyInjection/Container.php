@@ -46,6 +46,15 @@ class Container
 
     /**
      * @param string $id
+     * @return bool
+     */
+    public function hasParameter($id)
+    {
+        return isset($this->parameters[$id]);
+    }
+
+    /**
+     * @param string $id
      * @param mixed  $value
      * @return Container
      */
