@@ -6,11 +6,14 @@
  */
 namespace Water\Framework\Kernel;
 
+use Water\Framework\Exception\InvalidModuleException;
+use Water\Framework\Kernel\Module\ModuleInterface;
 use Water\Library\Bag\SimpleBag;
+use Water\Library\DependencyInjection\ContainerBuilder;
+use Water\Library\DependencyInjection\ContainerExtensionInterface;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
 use Water\Library\Kernel\HttpKernelInterface;
-use Water\Library\ServiceManager\ServiceManager;
 
 /**
  * Class Kernel
@@ -25,9 +28,9 @@ abstract class Kernel
     private $httpKernel = null;
 
     /**
-     * @var ServiceManager
+     * @var ContainerBuilder
      */
-    private $serviceManager = null;
+    private $container = null;
 
     /**
      * @var \ReflectionClass
@@ -72,6 +75,7 @@ abstract class Kernel
         $this->modules     = (array) $this->registerModules();
         $this->setOptions();
         $this->setParameters();
+
         $this->initialize();
     }
 
@@ -80,35 +84,36 @@ abstract class Kernel
      */
     private function initialize()
     {
-        $this->setServiceManager();
+        $this->container = new ContainerBuilder();
 
-        $this->extendServiceManager();
+        $this->extendContainer();
+
+        $this->container->compile();
     }
 
-    /**
-     * Define the service manager instance.
-     */
-    private function setServiceManager()
+    private function extendContainer()
     {
-        $frameworkConfig = new SimpleBag($this->config->get('framework', array()));
-
-        if ($frameworkConfig->has('service_manager.class')) {
-            if (is_object($class = $frameworkConfig->get('service_manager.class'))) {
-                $this->serviceManager = $class;
-            } else {
-                $this->serviceManager = new $class();
+        foreach ($this->modules as $module) {
+            if (!($module instanceof ModuleInterface)) {
+                throw new InvalidModuleException(sprintf(
+                    'The "%s", have to implement \Water\Framework\Module\ModuleInterface.',
+                    (is_object($module)) ? get_class($module) : gettype($module)
+                ));
             }
-        } else {
-            $this->serviceManager = new ServiceManager();
+
+            $module->setContainer($this->container);
+
+            $extensionName = str_replace('Module', 'Extension', $module->getShortName());
+            $class         = $module->getNamespaceName() . '\\Extension\\' . $extensionName;
+
+            if (class_exists($class, true)) {
+                $extension = new $class();
+                if (!($extension instanceof ContainerExtensionInterface)) {
+                    // TODO - throw exception.
+                }
+                $extension->extend($this->container);
+            }
         }
-    }
-
-    /**
-     * Extend the container with Module extensions.
-     */
-    private function extendServiceManager()
-    {
-
     }
 
     /**
@@ -129,7 +134,7 @@ abstract class Kernel
     }
 
     /**
-     * @return Kernel
+     * Define default options.
      */
     protected function setOptions()
     {
@@ -138,13 +143,14 @@ abstract class Kernel
     }
 
     /**
-     * @return Kernel
+     * Define default parameters.
      */
-    public function setParameters()
+    protected function setParameters()
     {
         $this->parameters['kernel_environment'] = $this->environment;
         $this->parameters['kernel_debug']       = $this->debug;
         $this->parameters['kernel_dir']         = dirname($this->getReflection()->getFileName());
+        $this->parameters['cache_dir']          = $this->parameters['kernel_dir'] . '/cache/' . $this->environment;
         $this->parameters['root_dir']           = dirname($this->parameters['kernel_dir']);
         $this->parameters = array_merge((array) $this->config->get('parameters', array()), $this->parameters);
     }
@@ -165,6 +171,9 @@ abstract class Kernel
      */
     public function getHttpKernel()
     {
+        if ($this->httpKernel === null) {
+            $this->httpKernel = $this->container->get('http_kernel');
+        }
         return $this->httpKernel;
     }
 }

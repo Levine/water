@@ -6,12 +6,14 @@
  */
 namespace Water\Framework\Kernel\Module;
 
+use Water\Library\DependencyInjection\ContainerAwareInterface;
+
 /**
  * Interface ModuleInterface
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-interface ModuleInterface
+interface ModuleInterface extends ContainerAwareInterface
 {
     /**
      * @return \Reflection

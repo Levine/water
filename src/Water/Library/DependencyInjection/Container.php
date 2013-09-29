@@ -14,7 +14,7 @@ use Water\Library\DependencyInjection\Exception\NotAllowOverrideException;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class Container
+class Container implements ContainerInterface
 {
     /**
      * @var ParameterBag
@@ -45,8 +45,7 @@ class Container
     }
 
     /**
-     * @param string $id
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasParameter($id)
     {
@@ -54,9 +53,7 @@ class Container
     }
 
     /**
-     * @param string $id
-     * @param mixed  $value
-     * @return Container
+     * {@inheritdoc}
      */
     public function addParameter($id, $value)
     {
@@ -65,8 +62,7 @@ class Container
     }
 
     /**
-     * @param array $array
-     * @return Container
+     * {@inheritdoc}
      */
     public function setParameters(array $array)
     {
@@ -75,8 +71,7 @@ class Container
     }
 
     /**
-     * @param string $id
-     * @return mixed|null
+     * {@inheritdoc}
      */
     public function getParameter($id)
     {
@@ -84,7 +79,7 @@ class Container
     }
 
     /**
-     * @return ParameterBag
+     * {@inheritdoc}
      */
     public function getParameters()
     {
@@ -92,8 +87,7 @@ class Container
     }
 
     /**
-     * @param string $id
-     * @return bool
+     * {@inheritdoc}
      */
     public function has($id)
     {
@@ -101,8 +95,7 @@ class Container
     }
 
     /**
-     * @param $id
-     * @return null|mixed
+     * {@inheritdoc}
      */
     public function get($id)
     {
@@ -113,13 +106,7 @@ class Container
     }
 
     /**
-     * Define one service specified by id.
-     *
-     * @param string $id
-     * @param mixed $service
-     * @return Container
-     *
-     * @throws NotAllowOverrideException
+     * {@inheritdoc}
      */
     public function set($id, $service)
     {

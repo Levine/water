@@ -6,12 +6,14 @@
  */
 namespace Water\Framework\Kernel\Module;
 
+use Water\Library\DependencyInjection\ContainerAware;
+
 /**
  * Class AbstractModule
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-abstract class AbstractModule implements ModuleInterface
+abstract class AbstractModule extends ContainerAware implements ModuleInterface
 {
     /**
      * @var \ReflectionClass
