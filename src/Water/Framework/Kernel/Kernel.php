@@ -96,7 +96,7 @@ abstract class Kernel
         foreach ($this->modules as $module) {
             if (!($module instanceof ModuleInterface)) {
                 throw new InvalidModuleException(sprintf(
-                    'The "%s", have to implement \Water\Framework\Module\ModuleInterface.',
+                    'The module "%s", have to implement \Water\Framework\Module\ModuleInterface.',
                     (is_object($module)) ? get_class($module) : gettype($module)
                 ));
             }
