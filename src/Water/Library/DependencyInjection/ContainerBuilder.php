@@ -102,6 +102,9 @@ class ContainerBuilder extends Container
         return $serviceIds;
     }
 
+    /**
+     * Generate all services.
+     */
     public function compile()
     {
         foreach ($this->servicesDefinitions as $id => $serviceDefinition) {
@@ -110,6 +113,13 @@ class ContainerBuilder extends Container
         $this->compiled = true;
     }
 
+    /**
+     * Create a service using the ServiceDefinition information.
+     *
+     * @param string            $id
+     * @param ServiceDefinition $serviceDefinition
+     * @throws InvalidArgumentException
+     */
     private function createService($id, ServiceDefinition $serviceDefinition)
     {
         $class = $serviceDefinition->getClass();
