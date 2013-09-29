@@ -19,17 +19,17 @@ class Container
     /**
      * @var ParameterBag
      */
-    private $parameters = null;
+    protected $parameters = null;
 
     /**
      * @var array
      */
-    private $services = array();
+    protected $services = array();
 
     /**
      * @var bool
      */
-    private $allowOverride = false;
+    protected $allowOverride = false;
 
     /**
      * Constructor.

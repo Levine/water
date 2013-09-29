@@ -65,6 +65,66 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2', $service->arg2);
     }
 
+    public function testGetWithReferences()
+    {
+        $container = new ContainerBuilder();
+
+        $container->addParameter('attr', 'value');
+
+        $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Service')
+                  ->addArgument('arg1')
+                  ->addArgument('arg2');
+
+        $container->register('service_with_reference', '\Water\Library\DependencyInjection\Tests\Resource\ServiceWithReference')
+                  ->addArgument('#service')
+                  ->addArgument('%attr%');
+
+        $serviceWithReference = $container->get('service_with_reference');
+        $this->assertInstanceOf(
+            '\Water\Library\DependencyInjection\Tests\Resource\Service',
+            $serviceWithReference->service
+        );
+        $this->assertEquals('value', $serviceWithReference->attr);
+
+        $container = new ContainerBuilder();
+
+        $container->addParameter('attr', 'value');
+
+        $container->register('service_with_reference', '\Water\Library\DependencyInjection\Tests\Resource\ServiceWithReference')
+                  ->addArgument('#service')
+                  ->addArgument('%attr%');
+
+        $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Service')
+                  ->addArgument('arg1')
+                  ->addArgument('arg2');
+
+        $serviceWithReference = $container->get('service_with_reference');
+        $this->assertInstanceOf(
+            '\Water\Library\DependencyInjection\Tests\Resource\Service',
+            $serviceWithReference->service
+        );
+        $this->assertEquals('value', $serviceWithReference->attr);
+    }
+
+    public function testGetWithReferenceInvalidArgumentException()
+    {
+        $container = new ContainerBuilder();
+
+        $container->addParameter('attr', 'value');
+
+        $container->register('service_with_reference', '\Water\Library\DependencyInjection\Tests\Resource\ServiceWithReference')
+                  ->addArgument('#service')
+                  ->addArgument('%attr%');
+
+        $this->setExpectedException(
+            '\Water\Library\DependencyInjection\Exception\InvalidArgumentException',
+            'The service specified by id "service", not exist. '
+            . 'It was called when trying to create "\Water\Library\DependencyInjection\Tests\Resource\ServiceWithReference" '
+            . 'specified by id "service_with_reference".'
+        );
+        $container->get('service_with_reference');
+    }
+
     public function testGetServicesByTag()
     {
         $container = new ContainerBuilder();
