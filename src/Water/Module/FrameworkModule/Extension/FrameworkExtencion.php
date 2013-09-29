@@ -21,6 +21,9 @@ class FrameworkExtension implements ContainerExtensionInterface
      */
     public function extend(ContainerBuilder $container)
     {
+        $container->register('resolver', '\Water\Module\FrameworkModule\Resolver\ControllerResolver')
+                  ->addArgument('#service_container');
 
+        $container->register('event_dispatcher', '\Water\Library\EventDispatcher\EventDispatcher');
     }
 }

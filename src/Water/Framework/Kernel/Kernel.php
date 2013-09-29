@@ -6,8 +6,9 @@
  */
 namespace Water\Framework\Kernel;
 
+use Water\Framework\Exception\InvalidContainerExtensionException;
 use Water\Framework\Exception\InvalidModuleException;
-use Water\Framework\Kernel\Module\ModuleInterface;
+use Water\Framework\Module\ModuleInterface;
 use Water\Library\Bag\SimpleBag;
 use Water\Library\DependencyInjection\ContainerBuilder;
 use Water\Library\DependencyInjection\ContainerExtensionInterface;
@@ -73,7 +74,7 @@ abstract class Kernel
         $this->environment = (string) $environment;
         $this->debug       = (boolean) $debug;
         $this->modules     = (array) $this->registerModules();
-        $this->setOptions();
+        $this->setConfig();
         $this->setParameters();
 
         $this->initialize();
@@ -84,17 +85,26 @@ abstract class Kernel
      */
     private function initialize()
     {
-        $this->container = new ContainerBuilder();
+        $this->container = (isset($this->parameters['service_container.class']))
+                         ? new $this->parameters['service_container.class']()
+                         : new ContainerBuilder();
+        $this->container->set('kernel', $this);
+        $this->container->setParameters($this->parameters);
 
         $this->extendContainer();
 
         $this->container->compile();
     }
 
+    /**
+     * Extend the current container with modules definitions.
+     *
+     * @throws InvalidModuleException
+     */
     private function extendContainer()
     {
         foreach ($this->modules as $module) {
-            if (!($module instanceof ModuleInterface)) {
+            if (!is_a($module, '\Water\Framework\Module\ModuleInterface')) {
                 throw new InvalidModuleException(sprintf(
                     'The module "%s", have to implement \Water\Framework\Module\ModuleInterface.',
                     (is_object($module)) ? get_class($module) : gettype($module)
@@ -108,10 +118,9 @@ abstract class Kernel
 
             if (class_exists($class, true)) {
                 $extension = new $class();
-                if (!($extension instanceof ContainerExtensionInterface)) {
-                    // TODO - throw exception.
+                if (is_a($extension, '\Water\Library\DependencyInjection\ContainerExtensionInterface')) {
+                    $extension->extend($this->container);
                 }
-                $extension->extend($this->container);
             }
         }
     }
@@ -134,9 +143,9 @@ abstract class Kernel
     }
 
     /**
-     * Define default options.
+     * Define default configurations.
      */
-    protected function setOptions()
+    protected function setConfig()
     {
         $configFile   = dirname($this->getReflection()->getFileName()) . '/config/application.config.php';
         $this->config = new SimpleBag((file_exists($configFile)) ? (array) include $configFile : array());
@@ -176,4 +185,54 @@ abstract class Kernel
         }
         return $this->httpKernel;
     }
+
+    // @codeCoverageIgnoreStart
+    /**
+     * @return ContainerBuilder
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @return \Water\Library\Bag\SimpleBag
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * @return array
+     */
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+    // @codeCoverageIgnoreEnd
 }

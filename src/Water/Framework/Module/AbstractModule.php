@@ -4,7 +4,7 @@
  * Date: 26/09/13
  * Time: 14:40
  */
-namespace Water\Framework\Kernel\Module;
+namespace Water\Framework\Module;
 
 use Water\Library\DependencyInjection\ContainerAware;
 

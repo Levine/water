@@ -96,7 +96,7 @@ class ContainerBuilder extends Container
      * @param string $name
      * @return array
      */
-    public function getServicesByTag($name)
+    public function getServiceIdsByTag($name)
     {
         $serviceIds = array();
         foreach ($this->servicesDefinitions as $id => $serviceDefinition) {

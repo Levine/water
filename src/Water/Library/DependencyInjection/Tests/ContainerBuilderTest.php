@@ -134,7 +134,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->register('service3', 'Service3')->addTag('tag');
         $container->register('service4', 'Service4')->addTag('test');
 
-        $this->assertCount(3, $container->getServicesByTag('tag'));
+        $this->assertCount(3, $container->getServiceIdsByTag('tag'));
     }
 
     public function testGetInvalidArgumentException()
