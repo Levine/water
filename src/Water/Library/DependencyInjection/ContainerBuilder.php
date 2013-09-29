@@ -165,6 +165,8 @@ class ContainerBuilder extends Container
     }
 
     /**
+     * Prepare the arguments.
+     *
      * @param string            $id
      * @param ServiceDefinition $parent
      * @param array             $args
