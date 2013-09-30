@@ -16,7 +16,6 @@
 
     <testsuites>
         <testsuite name="Water Test Suite">
-            <directory suffix="Test.php">./src/Water/Framework/Tests</directory>
             <directory suffix="Test.php">./src/Water/Library/*/Tests</directory>
         </testsuite>
     </testsuites>

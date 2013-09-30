@@ -1,13 +1,11 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 27/09/13
- * Time: 15:55
+ * Date: 30/09/13
+ * Time: 14:44
  */
 namespace Water\Library\DependencyInjection\Tests;
-
 use Water\Library\DependencyInjection\Container;
-use Water\Library\DependencyInjection\Tests\Resource\Service;
 
 /**
  * Class ContainerTest
@@ -26,42 +24,48 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    public function testConstruct()
+    public function testParameters()
     {
-        $container = new Container();
-
-        $this->assertInstanceOf('Water\Library\DependencyInjection\Container', $container);
-    }
-
-    public function testParameter()
-    {
-        $container = new Container();
-        $container->addParameter('index', 'value')
-                  ->addParameter('otherIndex', 'otherValue');
+        $container = new Container($parameter = array(
+            'index'      => 'value',
+            'otherIndex' => 'otherValue',
+        ));
 
         $this->assertTrue($container->hasParameter('index'));
+        $this->assertFalse($container->hasParameter('notExist'));
         $this->assertEquals('value', $container->getParameter('index'));
-        $this->assertEquals('otherValue', $container->getParameter('otherIndex'));
-        $this->assertFalse($container->hasParameter('notExistParameter'));
-        $this->assertNull($container->getParameter('notExistParameter'));
+        $this->assertEquals($parameter, $container->getParameters()->toArray());
 
-        $container->setParameters($paramenters = array('index' => 'value'));
+        $parameter['someIndex'] = 'someValue';
+        $container->addParameter('someIndex', 'someValue');
 
-        $this->assertEquals($paramenters, (array) $container->getParameters());
+        $this->assertTrue($container->hasParameter('someIndex'));
+        $this->assertEquals('someValue', $container->getParameter('someIndex'));
+
+        $oldParameters = $container->setParameters($newParameters = array('index' => 'value'));
+
+        $this->assertEquals($oldParameters, $parameter);
+        $this->assertEquals($newParameters, $container->getParameters()->toArray());
     }
 
-    public function testHasAndSetAndGet()
+    public function testServices()
     {
-        $container = new Container(array('index' => 'value'));
-        $container->set('service', $service = new Service(1, 2));
+        $container = new Container();
+        $container->addService('service', $service = function () { return true; });
 
-        $this->assertTrue($container->has('service'));
-        $this->assertFalse($container->has('notExistService'));
-        $this->assertEquals($container, $container->get('service_container'));
-        $this->assertEquals($service, $container->get('service'));
-        $this->assertNull($container->get('notExistService'));
+        $this->assertTrue($container->hasService('service'));
+        $this->assertEquals($service, $container->getService('service'));
+        $this->assertEquals(
+            $expected = array('service_container' => $container,'service' => $service),
+            $container->getServices()->toArray()
+        );
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\NotAllowOverrideException');
-        $container->set('service', null);
+        $oldServices = $container->setServices(array(
+            'service'       => $service,
+            'other_service' => function () { return false; },
+        ));
+
+        $this->assertTrue($container->hasService('other_service'));
+        $this->assertEquals($oldServices, $expected);
     }
 }

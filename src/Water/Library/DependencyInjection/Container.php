@@ -1,13 +1,13 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 27/09/13
- * Time: 15:51
+ * Date: 30/09/13
+ * Time: 14:30
  */
 namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\ParameterBag;
-use Water\Library\DependencyInjection\Exception\NotAllowOverrideException;
+use Water\Library\DependencyInjection\Bag\ServiceBag;
 
 /**
  * Class Container
@@ -22,14 +22,9 @@ class Container implements ContainerInterface
     protected $parameters = null;
 
     /**
-     * @var array
+     * @var ServiceBag
      */
-    protected $services = array();
-
-    /**
-     * @var bool
-     */
-    protected $allowOverride = false;
+    protected $services = null;
 
     /**
      * Constructor.
@@ -38,10 +33,10 @@ class Container implements ContainerInterface
      */
     public function __construct(array $parameters = array())
     {
-        $this->parameters    = new ParameterBag($parameters);
-        $this->allowOverride = false;
+        $this->parameters = new ParameterBag($parameters);
+        $this->services   = new ServiceBag();
 
-        $this->set('service_container', $this);
+        $this->addService('service_container', $this);
     }
 
     /**
@@ -49,7 +44,16 @@ class Container implements ContainerInterface
      */
     public function hasParameter($id)
     {
-        return isset($this->parameters[$id]);
+        return $this->parameters->has($id);
+    }
+
+    /**
+     * @param array $parameters
+     * @return array
+     */
+    public function setParameters(array $parameters)
+    {
+        return $this->parameters->fromArray($parameters);
     }
 
     /**
@@ -64,23 +68,6 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function setParameters(array $array)
-    {
-        $this->parameters->fromArray($array);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameter($id)
-    {
-        return $this->parameters->get($id, ParameterBag::DEFAULT_VALUE);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         return $this->parameters;
@@ -89,34 +76,49 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function has($id)
+    public function getParameter($id)
     {
-        return (isset($this->services[$id]));
+        return $this->parameters->get($id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($id)
+    public function hasService($id)
     {
-        if (isset($this->services[$id])) {
-            return $this->services[$id];
-        }
-        return null;
+        return $this->services->has($id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($id, $service)
+    public function setServices(array $services)
     {
-        if (isset($this->services[$id]) && !$this->allowOverride) {
-            throw new NotAllowOverrideException(sprintf(
-                'The service id "%s" is already being used by other service.',
-                $id
-            ));
-        }
-        $this->services[$id] = $service;
+        return $this->services->fromArray($services);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addService($id, $service)
+    {
+        $this->services->set($id, $service);
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getService($id)
+    {
+        return $this->services->get($id);
     }
 }

@@ -7,7 +7,7 @@
 namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\ParameterBag;
-use Water\Library\DependencyInjection\Exception\NotAllowOverrideException;
+use Water\Library\DependencyInjection\Bag\ServiceBag;
 
 /**
  * Interface ContainerInterface
@@ -23,23 +23,17 @@ interface ContainerInterface
     public function hasParameter($id);
 
     /**
+     * @param array $parameters
+     * @return array
+     */
+    public function setParameters(array $parameters);
+
+    /**
      * @param string $id
      * @param mixed  $value
-     * @return Container
+     * @return ContainerInterface
      */
     public function addParameter($id, $value);
-
-    /**
-     * @param array $array
-     * @return Container
-     */
-    public function setParameters(array $array);
-
-    /**
-     * @param string $id
-     * @return mixed|null
-     */
-    public function getParameter($id);
 
     /**
      * @return ParameterBag
@@ -48,24 +42,41 @@ interface ContainerInterface
 
     /**
      * @param string $id
-     * @return bool
+     * @return mixed|null
      */
-    public function has($id);
+    public function getParameter($id);
 
     /**
-     * @param $id
-     * @return null|mixed
+     * @param string $id
+     * @return bool
      */
-    public function get($id);
+    public function hasService($id);
+
+    /**
+     * @param array $services
+     * @return array
+     */
+    public function setServices(array $services);
 
     /**
      * Define one service specified by id.
      *
      * @param string $id
-     * @param mixed $service
-     * @return Container
-     *
-     * @throws NotAllowOverrideException
+     * @param mixed  $service
+     * @return ContainerInterface
      */
-    public function set($id, $service);
+    public function addService($id, $service);
+
+    /**
+     * Return all services.
+     *
+     * @return ServiceBag
+     */
+    public function getServices();
+
+    /**
+     * @param $id
+     * @return mixed|null
+     */
+    public function getService($id);
 }

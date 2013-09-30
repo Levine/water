@@ -1,8 +1,8 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 29/09/13
- * Time: 13:44
+ * Date: 30/09/13
+ * Time: 15:27
  */
 namespace Water\Library\DependencyInjection;
 
@@ -20,6 +20,7 @@ abstract class ContainerAware implements ContainerAwareInterface
 
     /**
      * {@inheritdoc}
+     * @return AbstractContainerAware
      */
     public function setContainer(ContainerInterface $container)
     {

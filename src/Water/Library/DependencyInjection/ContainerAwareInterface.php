@@ -1,8 +1,8 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 29/09/13
- * Time: 13:39
+ * Date: 30/09/13
+ * Time: 15:26
  */
 namespace Water\Library\DependencyInjection;
 
@@ -14,8 +14,6 @@ namespace Water\Library\DependencyInjection;
 interface ContainerAwareInterface
 {
     /**
-     * Define container.
-     *
      * @param ContainerInterface $container
      * @return ContainerAwareInterface
      */
