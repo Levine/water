@@ -8,6 +8,8 @@ namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\ParameterBag;
 use Water\Library\DependencyInjection\Bag\ServiceBag;
+use Water\Library\DependencyInjection\Exception\NotExistParameterException;
+use Water\Library\DependencyInjection\Exception\NotExistServiceException;
 
 /**
  * Class Container
@@ -36,7 +38,7 @@ class Container implements ContainerInterface
         $this->parameters = new ParameterBag($parameters);
         $this->services   = new ServiceBag();
 
-        $this->addService('service_container', $this);
+        $this->add('service_container', $this);
     }
 
     /**
@@ -78,13 +80,20 @@ class Container implements ContainerInterface
      */
     public function getParameter($id)
     {
-        return $this->parameters->get($id);
+        if ($this->parameters->has($id)) {
+            return $this->parameters->get($id);
+        }
+
+        throw new NotExistParameterException(sprintf(
+            'Not exist parameter with id "%s".',
+            $id
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasService($id)
+    public function has($id)
     {
         return $this->services->has($id);
     }
@@ -100,7 +109,7 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function addService($id, $service)
+    public function add($id, $service)
     {
         $this->services->set($id, $service);
         return $this;
@@ -117,8 +126,15 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function getService($id)
+    public function get($id)
     {
-        return $this->services->get($id);
+        if ($this->services->has($id)) {
+            return $this->services->get($id);
+        }
+
+        throw new NotExistServiceException(sprintf(
+            'Not exist service with id "%s".',
+            $id
+        ));
     }
 }

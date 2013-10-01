@@ -50,7 +50,7 @@ interface ContainerInterface
      * @param string $id
      * @return bool
      */
-    public function hasService($id);
+    public function has($id);
 
     /**
      * @param array $services
@@ -65,7 +65,7 @@ interface ContainerInterface
      * @param mixed  $service
      * @return ContainerInterface
      */
-    public function addService($id, $service);
+    public function add($id, $service);
 
     /**
      * Return all services.
@@ -78,5 +78,5 @@ interface ContainerInterface
      * @param $id
      * @return mixed|null
      */
-    public function getService($id);
+    public function get($id);
 }

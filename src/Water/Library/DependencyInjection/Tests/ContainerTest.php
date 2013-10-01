@@ -48,13 +48,21 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($newParameters, $container->getParameters()->toArray());
     }
 
+    public function testNotExistParameterException()
+    {
+        $container = new Container(array('index' => 'value'));
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\NotExistParameterException');
+        $container->getParameter('notExist');
+    }
+
     public function testServices()
     {
         $container = new Container();
-        $container->addService('service', $service = function () { return true; });
+        $container->add('service', $service = function () { return true; });
 
-        $this->assertTrue($container->hasService('service'));
-        $this->assertEquals($service, $container->getService('service'));
+        $this->assertTrue($container->has('service'));
+        $this->assertEquals($service, $container->get('service'));
         $this->assertEquals(
             $expected = array('service_container' => $container,'service' => $service),
             $container->getServices()->toArray()
@@ -65,7 +73,16 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             'other_service' => function () { return false; },
         ));
 
-        $this->assertTrue($container->hasService('other_service'));
+        $this->assertTrue($container->has('other_service'));
         $this->assertEquals($oldServices, $expected);
+    }
+
+    public function testNotExistServiceException()
+    {
+        $container = new Container();
+        $container->add('service', $service = function () { return true; });
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\NotExistServiceException');
+        $container->get('notExist');
     }
 }
