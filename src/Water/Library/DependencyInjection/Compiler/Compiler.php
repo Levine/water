@@ -4,18 +4,18 @@
  * Date: 30/09/13
  * Time: 14:16
  */
-namespace Water\Library\DependencyInjection\CompileProcessor;
+namespace Water\Library\DependencyInjection\Compiler;
 
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
-use Water\Library\DependencyInjection\CompileProcessor\Process\ProcessInterface;
+use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
 use Water\Library\DependencyInjection\Bag\ProcessBag;
 
 /**
- * Class CompileProcessor
+ * Class Compiler
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class CompileProcessor implements CompileProcessorInterface
+class Compiler implements CompilerInterface
 {
     /**
      * @var ProcessBag
@@ -38,7 +38,7 @@ class CompileProcessor implements CompileProcessorInterface
     public function compile(ContainerBuilderInterface $container)
     {
         foreach ($this->processes as $process) {
-            if (is_a($process, 'Water\Library\DependencyInjection\CompileProcessor\Process\ProcessInterface')) {
+            if (is_a($process, '\Water\Library\DependencyInjection\Compiler\Process\ProcessInterface')) {
                 $process->process($container);
             }
         }
@@ -55,7 +55,7 @@ class CompileProcessor implements CompileProcessorInterface
 
     /**
      * @param ProcessInterface $process
-     * @return CompileProcessorInterface
+     * @return CompilerInterface
      */
     public function addProcess(ProcessInterface $process)
     {

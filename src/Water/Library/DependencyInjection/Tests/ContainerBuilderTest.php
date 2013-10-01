@@ -7,6 +7,7 @@
 namespace Water\Library\DependencyInjection\Tests;
 
 use Water\Library\DependencyInjection\ContainerBuilder;
+use Water\Library\DependencyInjection\ContainerBuilderInterface;
 use Water\Library\DependencyInjection\Definition;
 
 /**
@@ -24,6 +25,38 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         parent::tearDown();
+    }
+
+    private function getCompilerMock()
+    {
+        $compiler = $this->getMock(
+            '\Water\Library\DependencyInjection\Compiler\CompilerInterface',
+            array('setProcesses', 'addProcess', 'getProcesses', 'compile')
+        );
+
+        $compiler->expects($this->any())
+                 ->method('addProcess')
+                 ->with($this->isInstanceOf('\Water\Library\DependencyInjection\Compiler\Process\ProcessInterface'));
+
+        $compiler->expects($this->any())
+                 ->method('compile')
+                 ->with($this->isInstanceOf('Water\Library\DependencyInjection\ContainerBuilderInterface'));
+
+        return $compiler;
+    }
+
+    private function getProcessMock()
+    {
+        $process = $this->getMock(
+            '\Water\Library\DependencyInjection\Compiler\Process\ProcessInterface',
+            array('process')
+        );
+
+        $process->expects($this->any())
+                ->method('process')
+                ->with($this->isInstanceOf('\Water\Library\DependencyInjection\ContainerBuilderInterface'));
+
+        return $process;
     }
 
     public function testDefinition()
@@ -45,5 +78,16 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $container->getDefinitions()->toArray());
         $this->assertEquals($oldExpected, $oldActual);
+    }
+
+    public function testCompile()
+    {
+        $container = new ContainerBuilder();
+
+        $this->assertInstanceOf('\Water\Library\DependencyInjection\Compiler\CompilerInterface', $container->getCompiler());
+
+        $container->setCompiler($this->getCompilerMock());
+        $container->addProcess($this->getProcessMock());
+        $container->compile();
     }
 }

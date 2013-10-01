@@ -4,18 +4,18 @@
  * Date: 30/09/13
  * Time: 14:16
  */
-namespace Water\Library\DependencyInjection\CompileProcessor;
+namespace Water\Library\DependencyInjection\Compiler;
 
 use Water\Library\DependencyInjection\Bag\ProcessBag;
-use Water\Library\DependencyInjection\CompileProcessor\Process\ProcessInterface;
+use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
 
 /**
- * Interface CompileProcessorInterface
+ * Interface CompilerInterface
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-interface CompileProcessorInterface
+interface CompilerInterface
 {
     /**
      * Compile the ContainerBuilder.
@@ -32,7 +32,7 @@ interface CompileProcessorInterface
 
     /**
      * @param ProcessInterface $process
-     * @return CompileProcessorInterface
+     * @return CompilerInterface
      */
     public function addProcess(ProcessInterface $process);
 

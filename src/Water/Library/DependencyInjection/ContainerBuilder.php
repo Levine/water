@@ -7,9 +7,10 @@
 namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\DefinitionBag;
-use Water\Library\DependencyInjection\CompileProcessor\CompileProcessor;
-use Water\Library\DependencyInjection\CompileProcessor\CompileProcessorInterface;
-use Water\Library\DependencyInjection\CompileProcessor\Process\ProcessInterface;
+use Water\Library\DependencyInjection\Bag\ServiceBag;
+use Water\Library\DependencyInjection\Compiler\Compiler;
+use Water\Library\DependencyInjection\Compiler\CompilerInterface;
+use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
 
 /**
  * Class ContainerBuilder
@@ -24,7 +25,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     protected $definitions = null;
 
     /**
-     * @var CompileProcessorInterface
+     * @var CompilerInterface
      */
     protected $compileProcessor = null;
 
@@ -96,7 +97,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setCompileProcessor(CompileProcessorInterface $compileProcessor)
+    public function setCompiler(CompilerInterface $compileProcessor)
     {
         $this->compileProcessor = $compileProcessor;
     }
@@ -104,10 +105,10 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function getCompileProcessor()
+    public function getCompiler()
     {
         if ($this->compileProcessor === null) {
-            $this->compileProcessor = new CompileProcessor();
+            $this->compileProcessor = new Compiler();
         }
         return $this->compileProcessor;
     }
@@ -115,9 +116,9 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function addCompileProcess(ProcessInterface $process)
+    public function addProcess(ProcessInterface $process)
     {
-        $this->getCompileProcessor()->addProcess($process);
+        $this->getCompiler()->addProcess($process);
         return $this;
     }
 
@@ -126,6 +127,50 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function compile()
     {
+        $this->getCompiler()->compile($this);
+        return $this;
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getService($id)
+    {
+        if (ServiceBag::DEFAULT_VALUE !== $service = $this->getService($id)) {
+            return $service;
+        }
+
+        return $this->createService($id);
+    }
+
+    /**
+     * Create a service using the definitions.
+     *
+     * @param string $id
+     * @return mixed
+     */
+    private function createService($id)
+    {
+        if (DefinitionBag::DEFAULT_VALUE === $definition = $this->getDefinition($id)) {
+            // TODO throw exception not found service definition.
+        }
+
+        if (!class_exists($class = $definition->getClass(), true)) {
+            // TODO throw exception wrong class definition (not exist).
+        }
+
+        try {
+            $arguments       = $definition->getArguments();
+            $reflectionClass = new \ReflectionClass($class);
+            $service         = $reflectionClass->newInstanceArgs($arguments);
+
+            // TODO make de methods call, resolve parameters and referenced services.
+
+        } catch (\ReflectionException $e) {
+            // TODO handle exception.
+        }
+
+        $this->setServices($id, $service);
+        return $service;
     }
 }

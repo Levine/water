@@ -6,8 +6,8 @@
  */
 namespace Water\Library\DependencyInjection;
 
-use Water\Library\DependencyInjection\CompileProcessor\CompileProcessorInterface;
-use Water\Library\DependencyInjection\CompileProcessor\Process\ProcessInterface;
+use Water\Library\DependencyInjection\Compiler\CompilerInterface;
+use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
 
 /**
  * Interface ContainerBuilderInterface
@@ -55,21 +55,21 @@ interface ContainerBuilderInterface extends ContainerInterface
     public function getDefinition($id);
 
     /**
-     * @param CompileProcessorInterface $compileProcessor
+     * @param CompilerInterface $compileProcessor
      * @return ContainerBuilderInterface
      */
-    public function setCompileProcessor(CompileProcessorInterface $compileProcessor);
+    public function setCompiler(CompilerInterface $compileProcessor);
 
     /**
-     * @return CompileProcessorInterface
+     * @return CompilerInterface
      */
-    public function getCompileProcessor();
+    public function getCompiler();
 
     /**
      * @param ProcessInterface $process
      * @return ContainerBuilderInterface
      */
-    public function addCompileProcess(ProcessInterface $process);
+    public function addProcess(ProcessInterface $process);
 
     /**
      * Compile the current container builder.
