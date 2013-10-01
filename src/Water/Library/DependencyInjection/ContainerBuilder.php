@@ -162,6 +162,12 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         try {
             $arguments       = $definition->getArguments();
             $reflectionClass = new \ReflectionClass($class);
+
+            $reflectionMethod = $reflectionClass->getConstructor();
+            if ($reflectionMethod->getNumberOfRequiredParameters() > count($arguments)) {
+                // TODO throw exception. Can't instance de service, insufficient parameters to constructor.
+            }
+
             $service         = $reflectionClass->newInstanceArgs($arguments);
 
             // TODO make de methods call, resolve parameters and referenced services.
