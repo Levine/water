@@ -6,4 +6,6 @@ master: [![Build Status](https://travis-ci.org/PombaCorp/water.png?branch=master
 > you put water into a bottle, it becomes the bottle, you put it in a teapot, it becomes the teapot.
 > Now water can flow or it can crash. Be water, my friend.
 >
-> -- <cite>Bruce Lee</cite>
+> -- <cite>[Bruce Lee][1]</cite>
+
+[1]:http://vimeo.com/3191188
