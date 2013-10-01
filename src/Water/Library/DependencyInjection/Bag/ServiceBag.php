@@ -15,4 +15,19 @@ use Water\Library\Bag\SimpleBag;
  */
 class ServiceBag extends SimpleBag
 {
+    const SERVICE_REGEX = '/^#([^#]+)$/';
+
+    /**
+     * Resolve service id and return the real id, FALSE if service not exist.
+     *
+     * @param string $service
+     * @return mixed
+     */
+    public function resolve($service)
+    {
+        if (preg_match(self::SERVICE_REGEX, $service, $matches)) {
+            return $matches[1];
+        }
+        return false;
+    }
 }

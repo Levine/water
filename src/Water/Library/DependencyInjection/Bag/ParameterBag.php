@@ -15,4 +15,20 @@ use Water\Library\Bag\SimpleBag;
  */
 class ParameterBag extends SimpleBag
 {
+    const PARAMETER_REGEX = '/^%([^%]+)%$/';
+
+
+    /**
+     * Resolve name and return the real index, FALSE if index not exist.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function resolve($name)
+    {
+        if (preg_match(self::PARAMETER_REGEX, $name, $matches)) {
+            return $matches[1];
+        }
+        return false;
+    }
 }
