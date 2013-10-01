@@ -7,10 +7,13 @@
 namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\DefinitionBag;
+use Water\Library\DependencyInjection\Bag\ParameterBag;
 use Water\Library\DependencyInjection\Bag\ServiceBag;
 use Water\Library\DependencyInjection\Compiler\Compiler;
 use Water\Library\DependencyInjection\Compiler\CompilerInterface;
 use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
+use Water\Library\DependencyInjection\Exception\InvalidArgumentException;
+use Water\Library\DependencyInjection\Exception\NotExistServiceException;
 
 /**
  * Class ContainerBuilder
@@ -131,13 +134,21 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         return $this;
     }
 
+    public function has($id)
+    {
+        if ($this->services->has($id) || $this->definitions->has($id)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function getService($id)
+    public function get($id)
     {
-        if (ServiceBag::DEFAULT_VALUE !== $service = $this->getService($id)) {
-            return $service;
+        if ($this->services->has($id)) {
+            return $this->services->get($id);
         }
 
         return $this->createService($id);
@@ -148,35 +159,103 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      *
      * @param string $id
      * @return mixed
+     *
+     * @throws NotExistServiceException
+     * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
     private function createService($id)
     {
         if (DefinitionBag::DEFAULT_VALUE === $definition = $this->getDefinition($id)) {
-            // TODO throw exception not found service definition.
+            throw new NotExistServiceException(sprintf(
+                'Not exist service with id "%s".',
+                $id
+            ));
         }
 
         if (!class_exists($class = $definition->getClass(), true)) {
-            // TODO throw exception wrong class definition (not exist).
+            throw new InvalidArgumentException(sprintf(
+                'Not exist class "%s" definition in service id "%s"',
+                $class,
+                $id
+            ));
         }
 
-        try {
-            $arguments       = $definition->getArguments();
-            $reflectionClass = new \ReflectionClass($class);
+        $reflectionClass  = new \ReflectionClass($class);
+        if (null === $reflectionMethod = $reflectionClass->getConstructor()) {
+            $service = $reflectionClass->newInstance();
+        } else {
+            if ($reflectionMethod->getNumberOfRequiredParameters() > count($arguments = $definition->getArguments())) {
+                throw new InvalidArgumentException(
+                    'Insufficient arguments to instance the service "%s" specified by id "%s"',
+                    $class,
+                    $id
+                );
+            }
+            $arguments = $this->prepareArguments($arguments, $id, $class);
+            $service   = $reflectionClass->newInstanceArgs($arguments);
+        }
 
-            $reflectionMethod = $reflectionClass->getConstructor();
-            if ($reflectionMethod->getNumberOfRequiredParameters() > count($arguments)) {
-                // TODO throw exception. Can't instance de service, insufficient parameters to constructor.
+        if ($definition->hasMethodsCall()) {
+            foreach ($definition->getMethodsCall() as $value) {
+                $method    = $value[0];
+                $arguments = $value[1];
+                $arguments = $this->prepareArguments($arguments, $id, $class);
+
+                call_user_func_array(array($service, $method), $arguments);
+            }
+        }
+
+        $this->add($id, $service);
+        return $service;
+    }
+
+    /**
+     * Prepare the arguments to be passed to a method.
+     *
+     * @param array  $arguments
+     * @param string $id
+     * @param string $class
+     * @return array
+     *
+     * @throws Exception\InvalidArgumentException
+     */
+    private function prepareArguments(array $arguments, $id, $class)
+    {
+        $args = array();
+        foreach ($arguments as $value) {
+            if (false !== $index = $this->parameters->resolve($value)) {
+                if ($this->parameters->has($index)) {
+                    $args[] = $this->parameters->get($index);
+                    continue;
+                }
+
+                throw new InvalidArgumentException(sprintf(
+                    'Not found parameter index "%s". It was used in the service id "%s", '
+                    . 'when try to instance the class "%s"',
+                    $index,
+                    $id,
+                    $class
+                ));
             }
 
-            $service         = $reflectionClass->newInstanceArgs($arguments);
+            if (false !== $index = $this->services->resolve($value)) {
+                if ($this->has($index)) {
+                    $args[] = $this->get($index);
+                    continue;
+                }
 
-            // TODO make de methods call, resolve parameters and referenced services.
+                throw new InvalidArgumentException(sprintf(
+                    'Not found service id "%s". It was used as a argument in the service id "%s", '
+                    . 'when try to instance the class "%s"',
+                    $index,
+                    $id,
+                    $class
+                ));
+            }
 
-        } catch (\ReflectionException $e) {
-            // TODO handle exception.
+            $args[] = $value;
         }
-
-        $this->setServices($id, $service);
-        return $service;
+        return $args;
     }
 }

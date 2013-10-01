@@ -46,6 +46,14 @@ class Definition
     }
 
     /**
+     * @return bool
+     */
+    public function hasMethodsCall()
+    {
+        return (count($this->methodsCall) > 0);
+    }
+
+    /**
      * Return the key for tag name if it's found, FALSE otherwise.
      *
      * @param $tag
@@ -61,7 +69,7 @@ class Definition
      * @param string $arguments
      * @return Definition
      */
-    public function setArguments($arguments)
+    public function setArguments(array $arguments)
     {
         $this->arguments = $arguments;
         return $this;

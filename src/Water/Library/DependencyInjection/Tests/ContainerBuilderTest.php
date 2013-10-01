@@ -90,4 +90,22 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->addProcess($this->getProcessMock());
         $container->compile();
     }
+
+    public function testGet()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+
+        $container->register('service_with_constructor', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
+                  ->setArguments(array('%attr%', '#service_without_constructor'));
+
+        $container->register('service_without_constructor', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService')
+                  ->addMethodCall('setAttr', array(2));
+
+        $this->assertInstanceOf(
+            '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor',
+            $container->get('service_with_constructor')
+        );
+        $this->assertEquals(2, $container->get('service_without_constructor')->attr);
+    }
 }

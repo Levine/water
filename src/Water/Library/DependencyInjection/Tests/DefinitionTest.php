@@ -24,12 +24,14 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    public function testConstructor()
+    public function testDefinition()
     {
         $definition = new Definition('Service', array('arg'));
-        $definition->addTag('service');
+        $definition->addTag('service')
+                   ->addMethodCall('someMethod', array('arg'));
 
         $this->assertInternalType('integer', $definition->hasTag('service'));
         $this->assertFalse($definition->hasTag('notExist'));
+        $this->assertTrue($definition->hasMethodsCall());
     }
 }
