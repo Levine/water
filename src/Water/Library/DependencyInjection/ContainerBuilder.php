@@ -7,6 +7,7 @@
 namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\DefinitionBag;
+use Water\Library\DependencyInjection\Bag\ExtensionBag;
 use Water\Library\DependencyInjection\Bag\ParameterBag;
 use Water\Library\DependencyInjection\Bag\ServiceBag;
 use Water\Library\DependencyInjection\Compiler\Compiler;
@@ -14,6 +15,7 @@ use Water\Library\DependencyInjection\Compiler\CompilerInterface;
 use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
 use Water\Library\DependencyInjection\Exception\InvalidArgumentException;
 use Water\Library\DependencyInjection\Exception\NotExistServiceException;
+use Water\Library\DependencyInjection\Extension\ExtensionInterface;
 
 /**
  * Class ContainerBuilder
@@ -22,6 +24,11 @@ use Water\Library\DependencyInjection\Exception\NotExistServiceException;
  */
 class ContainerBuilder extends Container implements ContainerBuilderInterface
 {
+    /**
+     * @var ExtensionBag
+     */
+    protected $extensions = null;
+
     /**
      * @var DefinitionBag
      */
@@ -44,6 +51,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     {
         parent::__construct($parameters);
 
+        $this->extensions  = new ExtensionBag();
         $this->definitions = new DefinitionBag();
     }
 
@@ -95,6 +103,93 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     public function getDefinition($id)
     {
         return $this->definitions->get($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function registerExtension($id, ExtensionInterface $extension)
+    {
+        $this->addExtension($id, $extension);
+        return $extension;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasExtension($id)
+    {
+        return $this->extensions->has($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeExtension($id)
+    {
+        $this->extensions->remove($id);
+        return $this;
+    }
+
+    /**
+     * @param array $extensions
+     * @return ContainerBuilderInterface
+     *
+     * @throws InvalidArgumentException
+     */
+    public function setExtensions(array $extensions)
+    {
+        $validExtensions   = array();
+        $invalidExtensions = array();
+        foreach ($extensions as $id => $extension) {
+            if (is_a($extension, '\Water\Library\DependencyInjection\Extension\ExtensionInterface')) {
+                $validExtensions[$id] = $extension;
+            } else {
+                $invalidExtensions[$id] = $extension;
+            }
+        }
+
+        if (empty($invalidExtensions)) {
+            return $this->extensions->fromArray($validExtensions);
+        }
+
+        $message = "Invalid extensions:\n";
+        foreach ($invalidExtensions as $id => $extension) {
+            $message .= sprintf(
+                "%s => %s\n",
+                $id,
+                (is_object($extension)) ? get_class($extension) : sprintf('%s value "%s"', gettype($extension), $extension)
+            );
+        }
+        throw new InvalidArgumentException($message);
+    }
+
+    /**
+     * @param string $id
+     * @param ExtensionInterface $extension
+     * @return ContainerBuilderInterface
+     */
+    public function addExtension($id, ExtensionInterface $extension)
+    {
+        $this->extensions->set($id, $extension);
+        return $this;
+    }
+
+    /**
+     * @return ExtensionBag
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * @param string $id
+     * @return null|void|ExtensionInterface
+     */
+    public function getExtension($id)
+    {
+        return $this->extensions->get($id);
     }
 
     /**
@@ -186,11 +281,11 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
             $service = $reflectionClass->newInstance();
         } else {
             if ($reflectionMethod->getNumberOfRequiredParameters() > count($arguments = $definition->getArguments())) {
-                throw new InvalidArgumentException(
+                throw new InvalidArgumentException(sprintf(
                     'Insufficient arguments to instance the service "%s" specified by id "%s"',
                     $class,
                     $id
-                );
+                ));
             }
             $arguments = $this->prepareArguments($arguments, $id, $class);
             $service   = $reflectionClass->newInstanceArgs($arguments);
@@ -218,7 +313,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      * @param string $class
      * @return array
      *
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function prepareArguments(array $arguments, $id, $class)
     {

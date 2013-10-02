@@ -59,6 +59,23 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         return $process;
     }
 
+    private function getExtensionMock()
+    {
+        $extension = $this->getMock(
+            '\Water\Library\DependencyInjection\Extension\ExtensionInterface',
+            array('extend')
+        );
+
+        $extension->expects($this->any())
+                  ->method('extend')
+                  ->with($this->isInstanceOf('\Water\Library\DependencyInjection\ContainerBuilderInterface'))
+                  ->will($this->returnCallback(function (ContainerBuilderInterface $container) {
+                      $container->addParameter('extend', true);
+                  }));
+
+        return $extension;
+    }
+
     public function testDefinition()
     {
         $container = new ContainerBuilder();
@@ -108,4 +125,62 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(2, $container->get('service_without_constructor')->attr);
     }
+
+    public function testGetNotExistServiceException()
+    {
+        $container = new ContainerBuilder();
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\NotExistServiceException');
+        $container->get('notExist');
+    }
+
+    public function testGetInvalidClassDefinitionException()
+    {
+        $container = new ContainerBuilder();
+        $container->register('service', 'NotExistClass');
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+    public function testGetInsufficientArgumentsException()
+    {
+        $container = new ContainerBuilder();
+        $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor');
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+    public function testPrepareArgumentsInvalidParameterException()
+    {
+        $container = new ContainerBuilder();
+
+        $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
+                  ->setArguments(array('%attr%', '#service_without_constructor'));
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+    public function testPrepareArgumentsInvalidServiceException()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+
+        $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
+            ->setArguments(array('%attr%', '#service_without_constructor'));
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+//    public function testExtension()
+//    {
+//        $container = new ContainerBuilder();
+//        $container->registerExtension($this->getExtensionMock());
+//        $container->compile();
+//
+//        $this->assertEquals(true, $container->getParameter('extension'));
+//    }
 }
