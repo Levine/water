@@ -85,6 +85,6 @@ class StronglyTypedBag extends SimpleBag
             $this->validate($value);
         }
 
-        parent::fromArray($input);
+        return parent::fromArray($input);
     }
 }

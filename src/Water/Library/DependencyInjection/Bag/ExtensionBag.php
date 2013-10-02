@@ -7,39 +7,25 @@
 namespace Water\Library\DependencyInjection\Bag;
 
 use Water\Library\Bag\SimpleBag;
-use Water\Library\DependencyInjection\Exception\InvalidArgumentException;
+use Water\Library\Bag\StronglyTypedBag;
+use Water\Library\Bag\Type\IntegerType;
+use Water\Library\Bag\Type\TypeInterface;
 
 /**
  * Class ExtensionBag
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class ExtensionBag extends SimpleBag
+class ExtensionBag extends StronglyTypedBag
 {
-    public function fromArray(array $input)
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(TypeInterface $type = null, array $input = array())
     {
-        $validExtensions   = array();
-        $invalidExtensions = array();
-        foreach ($input as $id => $extension) {
-            if (is_a($extension, '\Water\Library\DependencyInjection\Extension\ExtensionInterface')) {
-                $validExtensions[$id] = $extension;
-            } else {
-                $invalidExtensions[$id] = $extension;
-            }
-        }
-
-        if (empty($invalidExtensions)) {
-            return parent::fromArray($validExtensions);
-        }
-
-        $message = "Invalid extensions:\n";
-        foreach ($invalidExtensions as $id => $extension) {
-            $message .= sprintf(
-                "%s => %s\n",
-                $id,
-                (is_object($extension)) ? get_class($extension) : sprintf('%s value "%s"', gettype($extension), $extension)
-            );
-        }
-        throw new InvalidArgumentException($message);
+        $type = ($type === null)
+              ? new IntegerType('\Water\Library\DependencyInjection\Extension\ExtensionInterface')
+              : $type;
+        parent::__construct($type, $input);
     }
 }

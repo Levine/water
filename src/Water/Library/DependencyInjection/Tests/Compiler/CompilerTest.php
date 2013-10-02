@@ -80,7 +80,6 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 
         $compiler->setProcesses(array(
             $this->getProcessMock(),
-            'notProcessInterface',
         ));
 
         $compiler->compile($this->getContainerBuilderMock());

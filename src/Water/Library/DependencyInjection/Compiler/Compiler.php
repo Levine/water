@@ -38,9 +38,7 @@ class Compiler implements CompilerInterface
     public function compile(ContainerBuilderInterface $container)
     {
         foreach ($this->processes as $process) {
-            if (is_a($process, '\Water\Library\DependencyInjection\Compiler\Process\ProcessInterface')) {
-                $process->process($container);
-            }
+            $process->process($container);
         }
     }
 
