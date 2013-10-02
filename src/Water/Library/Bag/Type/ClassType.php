@@ -54,4 +54,12 @@ class ClassType extends ObjectType
     {
         return $this->type;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function valid($value)
+    {
+        return is_a($value, $this->getType());
+    }
 }

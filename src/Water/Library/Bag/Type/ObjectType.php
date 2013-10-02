@@ -11,18 +11,21 @@ namespace Water\Library\Bag\Type;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-abstract class ObjectType implements TypeInterface
+class ObjectType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    abstract public function getType();
+    public function getType()
+    {
+        return 'Object';
+    }
 
     /**
      * {@inheritdoc}
      */
     public function valid($value)
     {
-        return is_a($value, $this->getType());
+        return is_object($value);
     }
 }
