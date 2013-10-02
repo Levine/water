@@ -32,12 +32,21 @@ class SimpleBagTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($bag->has('otherIndex'));
     }
 
-    public function testOffsetGet()
+    public function testRemove()
     {
-        $bag = new SimpleBag(array('index' => 'value'));
+        $bag = new SimpleBag(array(
+            'index'         => 'value',
+            'otherIndex'    => 'otherValue'
+        ));
 
-        $this->assertEquals('value', $bag->offsetGet('index'));
-        $this->assertNull($bag->offsetGet('notExistsIndex'));
+        $this->assertTrue($bag->has('index'));
+        $this->assertTrue($bag->has('otherIndex'));
+
+        $bag->remove('index');
+        $bag->offsetUnset('otherIndex');
+
+        $this->assertFalse($bag->has('index'));
+        $this->assertFalse($bag->has('otherIndex'));
     }
 
     public function testGetAndSet()
@@ -50,6 +59,14 @@ class SimpleBagTest extends \PHPUnit_Framework_TestCase
 
         $bag->set('newIndex', $expected = 'newValue');
         $this->assertEquals($expected, $bag->get('newIndex'));
+
+        $bag = new SimpleBag(array('index' => 'value'));
+
+        $this->assertEquals('value', $bag->offsetGet('index'));
+        $this->assertNull($bag->offsetGet('notExistsIndex'));
+
+        $bag->offsetSet('newIndex', $expected = 'newValue');
+        $this->assertEquals($expected, $bag->offsetGet('newIndex'));
     }
 
     public function testFromArrayAndFromString()
@@ -63,6 +80,12 @@ class SimpleBagTest extends \PHPUnit_Framework_TestCase
         $old = $bag->fromString(http_build_query($expected1));
         $this->assertEquals($expected2, $old);
         $this->assertEquals($expected1, (array) $bag);
+
+        $bag = new SimpleBag($expected1 = array('index' => 'value'));
+
+        $old = $bag->exchangeArray($expected2 = array('otherIndex' => 'otherValue'));
+        $this->assertEquals($expected1, $old);
+        $this->assertEquals($expected2, (array) $bag);
     }
 
     public function testToArray()

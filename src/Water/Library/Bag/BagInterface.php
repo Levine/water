@@ -29,15 +29,6 @@ interface BagInterface extends ArrayAccess, Countable, IteratorAggregate, Serial
     public function has($index);
 
     /**
-     * Returns the value of a specified index, if the index not exists return a default value.
-     *
-     * @param mixed $index
-     * @param mixed $default
-     * @return mixed
-     */
-    public function get($index, $default = self::DEFAULT_VALUE);
-
-    /**
      * Define the value of a specified index to value.
      *
      * @param mixed $index
@@ -45,6 +36,23 @@ interface BagInterface extends ArrayAccess, Countable, IteratorAggregate, Serial
      * @return BagInterface
      */
     public function set($index, $value);
+
+    /**
+     * Unset the element specified by index.
+     *
+     * @param mixed $index
+     * @return BagInterface
+     */
+    public function remove($index);
+
+    /**
+     * Returns the value of a specified index, if the index not exists return a default value.
+     *
+     * @param mixed $index
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get($index, $default = self::DEFAULT_VALUE);
 
     /**
      * Change values for another array and returns the old array.

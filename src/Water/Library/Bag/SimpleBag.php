@@ -34,6 +34,43 @@ class SimpleBag extends ArrayObject implements BagInterface
     }
 
     /**
+     * Override to the local method.
+     */
+    public function offsetSet($index, $value)
+    {
+        $this->set($index, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set($index, $value)
+    {
+        parent::offsetSet($index, $value);
+        return $this;
+    }
+
+    /**
+     * Override to the local method.
+     */
+    public function offsetUnset($index)
+    {
+        $this->remove($index);
+    }
+
+    /**
+     * Unset the element specified by index.
+     *
+     * @param mixed $index
+     * @return BagInterface
+     */
+    public function remove($index)
+    {
+        parent::offsetUnset($index);
+        return true;
+    }
+
+    /**
      * Returns the value of a specified index, if the index not exists return a default value.
      *
      * @param mixed $index
@@ -56,12 +93,11 @@ class SimpleBag extends ArrayObject implements BagInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Override to the local method.
      */
-    public function set($index, $value)
+    public function exchangeArray($input)
     {
-        parent::offsetSet($index, $value);
-        return $this;
+        return $this->fromArray($input);
     }
 
     /**
@@ -69,7 +105,7 @@ class SimpleBag extends ArrayObject implements BagInterface
      */
     public function fromArray(array $input)
     {
-        return $this->exchangeArray($input);
+        return parent::exchangeArray($input);
     }
 
     /**
