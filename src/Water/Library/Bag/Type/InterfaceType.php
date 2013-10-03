@@ -13,7 +13,7 @@ use Water\Library\Bag\Exception\InvalidArgumentException;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class InterfaceType extends ObjectType
+class InterfaceType implements TypeInterface
 {
     /**
      * @var string
