@@ -132,42 +132,15 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     }
 
     /**
-     * @param array $extensions
-     * @return ContainerBuilderInterface
-     *
-     * @throws InvalidArgumentException
+     * {@inheritdoc}
      */
     public function setExtensions(array $extensions)
     {
-        $validExtensions   = array();
-        $invalidExtensions = array();
-        foreach ($extensions as $id => $extension) {
-            if (is_a($extension, '\Water\Library\DependencyInjection\Extension\ExtensionInterface')) {
-                $validExtensions[$id] = $extension;
-            } else {
-                $invalidExtensions[$id] = $extension;
-            }
-        }
-
-        if (empty($invalidExtensions)) {
-            return $this->extensions->fromArray($validExtensions);
-        }
-
-        $message = "Invalid extensions:\n";
-        foreach ($invalidExtensions as $id => $extension) {
-            $message .= sprintf(
-                "%s => %s\n",
-                $id,
-                (is_object($extension)) ? get_class($extension) : sprintf('%s value "%s"', gettype($extension), $extension)
-            );
-        }
-        throw new InvalidArgumentException($message);
+        return $this->extensions->fromArray($extensions);
     }
 
     /**
-     * @param string $id
-     * @param ExtensionInterface $extension
-     * @return ContainerBuilderInterface
+     * {@inheritdoc}
      */
     public function addExtension($id, ExtensionInterface $extension)
     {
@@ -176,7 +149,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     }
 
     /**
-     * @return ExtensionBag
+     * {@inheritdoc}
      */
     public function getExtensions()
     {
@@ -184,8 +157,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     }
 
     /**
-     * @param string $id
-     * @return null|void|ExtensionInterface
+     * {@inheritdoc}
      */
     public function getExtension($id)
     {

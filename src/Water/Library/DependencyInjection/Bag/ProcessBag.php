@@ -8,8 +8,7 @@ namespace Water\Library\DependencyInjection\Bag;
 
 use Water\Library\Bag\SimpleBag;
 use Water\Library\Bag\StronglyTypedBag;
-use Water\Library\Bag\Type\InterfaceType;
-use Water\Library\Bag\Type\TypeInterface;
+use Water\Library\Bag\Type\ClassType;
 
 /**
  * Class ProcessBag
@@ -19,13 +18,12 @@ use Water\Library\Bag\Type\TypeInterface;
 class ProcessBag extends StronglyTypedBag
 {
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param array $input
      */
-    public function __construct(TypeInterface $type = null, array $input = array())
+    public function __construct(array $input = array())
     {
-        $type = ($type === null)
-              ? new InterfaceType('\Water\Library\DependencyInjection\Compiler\Process\ProcessInterface')
-              : $type;
-        parent::__construct($type, $input);
+        parent::__construct(new ClassType('\Water\Library\DependencyInjection\Compiler\Process\ProcessInterface'), $input);
     }
 }

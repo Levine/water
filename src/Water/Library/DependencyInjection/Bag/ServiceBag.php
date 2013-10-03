@@ -20,12 +20,13 @@ class ServiceBag extends StronglyTypedBag
     const SERVICE_REGEX = '/^#([^#]+)$/';
 
     /**
-     * {@inheritdoc}
+     * Constructor.
+     *
+     * @param array $input
      */
-    public function __construct(TypeInterface $type = null, array $input = array())
+    public function __construct(array $input = array())
     {
-        $type = ($type === null) ? new ObjectType() : $type;
-        parent::__construct($type, $input);
+        parent::__construct(new ObjectType(), $input);
     }
 
     /**
