@@ -108,6 +108,7 @@ abstract class Kernel
         $this->parameters['kernel_dir']         = dirname($this->getReflection()->getFileName());
         $this->parameters['cache_dir']          = $this->parameters['kernel_dir'] . '/cache/' . $this->environment;
         $this->parameters['root_dir']           = dirname($this->parameters['kernel_dir']);
+        $this->parameters['application_config'] = $this->config;
         $this->parameters = array_merge((array) $this->config->get('parameters', array()), $this->parameters);
     }
 
@@ -116,29 +117,32 @@ abstract class Kernel
      */
     private function initialize()
     {
-        $this->buildContainer();
+        $this->initializeModules();
 
-        $this->buildModules();
+        $this->initializeContainer();
     }
 
     /**
-     * Build container.
+     * Initialize container.
      */
-    private function buildContainer()
+    private function initializeContainer()
     {
-        $this->container = new ContainerBuilder();
+        $this->container = $this->getContainer();
         $this->container->add('kernel', $this);
         $this->container->setParameters($this->parameters);
     }
 
     /**
-     * Build modules.
+     * Initialize modules.
      */
-    private function buildModules()
+    private function initializeModules()
     {
+        $modules = array();
         foreach($this->getModules() as $module) {
-            $module->build($this->container);
+            $modules[$module->getShortName()] = $module;
         }
+
+        $this->modules->fromArray($modules);
     }
 
     /**
@@ -159,8 +163,22 @@ abstract class Kernel
      */
     private function compile()
     {
+        $this->buildModules();
+
         $this->container->compile();
         $this->compiled = true;
+    }
+
+    /**
+     * Build modules.
+     */
+    private function buildModules()
+    {
+        $container = $this->getContainer();
+
+        foreach ($this->getModules() as $module) {
+            $module->build($container);
+        }
     }
 
     /**
@@ -191,6 +209,9 @@ abstract class Kernel
      */
     public function getContainer()
     {
+        if ($this->container === null) {
+            $this->container = new ContainerBuilder();
+        }
         return $this->container;
     }
 
