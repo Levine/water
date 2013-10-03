@@ -7,7 +7,7 @@
 
 $this->extend(__DIR__ . '/layout.php');
 ?>
-    <h1>Test View</h1>
+<h1>Test View</h1>
 <?php $this->startBlock('javascript'); ?>
     <script type="text/javascript">
         alert('Opa!!');

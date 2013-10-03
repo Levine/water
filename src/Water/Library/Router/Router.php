@@ -20,27 +20,27 @@ class Router implements RouterInterface
     /**
      * @var RouteCollection
      */
-    private $routes = null;
+    protected $routes = null;
 
     /**
      * @var MatcherInterface
      */
-    private $matcher = null;
+    protected $matcher = null;
 
     /**
      * @var GeneratorInterface
      */
-    private $generator = null;
+    protected $generator = null;
 
     /**
      * @var array
      */
-    private $options = array();
+    protected $options = array();
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(RouteCollection $routes, array $options = array())
+    public function __construct(RouteCollection $routes = null, array $options = array())
     {
         $this->routes = $routes;
         $this->setOptions($options);
@@ -94,7 +94,7 @@ class Router implements RouterInterface
             );
         }
 
-        return $this->matcher = new $this->options['matcher_class']($this->routes);
+        return $this->matcher = new $this->options['matcher_class']($this->getRoutes());
     }
 
     /**
@@ -114,10 +114,9 @@ class Router implements RouterInterface
             );
         }
 
-        return $this->generator = new $this->options['generator_class']($this->routes);
+        return $this->generator = new $this->options['generator_class']($this->getRoutes());
     }
 
-    // @codeCoverageIgnoreStart
     /**
      * @return \Water\Library\Router\RouteCollection
      */
@@ -125,5 +124,4 @@ class Router implements RouterInterface
     {
         return $this->routes;
     }
-    // @codeCoverageIgnoreEnd
 }

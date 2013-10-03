@@ -14,14 +14,6 @@ namespace Water\Library\Router;
 interface RouterInterface
 {
     /**
-     * Constructor.
-     *
-     * @param RouteCollection $routes
-     * @param array           $options
-     */
-    public function __construct(RouteCollection $routes, array $options = array());
-
-    /**
      * @see \Water\Library\Router\Matcher\MatcherInterface::match($path)
      */
     public function match($path);

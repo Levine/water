@@ -76,6 +76,16 @@ class Definition
     }
 
     /**
+     * @param $argument
+     * @return Definition
+     */
+    public function addArgument($argument)
+    {
+        $this->arguments[] = $argument;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getArguments()
