@@ -116,9 +116,29 @@ abstract class Kernel
      */
     private function initialize()
     {
+        $this->buildContainer();
+
+        $this->buildModules();
+    }
+
+    /**
+     * Build container.
+     */
+    private function buildContainer()
+    {
         $this->container = new ContainerBuilder();
         $this->container->add('kernel', $this);
         $this->container->setParameters($this->parameters);
+    }
+
+    /**
+     * Build modules.
+     */
+    private function buildModules()
+    {
+        foreach($this->getModules() as $module) {
+            $module->build($this->container);
+        }
     }
 
     /**
@@ -139,7 +159,8 @@ abstract class Kernel
      */
     private function compile()
     {
-
+        $this->container->compile();
+        $this->compiled = true;
     }
 
     /**

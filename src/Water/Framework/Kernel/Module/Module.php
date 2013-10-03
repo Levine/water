@@ -6,19 +6,28 @@
  */
 namespace Water\Framework\Kernel\Module;
 
-use Water\Library\DependencyInjection\ContainerAware;
+use Water\Library\DependencyInjection\ContainerBuilderInterface;
 
 /**
- * Class AbstractModule
+ * Class Module
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-abstract class AbstractModule extends ContainerAware implements ModuleInterface
+abstract class Module implements ModuleInterface
 {
     /**
      * @var \ReflectionClass
      */
     private $reflection = null;
+
+    /**
+     * Make the necessary changes for the module.
+     *
+     * @param ContainerBuilderInterface $container
+     */
+    public function build(ContainerBuilderInterface $container)
+    {
+    }
 
     /**
      * {@inheritdoc}
@@ -77,7 +86,7 @@ abstract class AbstractModule extends ContainerAware implements ModuleInterface
     public function getExtension()
     {
         $class = str_replace('Module', 'Extension', $this->getShortName());
-        $class = $this->getNamespaceName() . '\\Extension\\' . $class;
+        $class = $this->getNamespaceName() . '\\DependencyInjection\\Extension\\' . $class;
 
         if (class_exists($class)
             && is_a($extension = new $class(), 'Water\Library\DependencyInjection\Extension\ExtensionInterface')

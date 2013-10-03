@@ -4,7 +4,7 @@
  * Date: 02/10/13
  * Time: 23:03
  */
-namespace Water\Framework\Kernel\Tests\Module\Resource\Extension;
+namespace Water\Framework\Kernel\Tests\Module\Resource\DependencyInjection\Extension;
 
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
 use Water\Library\DependencyInjection\Extension\ExtensionInterface;

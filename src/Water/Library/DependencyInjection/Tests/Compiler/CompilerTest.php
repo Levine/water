@@ -61,7 +61,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         $compiler->addProcess($this->getProcessMock());
         $compiler->addProcess($this->getProcessMock());
 
-        $this->assertCount(2, $compiler->getProcesses());
+        $this->assertCount(3, $compiler->getProcesses());
 
         $old = $compiler->setProcesses(array(
             $this->getProcessMock(),
@@ -70,7 +70,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
             $this->getProcessMock(),
         ));
 
-        $this->assertCount(2, $old);
+        $this->assertCount(3, $old);
         $this->assertCount(4, $compiler->getProcesses());
     }
 

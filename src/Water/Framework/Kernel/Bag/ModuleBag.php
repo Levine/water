@@ -8,6 +8,7 @@ namespace Water\Framework\Kernel\Bag;
 
 use Water\Library\Bag\StronglyTypedBag;
 use Water\Library\Bag\Type\ClassType;
+use Water\Library\Bag\Type\InterfaceType;
 
 /**
  * Class ModuleBag
@@ -21,6 +22,6 @@ class ModuleBag extends StronglyTypedBag
      */
     public function __construct(array $input = array())
     {
-        parent::__construct(new ClassType('\Water\Framework\Kernel\Module\ModuleInterface'), $input);
+        parent::__construct(new InterfaceType('\Water\Framework\Kernel\Module\ModuleInterface'), $input);
     }
 }

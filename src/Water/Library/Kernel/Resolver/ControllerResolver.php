@@ -47,11 +47,24 @@ class ControllerResolver implements ControllerResolverInterface
         $class  = strtok($controller, '::');
         $method = strtok('::');
 
-        if (!class_exists($class, true) || !is_callable($controller = array(new $class(), $method))) {
+        if (!class_exists($class, true)
+            || !is_callable($controller = array($this->createController($class), $method))
+        ) {
             throw new InvalidArgumentException("Controller isn't a valid class or isn't callable.");
         }
 
         return $controller;
+    }
+
+    /**
+     * Method to create the controller instance.
+     *
+     * @param string $class
+     * @return object
+     */
+    protected function createController($class)
+    {
+        return new $class();
     }
 
     public function getArguments(Request $request)

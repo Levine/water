@@ -6,9 +6,9 @@
  */
 namespace Water\Library\DependencyInjection\Compiler;
 
+use Water\Library\DependencyInjection\Bag\ProcessBag;
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
 use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
-use Water\Library\DependencyInjection\Bag\ProcessBag;
 
 /**
  * Class Compiler
@@ -18,16 +18,16 @@ use Water\Library\DependencyInjection\Bag\ProcessBag;
 class Compiler implements CompilerInterface
 {
     /**
-     * @var ProcessBag
+     * @var ProcessConfiguration
      */
-    protected $processes = array();
+    protected $processConfiguration = array();
 
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct(ProcessConfiguration $config = null)
     {
-        $this->processes = new ProcessBag();
+        $this->processConfiguration = ($config === null) ? new ProcessConfiguration() : $config;
     }
 
     /**
@@ -48,7 +48,7 @@ class Compiler implements CompilerInterface
      */
     public function setProcesses(array $processes)
     {
-        return $this->processes->fromArray($processes);
+        return $this->processConfiguration->setProcesses($processes);
     }
 
     /**
@@ -57,7 +57,7 @@ class Compiler implements CompilerInterface
      */
     public function addProcess(ProcessInterface $process)
     {
-        $this->processes->append($process);
+        $this->processConfiguration->addProcess($process);
         return $this;
     }
 
@@ -66,6 +66,6 @@ class Compiler implements CompilerInterface
      */
     public function getProcesses()
     {
-        return $this->processes;
+        return $this->processConfiguration->getProcesses();
     }
 }

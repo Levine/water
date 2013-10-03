@@ -33,14 +33,11 @@ class ControllerResolver extends BaseControllerResolver
         $this->container = $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getController(Request $request)
+    protected function createController($class)
     {
-        $controller = parent::getController($request);
+        $controller = parent::createController($class);
 
-        if (is_a($controller, 'Water\Library\DependencyInjection\ContainerAwareInterface')) {
+        if (is_a($controller, '\Water\Library\DependencyInjection\ContainerAwareInterface')) {
             $controller->setContainer($this->container);
         }
 

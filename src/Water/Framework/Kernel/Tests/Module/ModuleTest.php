@@ -10,11 +10,11 @@ use Water\Framework\Kernel\Tests\Module\Resource\TestModule;
 use Water\Framework\Kernel\Tests\Module\Resource\TestNotExtendModule;
 
 /**
- * Class AbstractModuleTest
+ * Class ModuleTest
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class AbstractModuleTest extends \PHPUnit_Framework_TestCase
+class ModuleTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {

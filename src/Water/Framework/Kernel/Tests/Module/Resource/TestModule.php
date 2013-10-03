@@ -6,13 +6,13 @@
  */
 namespace Water\Framework\Kernel\Tests\Module\Resource;
 
-use Water\Framework\Kernel\Module\AbstractModule;
+use Water\Framework\Kernel\Module\Module;
 
 /**
  * Class TestModule
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class TestModule extends AbstractModule
+class TestModule extends Module
 {
 }

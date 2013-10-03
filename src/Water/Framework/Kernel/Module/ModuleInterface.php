@@ -14,7 +14,7 @@ use Water\Library\DependencyInjection\Extension\ExtensionInterface;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-interface ModuleInterface extends ContainerAwareInterface
+interface ModuleInterface
 {
     /**
      * @return \Reflection
