@@ -6,6 +6,7 @@
  */
 namespace Water\Library\DependencyInjection\Tests;
 
+use Water\Library\DependencyInjection\Compiler\Process\ExtensionProcess;
 use Water\Library\DependencyInjection\ContainerBuilder;
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
 use Water\Library\DependencyInjection\Definition;
@@ -175,12 +176,36 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->get('service');
     }
 
-//    public function testExtension()
-//    {
-//        $container = new ContainerBuilder();
-//        $container->registerExtension($this->getExtensionMock());
-//        $container->compile();
-//
-//        $this->assertEquals(true, $container->getParameter('extension'));
-//    }
+    public function testExtension()
+    {
+        $container = new ContainerBuilder();
+        $container->registerExtension('test1', $this->getExtensionMock());
+        $container->registerExtension('test2', $this->getExtensionMock());
+
+        $this->assertTrue($container->hasExtension('test1'));
+        $this->assertCount(2, $container->getExtensions());
+
+        $container->removeExtension('test1');
+
+        $this->assertFalse($container->hasExtension('test1'));
+        $this->assertCount(1, $container->getExtensions());
+
+        $container->setExtensions(array(
+            'test1' => $this->getExtensionMock(),
+            'test2' => $this->getExtensionMock(),
+        ));
+
+        $this->assertCount(2, $container->getExtensions());
+        $this->assertEquals($this->getExtensionMock(), $container->getExtension('test1'));
+    }
+
+    public function testExtensionProcess()
+    {
+        $container = new ContainerBuilder();
+        $container->addProcess(new ExtensionProcess());
+        $container->registerExtension('test', $this->getExtensionMock());
+        $container->compile();
+
+        $this->assertEquals(true, $container->getParameter('extend'));
+    }
 }
