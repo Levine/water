@@ -1,12 +1,12 @@
 <?php
 /**
  * User: Ivan C. Sanches
- * Date: 29/09/13
- * Time: 17:07
+ * Date: 02/10/13
+ * Time: 23:02
  */
-namespace Water\Framework\Tests\Resource\Module;
+namespace Water\Framework\Kernel\Tests\Module\Resource;
 
-use Water\Framework\Module\AbstractModule;
+use Water\Framework\Kernel\Module\AbstractModule;
 
 /**
  * Class TestModule

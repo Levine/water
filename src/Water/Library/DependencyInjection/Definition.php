@@ -61,7 +61,7 @@ class Definition
      */
     public function hasTag($tag)
     {
-        return array_search($tag, $this->tags);
+        return (array_search($tag, $this->tags) !== false) ? true : false;
     }
 
     // @codeCoverageIgnoreStart

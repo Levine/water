@@ -55,6 +55,14 @@ interface ContainerBuilderInterface extends ContainerInterface
     public function getDefinitions();
 
     /**
+     * Return all definitions with the specified tag.
+     *
+     * @param string $tag
+     * @return DefinitionBag
+     */
+    public function getDefinitionsByTag($tag);
+
+    /**
      * @param string $id
      * @return Definition|null
      */

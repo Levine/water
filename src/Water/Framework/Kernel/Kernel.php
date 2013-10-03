@@ -6,12 +6,9 @@
  */
 namespace Water\Framework\Kernel;
 
-use Water\Framework\Exception\InvalidContainerExtensionException;
-use Water\Framework\Exception\InvalidModuleException;
-use Water\Framework\Module\ModuleInterface;
+use Water\Framework\Kernel\Bag\ModuleBag;
 use Water\Library\Bag\SimpleBag;
 use Water\Library\DependencyInjection\ContainerBuilder;
-use Water\Library\DependencyInjection\ContainerExtensionInterface;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
 use Water\Library\Kernel\HttpKernelInterface;
@@ -32,6 +29,11 @@ abstract class Kernel
      * @var ContainerBuilder
      */
     private $container = null;
+
+    /**
+     * @var bool
+     */
+    private $compiled = false;
 
     /**
      * @var \ReflectionClass
@@ -59,7 +61,7 @@ abstract class Kernel
     private $debug = true;
 
     /**
-     * @var array
+     * @var ModuleBag
      */
     private $modules = array();
 
@@ -73,56 +75,11 @@ abstract class Kernel
     {
         $this->environment = (string) $environment;
         $this->debug       = (boolean) $debug;
-        $this->modules     = (array) $this->registerModules();
+        $this->modules     = new ModuleBag($this->registerModules());
         $this->setConfig();
         $this->setParameters();
 
         $this->initialize();
-    }
-
-    /**
-     * Initialize the current Kernel.
-     */
-    private function initialize()
-    {
-        $this->container = (isset($this->parameters['service_container.class']))
-                         ? new $this->parameters['service_container.class']()
-                         : new ContainerBuilder();
-        $this->container->set('kernel', $this);
-        $this->container->setParameters($this->parameters);
-
-        $this->extendContainer();
-
-        $this->container->compile();
-    }
-
-    /**
-     * Extend the current container with modules definitions.
-     *
-     * @throws InvalidModuleException
-     */
-    private function extendContainer()
-    {
-        foreach ($this->modules as $module) {
-            if (!is_a($module, '\Water\Framework\Module\ModuleInterface')) {
-                throw new InvalidModuleException(sprintf(
-                    'The module "%s", have to implement \Water\Framework\Module\ModuleInterface.',
-                    (is_object($module)) ? get_class($module) : gettype($module)
-                ));
-            }
-
-            $module->setContainer($this->container);
-
-            $extensionName = str_replace('Module', 'Extension', $module->getShortName());
-            $class         = $module->getNamespaceName() . '\\Extension\\' . $extensionName;
-
-            if (class_exists($class, true)) {
-                $extension = new $class();
-                if (is_a($extension, '\Water\Library\DependencyInjection\ContainerExtensionInterface')) {
-                    $extension->extend($this->container);
-                }
-            }
-        }
     }
 
     /**
@@ -131,16 +88,6 @@ abstract class Kernel
      * @return array
      */
     abstract public function registerModules();
-
-    /**
-     * @param Request $request
-     * @param bool $catch
-     * @return Response
-     */
-    public function handle(Request $request, $catch = true)
-    {
-        return $this->getHttpKernel()->handle($request, $catch);
-    }
 
     /**
      * Define default configurations.
@@ -162,6 +109,37 @@ abstract class Kernel
         $this->parameters['cache_dir']          = $this->parameters['kernel_dir'] . '/cache/' . $this->environment;
         $this->parameters['root_dir']           = dirname($this->parameters['kernel_dir']);
         $this->parameters = array_merge((array) $this->config->get('parameters', array()), $this->parameters);
+    }
+
+    /**
+     * Initialize the current Kernel.
+     */
+    private function initialize()
+    {
+        $this->container = new ContainerBuilder();
+        $this->container->add('kernel', $this);
+        $this->container->setParameters($this->parameters);
+    }
+
+    /**
+     * @param Request $request
+     * @param bool $catch
+     * @return Response
+     */
+    public function handle(Request $request, $catch = true)
+    {
+        if ($this->compiled === false) {
+            $this->compile();
+        }
+        return $this->getHttpKernel()->handle($request, $catch);
+    }
+
+    /**
+     * Compile the current container.
+     */
+    private function compile()
+    {
+
     }
 
     /**

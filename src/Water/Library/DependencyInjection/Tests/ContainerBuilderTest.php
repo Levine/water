@@ -88,14 +88,27 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Water\Library\DependencyInjection\Definition', $container->getDefinition('service'));
 
         $oldExpected = $container->getDefinitions()->toArray();
+
+        $service = new Definition('Service');
+        $service->setTags(array('tag'));
+
+        $otherService = new Definition('OtherService');
+        $otherService->setTags(array('test'));
+
+        $someService = new Definition('SomeService');
+        $someService->setTags(array('tag', 'test', 'otherTag'));
+
         $oldActual = $container->setDefinitions($expected = array(
-            'service'           => new Definition('Service'),
-            'other_service'     => new Definition('OtherService'),
-            'some_service'      => new Definition('SomeService'),
+            'service'           => $service,
+            'other_service'     => $otherService,
+            'some_service'      => $someService,
         ));
 
         $this->assertEquals($expected, $container->getDefinitions()->toArray());
         $this->assertEquals($oldExpected, $oldActual);
+        $this->assertCount(2, $container->getDefinitionsByTag('tag'));
+        $this->assertCount(2, $container->getDefinitionsByTag('test'));
+        $this->assertCount(1, $container->getDefinitionsByTag('otherTag'));
     }
 
     public function testCompile()

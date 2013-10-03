@@ -30,7 +30,7 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $definition->addTag('service')
                    ->addMethodCall('someMethod', array('arg'));
 
-        $this->assertInternalType('integer', $definition->hasTag('service'));
+        $this->assertTrue($definition->hasTag('service'));
         $this->assertFalse($definition->hasTag('notExist'));
         $this->assertTrue($definition->hasMethodsCall());
     }

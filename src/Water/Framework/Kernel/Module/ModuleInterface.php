@@ -4,9 +4,10 @@
  * Date: 26/09/13
  * Time: 14:40
  */
-namespace Water\Framework\Module;
+namespace Water\Framework\Kernel\Module;
 
 use Water\Library\DependencyInjection\ContainerAwareInterface;
+use Water\Library\DependencyInjection\Extension\ExtensionInterface;
 
 /**
  * Interface ModuleInterface
@@ -44,4 +45,9 @@ interface ModuleInterface extends ContainerAwareInterface
      * @return string
      */
     public function getPath();
+
+    /**
+     * @return ExtensionInterface|null
+     */
+    public function getExtension();
 }

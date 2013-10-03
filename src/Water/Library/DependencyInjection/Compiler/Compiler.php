@@ -37,7 +37,7 @@ class Compiler implements CompilerInterface
      */
     public function compile(ContainerBuilderInterface $container)
     {
-        foreach ($this->processes as $process) {
+        foreach ($this->getProcesses() as $process) {
             $process->process($container);
         }
     }
@@ -57,7 +57,7 @@ class Compiler implements CompilerInterface
      */
     public function addProcess(ProcessInterface $process)
     {
-        $this->processes[] = $process;
+        $this->processes->append($process);
         return $this;
     }
 

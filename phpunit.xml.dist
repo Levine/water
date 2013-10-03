@@ -16,6 +16,7 @@
 
     <testsuites>
         <testsuite name="Water Test Suite">
+            <directory suffix="Test.php">./src/Water/Framework/*/Tests</directory>
             <directory suffix="Test.php">./src/Water/Library/*/Tests</directory>
         </testsuite>
     </testsuites>
@@ -24,7 +25,7 @@
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src/Water</directory>
             <exclude>
-                <directory>./src/Water/Framework/Tests</directory>
+                <directory>./src/Water/Framework/*/Tests</directory>
                 <directory>./src/Water/Library/*/Tests</directory>
             </exclude>
         </whitelist>

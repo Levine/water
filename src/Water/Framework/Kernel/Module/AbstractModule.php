@@ -4,7 +4,7 @@
  * Date: 26/09/13
  * Time: 14:40
  */
-namespace Water\Framework\Module;
+namespace Water\Framework\Kernel\Module;
 
 use Water\Library\DependencyInjection\ContainerAware;
 
@@ -69,5 +69,21 @@ abstract class AbstractModule extends ContainerAware implements ModuleInterface
     public function getPath()
     {
         return dirname($this->getFileName());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtension()
+    {
+        $class = str_replace('Module', 'Extension', $this->getShortName());
+        $class = $this->getNamespaceName() . '\\Extension\\' . $class;
+
+        if (class_exists($class)
+            && is_a($extension = new $class(), 'Water\Library\DependencyInjection\Extension\ExtensionInterface')
+        ) {
+            return $extension;
+        }
+        return null;
     }
 }

@@ -100,6 +100,20 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
     /**
      * {@inheritdoc}
      */
+    public function getDefinitionsByTag($tag)
+    {
+        $bag = new DefinitionBag();
+        foreach ($this->getDefinitions() as $id => $definition) {
+            if ($definition->hasTag($tag)) {
+                $bag->set($id, $definition);
+            }
+        }
+        return $bag;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefinition($id)
     {
         return $this->definitions->get($id);
