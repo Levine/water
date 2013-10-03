@@ -66,7 +66,7 @@ class Definition
 
     // @codeCoverageIgnoreStart
     /**
-     * @param string $arguments
+     * @param array $arguments
      * @return Definition
      */
     public function setArguments(array $arguments)
