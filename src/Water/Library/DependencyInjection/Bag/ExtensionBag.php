@@ -8,7 +8,7 @@ namespace Water\Library\DependencyInjection\Bag;
 
 use Water\Library\Bag\SimpleBag;
 use Water\Library\Bag\StronglyTypedBag;
-use Water\Library\Bag\Type\ClassType;
+use Water\Library\Bag\Type\InterfaceType;
 
 /**
  * Class ExtensionBag
@@ -24,6 +24,6 @@ class ExtensionBag extends StronglyTypedBag
      */
     public function __construct(array $input = array())
     {
-        parent::__construct(new ClassType('\Water\Library\DependencyInjection\Extension\ExtensionInterface'), $input);
+        parent::__construct(new InterfaceType('\Water\Library\DependencyInjection\Extension\ExtensionInterface'), $input);
     }
 }

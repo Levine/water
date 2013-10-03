@@ -27,7 +27,7 @@ class ServiceBagTest extends \PHPUnit_Framework_TestCase
 
     public function testResolve()
     {
-        $bag = new ServiceBag(null, array('index' => new \stdClass()));
+        $bag = new ServiceBag(array('index' => new \stdClass()));
 
         $this->assertEquals('index', $bag->resolve('#index'));
         $this->assertFalse($bag->resolve('#invalid#index'));
