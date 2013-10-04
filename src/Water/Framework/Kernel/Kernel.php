@@ -23,47 +23,47 @@ abstract class Kernel
     /**
      * @var HttpKernelInterface
      */
-    private $httpKernel = null;
+    protected $httpKernel = null;
 
     /**
      * @var ContainerBuilder
      */
-    private $container = null;
+    protected $container = null;
 
     /**
      * @var bool
      */
-    private $compiled = false;
+    protected $compiled = false;
 
     /**
      * @var \ReflectionClass
      */
-    private $reflection = null;
+    protected $reflection = null;
 
     /**
      * @var SimpleBag
      */
-    private $config = array();
+    protected $config = array();
 
     /**
      * @var array
      */
-    private $parameters = array();
+    protected $parameters = array();
 
     /**
      * @var string
      */
-    private $environment = '';
+    protected $environment = '';
 
     /**
      * @var bool
      */
-    private $debug = true;
+    protected $debug = true;
 
     /**
      * @var ModuleBag
      */
-    private $modules = array();
+    protected $modules = array();
 
     /**
      * Constructor.
@@ -117,9 +117,9 @@ abstract class Kernel
      */
     private function initialize()
     {
-        $this->initializeModules();
-
         $this->initializeContainer();
+
+        $this->initializeModules();
     }
 
     /**
@@ -198,7 +198,7 @@ abstract class Kernel
     public function getHttpKernel()
     {
         if ($this->httpKernel === null) {
-            $this->httpKernel = $this->container->get('http_kernel');
+            $this->httpKernel = $this->getContainer()->get('http_kernel');
         }
         return $this->httpKernel;
     }

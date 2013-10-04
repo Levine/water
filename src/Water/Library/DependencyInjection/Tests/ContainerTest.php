@@ -5,6 +5,7 @@
  * Time: 14:44
  */
 namespace Water\Library\DependencyInjection\Tests;
+
 use Water\Library\DependencyInjection\Container;
 
 /**
