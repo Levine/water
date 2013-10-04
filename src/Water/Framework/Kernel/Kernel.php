@@ -176,8 +176,12 @@ abstract class Kernel
     {
         $container = $this->getContainer();
 
-        foreach ($this->getModules() as $module) {
+        foreach ($this->getModules() as $name => $module) {
             $module->build($container);
+
+            if (null !== $extension = $module->getExtension()) {
+                $container->addExtension($name, $extension);
+            }
         }
     }
 

@@ -37,7 +37,7 @@ class ServiceBag extends StronglyTypedBag
      */
     public function resolve($service)
     {
-        if (preg_match(self::SERVICE_REGEX, $service, $matches)) {
+        if (is_string($service) && preg_match(self::SERVICE_REGEX, $service, $matches)) {
             return $matches[1];
         }
         return false;

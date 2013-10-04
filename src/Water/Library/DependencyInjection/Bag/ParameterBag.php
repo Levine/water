@@ -26,7 +26,7 @@ class ParameterBag extends SimpleBag
      */
     public function resolve($name)
     {
-        if (preg_match(self::PARAMETER_REGEX, $name, $matches)) {
+        if (is_string($name) && preg_match(self::PARAMETER_REGEX, $name, $matches)) {
             return $matches[1];
         }
         return false;
