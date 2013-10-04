@@ -6,7 +6,7 @@
  */
 namespace Water\Framework\Kernel\Tests;
 
-use Water\Framework\Kernel\Tests\Resource\Module\TestModule;
+use Water\Framework\Kernel\Tests\Module\Resource\TestModule;
 use Water\Framework\Kernel\Tests\Resource\TestKernel;
 use Water\Library\Http\Request;
 
@@ -70,24 +70,36 @@ class KernelTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('/');
 
-        $httpKernelMock = $this->getMockBuilder('Water\Library\Kernel\HttpKernel')
-                               ->setMethods(array('handle'))
-                               ->disableOriginalConstructor()
-                               ->getMock();
+        $httpKernelMock = $this->getMockBuilder('\Water\Library\Kernel\HttpKernel')
+            ->setMethods(array('handle'))
+            ->disableOriginalConstructor()
+            ->getMock();
         $httpKernelMock->expects($this->any())
-                       ->method('handle')
-                       ->with($request);
+            ->method('handle')
+            ->with($request);
 
         $kernel = $this->getMockBuilder('\Water\Framework\Kernel\Tests\Resource\TestKernel')
-                       ->disableOriginalConstructor()
-                       ->setMethods(array('getModules', 'getHttpKernel'))
+            ->disableOriginalConstructor()
+            ->setMethods(array('getModules', 'getHttpKernel'))
+            ->getMock();
+
+        $extension = $this->getMock('\Water\Library\DependencyInjection\Extension\ExtensionInterface', array('extend'));
+        $extension->expects($this->any())
+                  ->method('expend')
+                  ->with($this->isInstanceOf('\Water\Library\DependencyInjection\ContainerInterface'));
+        $module = $this->getMockBuilder('\Water\Framework\Kernel\Module\Module')
+                       ->setMethods(array('getExtension'))
                        ->getMock();
+        $module->expects($this->any())
+               ->method('getExtension')
+               ->will($this->returnValue($extension));
+
         $kernel->expects($this->any())
                ->method('getModules')
-               ->will($this->returnValue(array(new TestModule())));
+               ->will($this->returnValue(array('module1' => $module)));
         $kernel->expects($this->any())
-               ->method('getHttpKernel')
-               ->will($this->returnValue($httpKernelMock));
+            ->method('getHttpKernel')
+            ->will($this->returnValue($httpKernelMock));
 
         $kernel->handle($request);
     }

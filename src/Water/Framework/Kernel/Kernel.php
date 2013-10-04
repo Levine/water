@@ -152,6 +152,8 @@ abstract class Kernel
      */
     public function handle(Request $request, $catch = true)
     {
+        $this->getContainer()->add('request', $request);
+
         if ($this->compiled === false) {
             $this->compile();
         }
