@@ -5,6 +5,7 @@
  * Time: 14:37
  */
 namespace Water\Library\Http\Tests;
+
 use Water\Library\Http\Request;
 
 /**
