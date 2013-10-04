@@ -66,7 +66,7 @@ class EventDispatcherTaggedProcessTest extends \PHPUnit_Framework_TestCase
                   ->with($this->equalTo('dispatcher'))
                   ->will($this->returnValue($hasReturn));
 
-        $definitionMock = $this->getMockBuilder('\Water\Library\DependencyInjection\Definition', array('addMethodCall'))
+        $definitionMock = $this->getMockBuilder('\Water\Library\DependencyInjection\Definition')
                                ->disableOriginalConstructor()
                                ->getMock();
         $container->expects($this->any())
@@ -86,7 +86,7 @@ class EventDispatcherTaggedProcessTest extends \PHPUnit_Framework_TestCase
     {
         $process = new EventDispatcherTaggedProcess();
 
-        $process->process($this->getContainerBuilderMock());
+        $process->process($container = $this->getContainerBuilderMock());
 
         $process = new EventDispatcherTaggedProcess();
 
