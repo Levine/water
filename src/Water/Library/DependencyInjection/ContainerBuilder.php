@@ -254,7 +254,12 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
             ));
         }
 
-        if (!class_exists($class = $definition->getClass(), true)) {
+        $class = $definition->getClass();
+        if (false !== $index = $this->parameters->resolve($class)) {
+            $class = $this->getParameter($index);
+        }
+
+        if (!class_exists($class, true)) {
             throw new InvalidArgumentException(sprintf(
                 'Not exist class "%s" definition in service id "%s"',
                 $class,
@@ -262,6 +267,37 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
             ));
         }
 
+        if (!$definition->hasFactoryClass()) {
+            $service = $this->createInstantiableClass($id, $class, $definition);
+        } else {
+            $service = $this->createFactoryClass($id, $class, $definition);
+        }
+
+        if ($definition->hasMethodsCall()) {
+            foreach ($definition->getMethodsCall() as $value) {
+                $method    = $value[0];
+                $arguments = $value[1];
+                $arguments = $this->prepareArguments($arguments, $id, $definition->getClass());
+
+                call_user_func_array(array($service, $method), $arguments);
+            }
+        }
+
+        $this->add($id, $service);
+        return $service;
+    }
+
+    /**
+     * @param string     $id
+     * @param string     $class
+     * @param Definition $definition
+     * @return object
+     *
+     * @throws InvalidArgumentException
+     *
+     */
+    private function createInstantiableClass($id, $class, Definition $definition)
+    {
         $reflectionClass  = new \ReflectionClass($class);
         if (null === $reflectionMethod = $reflectionClass->getConstructor()) {
             $service = $reflectionClass->newInstance();
@@ -277,17 +313,52 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
             $service   = $reflectionClass->newInstanceArgs($arguments);
         }
 
-        if ($definition->hasMethodsCall()) {
-            foreach ($definition->getMethodsCall() as $value) {
-                $method    = $value[0];
-                $arguments = $value[1];
-                $arguments = $this->prepareArguments($arguments, $id, $class);
+        return $service;
+    }
 
-                call_user_func_array(array($service, $method), $arguments);
-            }
+    /**
+     * @param string     $id
+     * @param string     $class
+     * @param Definition $definition
+     * @return object
+     *
+     * @throws InvalidArgumentException
+     */
+    private function createFactoryClass($id, $class, Definition $definition)
+    {
+        $factoryClass  = $definition->getFactoryClass();
+        $factoryMethod = $definition->getFactoryMethod();
+
+        if (false !== $index = $this->parameters->resolve($factoryClass)) {
+            $factoryClass = $this->getParameter($index);
         }
 
-        $this->add($id, $service);
+        if (false !== $index = $this->parameters->resolve($factoryMethod)) {
+            $factoryMethod = $this->getParameter($index);
+        }
+
+        if (!class_exists($factoryClass, true) || !method_exists($factoryClass, $factoryMethod)) {
+            throw new InvalidArgumentException(sprintf(
+                'Not exist factory "%s::%s()" defined in service id "%s"',
+                $factoryClass,
+                $factoryMethod,
+                $id
+            ));
+        }
+
+        $arguments = $this->prepareArguments($definition->getArguments(), $id, $class);
+        $service   = call_user_func_array(array($factoryClass, $factoryMethod), $arguments);
+
+        if (!is_a($service, $class)) {
+            throw new InvalidArgumentException(sprintf(
+                'The service id "%s" return by factory "%s::%s()", do not return a specified service "%s".',
+                $id,
+                $factoryClass,
+                $factoryMethod,
+                $class
+            ));
+        }
+
         return $service;
     }
 
@@ -307,7 +378,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         foreach ($arguments as $value) {
             if (false !== $index = $this->parameters->resolve($value)) {
                 if ($this->parameters->has($index)) {
-                    $args[] = $this->parameters->get($index);
+                    $args[] = $this->getParameter($index);
                     continue;
                 }
 

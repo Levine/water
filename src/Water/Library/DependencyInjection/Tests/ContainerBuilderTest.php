@@ -122,15 +122,17 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->compile();
     }
 
-    public function testGet()
+    public function testGetInstantiableClass()
     {
         $container = new ContainerBuilder();
         $container->addParameter('attr', 1);
+        $container->addParameter('service_with_constructor.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor');
+        $container->addParameter('service_without_constructor.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService');
 
-        $container->register('service_with_constructor', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
+        $container->register('service_with_constructor', '%service_with_constructor.class%')
                   ->setArguments(array('%attr%', '#service_without_constructor'));
 
-        $container->register('service_without_constructor', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService')
+        $container->register('service_without_constructor', '%service_without_constructor.class%')
                   ->addMethodCall('setAttr', array(2));
 
         $this->assertInstanceOf(
@@ -138,6 +140,26 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
             $container->get('service_with_constructor')
         );
         $this->assertEquals(2, $container->get('service_without_constructor')->attr);
+    }
+
+    public function testGetFactoryClass()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+        $container->addParameter('service.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService');
+        $container->addParameter('service_factory.class', 'Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceFactory');
+        $container->addParameter('service_factory.method', 'create');
+
+        $container->register('service', '%service.class%')
+                  ->setFactoryClass('%service_factory.class%')
+                  ->setFactoryMethod('%service_factory.method%')
+                  ->addArgument('%attr%');
+
+        $this->assertInstanceOf(
+            '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService',
+            $container->get('service')
+        );
+        $this->assertEquals(1, $container->get('service')->attr);
     }
 
     public function testGetNotExistServiceException()
@@ -161,6 +183,57 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $container = new ContainerBuilder();
         $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor');
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+    public function testGetFactoryClassNotExistException()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+        $container->addParameter('service.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService');
+        $container->addParameter('service_factory.class', 'NotExistFactoryClass');
+        $container->addParameter('service_factory.method', 'create');
+
+        $container->register('service', '%service.class%')
+                  ->setFactoryClass('%service_factory.class%')
+                  ->setFactoryMethod('%service_factory.method%')
+                  ->addArgument('%attr%');
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+    public function testGetFactoryMethodNotExistException()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+        $container->addParameter('service.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService');
+        $container->addParameter('service_factory.class', 'Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceFactory');
+        $container->addParameter('service_factory.method', 'notExist');
+
+        $container->register('service', '%service.class%')
+                  ->setFactoryClass('%service_factory.class%')
+                  ->setFactoryMethod('%service_factory.method%')
+                  ->addArgument('%attr%');
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
+    public function testGetNotIsASpecifiedClassException()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+        $container->addParameter('service.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor');
+        $container->addParameter('service_factory.class', 'Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceFactory');
+        $container->addParameter('service_factory.method', 'create');
+
+        $container->register('service', '%service.class%')
+                  ->setFactoryClass('%service_factory.class%')
+                  ->setFactoryMethod('%service_factory.method%')
+                  ->addArgument('%attr%');
 
         $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
         $container->get('service');

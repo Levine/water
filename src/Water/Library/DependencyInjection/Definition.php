@@ -21,6 +21,12 @@ class Definition
     /**
      * @var string
      */
+    private $factoryClass  = '';
+    private $factoryMethod = '';
+
+    /**
+     * @var string
+     */
     private $arguments = '';
 
     /**
@@ -109,6 +115,50 @@ class Definition
     public function getClass()
     {
         return $this->class;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFactoryClass()
+    {
+        return $this->factoryClass !== '';
+    }
+
+    /**
+     * @param string $factoryClass
+     * @return Definition
+     */
+    public function setFactoryClass($factoryClass)
+    {
+        $this->factoryClass = $factoryClass;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFactoryClass()
+    {
+        return $this->factoryClass;
+    }
+
+    /**
+     * @param string $factoryMethod
+     * @return Definition
+     */
+    public function setFactoryMethod($factoryMethod)
+    {
+        $this->factoryMethod = $factoryMethod;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFactoryMethod()
+    {
+        return $this->factoryMethod;
     }
 
     /**
