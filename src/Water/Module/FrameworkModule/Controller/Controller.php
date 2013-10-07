@@ -44,4 +44,13 @@ abstract class Controller extends ContainerAware
     {
         return new RedirectResponse($url);
     }
+
+    /**
+     * @param string $name
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function getDoctrine($name = 'default')
+    {
+        return $this->container->get('doctrine')->get($name);
+    }
 }

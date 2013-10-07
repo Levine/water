@@ -94,7 +94,8 @@ abstract class Kernel
      */
     protected function setConfig()
     {
-        $configFile   = dirname($this->getReflection()->getFileName()) . '/config/application.config.php';
+        $configFile   = dirname($this->getReflection()->getFileName())
+                      . '/config/application.' . $this->environment . '.config.php';
         $this->config = new SimpleBag((file_exists($configFile)) ? (array) include $configFile : array());
     }
 
