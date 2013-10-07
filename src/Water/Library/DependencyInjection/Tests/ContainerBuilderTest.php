@@ -222,6 +222,23 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->get('service');
     }
 
+    public function testGetFactoryMethodNotStaticException()
+    {
+        $container = new ContainerBuilder();
+        $container->addParameter('attr', 1);
+        $container->addParameter('service.class', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestService');
+        $container->addParameter('service_factory.class', 'Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceFactory');
+        $container->addParameter('service_factory.method', 'notStaticCreate');
+
+        $container->register('service', '%service.class%')
+            ->setFactoryClass('%service_factory.class%')
+            ->setFactoryMethod('%service_factory.method%')
+            ->addArgument('%attr%');
+
+        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $container->get('service');
+    }
+
     public function testGetNotIsASpecifiedClassException()
     {
         $container = new ContainerBuilder();

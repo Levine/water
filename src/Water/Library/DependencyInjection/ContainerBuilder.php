@@ -346,6 +346,18 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
             ));
         }
 
+        $reflectionClass = new \ReflectionClass($factoryClass);
+        $reflectionMethod = $reflectionClass->getMethod($factoryMethod);
+
+        if (!$reflectionMethod->isStatic()){
+            throw new InvalidArgumentException(sprintf(
+                'The factory method have to be static function. ("%s::%s()" defined in service id "%s" given)',
+                $factoryClass,
+                $factoryMethod,
+                $id
+            ));
+        }
+
         $arguments = $this->prepareArguments($definition->getArguments(), $id, $class);
         $service   = call_user_func_array(array($factoryClass, $factoryMethod), $arguments);
 

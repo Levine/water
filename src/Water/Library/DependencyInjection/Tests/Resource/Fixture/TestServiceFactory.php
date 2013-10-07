@@ -13,7 +13,15 @@ namespace Water\Library\DependencyInjection\Tests\Resource\Fixture;
  */
 class TestServiceFactory
 {
-    public function create($arg)
+    public static function create($arg)
+    {
+        $test = new TestService();
+        $test->setAttr($arg);
+
+        return $test;
+    }
+
+    public function notStaticCreate($arg)
     {
         $test = new TestService();
         $test->setAttr($arg);
