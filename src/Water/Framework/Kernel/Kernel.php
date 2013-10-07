@@ -103,11 +103,11 @@ abstract class Kernel
      */
     protected function setParameters()
     {
-        $this->parameters['kernel_environment'] = $this->environment;
-        $this->parameters['kernel_debug']       = $this->debug;
-        $this->parameters['kernel_dir']         = dirname($this->getReflection()->getFileName());
-        $this->parameters['cache_dir']          = $this->parameters['kernel_dir'] . '/cache/' . $this->environment;
-        $this->parameters['root_dir']           = dirname($this->parameters['kernel_dir']);
+        $this->parameters['kernel.environment'] = $this->environment;
+        $this->parameters['kernel.debug']       = $this->debug;
+        $this->parameters['kernel.dir']         = dirname($this->getReflection()->getFileName());
+        $this->parameters['cache_dir']          = $this->parameters['kernel.dir'] . '/cache/' . $this->environment;
+        $this->parameters['root_dir']           = dirname($this->parameters['kernel.dir']);
         $this->parameters['application_config'] = $this->config;
         $this->parameters = array_merge((array) $this->config->get('parameters', array()), $this->parameters);
     }
