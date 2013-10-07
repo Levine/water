@@ -183,7 +183,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->addParameter('attr', 1);
 
         $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
-            ->setArguments(array('%attr%', '#service_without_constructor'));
+                  ->setArguments(array('%attr%', '#service_without_constructor'));
 
         $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
         $container->get('service');
