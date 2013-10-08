@@ -72,8 +72,13 @@ class FrameworkExtensionTest extends \PHPUnit_Framework_TestCase
                        ->will($this->returnSelf());
 
         $container->expects($this->any())
-            ->method('register')
-            ->will($this->returnValue($definitionMock));
+                  ->method('register')
+                  ->will($this->returnValue($definitionMock));
+
+        $container->expects($this->any())
+                  ->method('getParameter')
+                  ->with($this->equalTo('application_config'))
+                  ->will($this->returnValue(array('framework' => array('exception_action' => 'SomeController::someAction()'))));
 
         return $container;
     }
