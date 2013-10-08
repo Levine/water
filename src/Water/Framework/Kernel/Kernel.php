@@ -149,7 +149,7 @@ abstract class Kernel
     /**
      * @param Request $request
      * @param bool $catch
-     * @return Response
+     * @return Response|\Exception
      */
     public function handle(Request $request, $catch = true)
     {
