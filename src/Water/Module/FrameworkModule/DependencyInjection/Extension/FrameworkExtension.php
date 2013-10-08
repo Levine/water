@@ -21,6 +21,8 @@ class FrameworkExtension implements ExtensionInterface
      */
     public function extend(ContainerBuilderInterface $container)
     {
+        $appConfig = $container->getParameter('application_config');
+
         $container->register('resolver', '\Water\Module\FrameworkModule\Resolver\ControllerResolver')
                   ->setArguments(array('#service_container'));
 
@@ -36,6 +38,12 @@ class FrameworkExtension implements ExtensionInterface
         $container->register('response.listener', '\Water\Library\Kernel\EventListener\ResponseListener')
                   ->setArguments(array('UTF-8'))
                   ->addTag('kernel.dispatcher_subscriber');
+
+        if (isset($appConfig['framework']) && isset($appConfig['framework']['exception_action'])) {
+            $container->register('response.exception', '\Water\Library\Kernel\EventListener\ExceptionListener')
+                      ->setArguments(array($appConfig['framework']['exception_action']))
+                      ->addTag('kernel.dispatcher_subscriber');
+        }
 
         $container->register('http_kernel', '\Water\Library\Kernel\HttpKernel')
                   ->setArguments(array('#dispatcher', '#resolver'));
