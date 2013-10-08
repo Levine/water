@@ -9,6 +9,8 @@ namespace Water\Module\FrameworkModule\Controller;
 use Water\Library\DependencyInjection\ContainerAware;
 use Water\Library\Http\RedirectResponse;
 use Water\Library\Http\Request;
+use Water\Library\Http\Response;
+use Water\Library\View\View;
 
 /**
  * Class Controller
@@ -24,6 +26,18 @@ abstract class Controller extends ContainerAware
     public function generateUrl($name)
     {
         return $this->container->get('router')->generate($name);
+    }
+
+    /**
+     * @param string $fileName
+     * @param array  $parameters
+     * @return Response
+     */
+    public function render($fileName, $parameters = array())
+    {
+        // TODO - review.
+        $view = new View();
+        return Response::create($view->render($fileName, (array) $parameters));
     }
 
     /**
@@ -47,10 +61,13 @@ abstract class Controller extends ContainerAware
 
     /**
      * @param string $name
-     * @return Doctrine\ORM\EntityManager
+     * @return Doctrine\ORM\EntityManager|null
      */
     public function getDoctrine($name = 'default')
     {
-        return $this->container->get('doctrine')->get($name);
+        if ($this->container->has('doctrine')){
+            return $this->container->get('doctrine')->get($name);
+        }
+        return null;
     }
 }

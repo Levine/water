@@ -130,6 +130,7 @@ abstract class Kernel
     {
         $this->container = $this->getContainer();
         $this->container->add('kernel', $this);
+        $this->container->add('modules', $this->modules);
         $this->container->setParameters($this->parameters);
     }
 

@@ -71,4 +71,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->getMockForAbstractClass('\Water\Module\FrameworkModule\Controller\Controller');
         $this->assertInstanceOf('\Water\Library\Http\RedirectResponse', $controller->redirect('/'));
     }
+
+    public function testGetDoctrine()
+    {
+        $controller = $this->getMockForAbstractClass('\Water\Module\FrameworkModule\Controller\Controller');
+        $controller->setContainer($this->getMock('Water\Library\DependencyInjection\Container'));
+        $this->assertNull($controller->getDoctrine());
+    }
 }

@@ -37,7 +37,22 @@ class ControllerResolver implements ControllerResolverInterface
             return new $controller;
         }
 
-        if (false === $pos = strpos($controller, '::')) {
+        $controller = $this->createController($controller);
+
+        return $controller;
+    }
+
+    /**
+     * Method to create the controller instance.
+     *
+     * @param string $controller
+     * @return object
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function createController($controller)
+    {
+        if (substr_count($controller, '::') != 1) {
             throw new InvalidArgumentException(sprintf(
                 'Controller has to be a "array", "invokable class", "function" or "<ControllerName>::<methodName>" ("%s" given).',
                 $controller
@@ -48,7 +63,7 @@ class ControllerResolver implements ControllerResolverInterface
         $method = strtok('::');
 
         if (!class_exists($class, true)
-            || !is_callable($controller = array($this->createController($class), $method))
+            || !is_callable($controller = array(new $class(), $method))
         ) {
             throw new InvalidArgumentException("Controller isn't a valid class or isn't callable.");
         }
@@ -56,21 +71,14 @@ class ControllerResolver implements ControllerResolverInterface
         return $controller;
     }
 
-    /**
-     * Method to create the controller instance.
-     *
-     * @param string $class
-     * @return object
-     */
-    protected function createController($class)
-    {
-        return new $class();
-    }
-
     public function getArguments(Request $request)
     {
-        if (!is_array($args = $request->getResource()->get('_args', array()))) {
-            $args = array($args);
+        $args = array();
+        if ($request->getResource()->has('_args')) {
+            $args = $request->getResource()->get('_args');
+            if (!is_array($args)) {
+                $args = array($args);
+            }
         }
         return $args;
     }

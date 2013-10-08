@@ -9,6 +9,7 @@ namespace Water\Module\FrameworkModule\Resolver;
 use Water\Library\DependencyInjection\ContainerAwareInterface;
 use Water\Library\DependencyInjection\ContainerInterface;
 use Water\Library\Http\Request;
+use Water\Library\Kernel\Exception\InvalidArgumentException;
 use Water\Library\Kernel\Resolver\ControllerResolver as BaseControllerResolver;
 
 /**
@@ -33,14 +34,48 @@ class ControllerResolver extends BaseControllerResolver
         $this->container = $container;
     }
 
-    protected function createController($class)
+    protected function createController($controller)
     {
-        $controller = parent::createController($class);
+        if (preg_match(
+            '/^(?P<module>[a-zA-Z0-9_.-]+)\:(?P<controller>[a-zA-Z0-9_.-]+)\:(?P<method>[a-zA-Z0-9_.-]+)$/',
+            $controller,
+            $matches
+        )) {
+            $modules = $this->container->get('modules');
+            if ($modules->has($matches['module'])) {
+                $controller = $modules->get($matches['module'])->getNamespaceName()
+                            . '\\Controller\\' . $matches['controller'] . '::' . $matches['method'];
+            } else {
+                throw new InvalidArgumentException(sprintf(
+                    'No exist module with name "%s". ("%s" given)',
+                    $matches['module'],
+                    $controller
+                ));
+            }
+        }
 
-        if (is_a($controller, '\Water\Library\DependencyInjection\ContainerAwareInterface')) {
+        if (substr_count($controller, '::') != 1) {
+            throw new InvalidArgumentException(sprintf(
+                'Controller has to be a "array", "invokable class", "function", '
+                . '"<ControllerFullName>::<methodName>" or "<ModuleName>:<ControllerShortName>:<methodName>"'
+                . ' ("%s" given).',
+                $controller
+            ));
+        }
+
+        $class  = strtok($controller, '::');
+        $method = strtok('::');
+
+        if (!class_exists($class, true)
+            || !is_callable($return = array($controller = new $class(), $method))
+        ) {
+            throw new InvalidArgumentException("Controller isn't a valid class or isn't callable.");
+        }
+
+        if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($this->container);
         }
 
-        return $controller;
+        return $return;
     }
 }
