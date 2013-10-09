@@ -100,6 +100,8 @@ class View
 
         // Prevent some problem.
         unset($parameters['this']);
+        unset($parameters['view']);
+        $parameters['view'] = $this;
 
         extract($parameters, EXTR_SKIP);
         while (!empty($this->extendStack)) {
