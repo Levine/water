@@ -54,8 +54,7 @@ class HttpKernel implements HttpKernelInterface
             if ($catch === false) {
                 throw $exception;
             }
-            $response = $this->handleException($request, $exception);
-            return ($response instanceof Response) ? $response : $exception;
+            return $this->handleException($request, $exception);
         }
     }
 
@@ -113,7 +112,7 @@ class HttpKernel implements HttpKernelInterface
         if ($event->hasResponse()) {
             return $this->filterResponse($request, $event->getResponse());
         }
-        return $exception;
+        return $this->filterResponse($request, Response::create('Internal Server Error.', 500));
     }
 
     /**

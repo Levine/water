@@ -22,6 +22,8 @@ interface HttpKernelInterface
      * @param Request $request
      * @param bool    $catch
      * @return Response
+     *
+     * @throws \Exception
      */
     public function handle(Request $request, $catch = true);
 

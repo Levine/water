@@ -149,8 +149,8 @@ abstract class Kernel
 
     /**
      * @param Request $request
-     * @param bool $catch
-     * @return Response|\Exception
+     * @param bool    $catch
+     * @return Response
      */
     public function handle(Request $request, $catch = true)
     {
@@ -159,7 +159,8 @@ abstract class Kernel
         if ($this->compiled === false) {
             $this->compile();
         }
-        return $this->getHttpKernel()->handle($request, $catch);
+        $response = $this->getHttpKernel()->handle($request, $catch);
+        return $response;
     }
 
     /**

@@ -57,8 +57,8 @@ class ControllerResolver extends BaseControllerResolver
         if (substr_count($controller, '::') != 1) {
             throw new InvalidArgumentException(sprintf(
                 'Controller has to be a "array", "invokable class", "function", '
-                . '"<ControllerFullName>::<methodName>" or "<ModuleName>:<ControllerShortName>:<methodName>"'
-                . ' ("%s" given).',
+                . '"<ControllerFullName>::<methodName>" or "<ModuleName>:<ControllerShortName>:<methodName>" '
+                . '("%s" given).',
                 $controller
             ));
         }

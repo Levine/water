@@ -8,6 +8,7 @@ namespace Water\Module\FrameworkModule\DependencyInjection\Extension;
 
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
 use Water\Library\DependencyInjection\Extension\ExtensionInterface;
+use Water\Library\Http\Response;
 
 /**
  * Class FrameworkExtension
@@ -42,6 +43,12 @@ class FrameworkExtension implements ExtensionInterface
         if (isset($appConfig['framework']) && isset($appConfig['framework']['exception_action'])) {
             $container->register('response.exception', '\Water\Library\Kernel\EventListener\ExceptionListener')
                       ->setArguments(array($appConfig['framework']['exception_action']))
+                      ->addTag('kernel.dispatcher_subscriber');
+        } else {
+            $container->register('response.exception', '\Water\Library\Kernel\EventListener\ExceptionListener')
+                      ->setArguments(array(
+                          function (\Exception $e) { return Response::create('Internal Server Error.', 500); }
+                      ))
                       ->addTag('kernel.dispatcher_subscriber');
         }
 

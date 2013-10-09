@@ -27,40 +27,7 @@ class FrameworkExtensionTest extends \PHPUnit_Framework_TestCase
 
     private function getContainerBuilderMock()
     {
-        $methods = array(
-            'hasParameter',
-            'setParameters',
-            'addParameter',
-            'getParameters',
-            'getParameter',
-            'has',
-            'setServices',
-            'add',
-            'getServices',
-            'get',
-            'register',
-            'hasDefinition',
-            'setDefinitions',
-            'addDefinition',
-            'getDefinitions',
-            'getDefinitionsByTag',
-            'getDefinition',
-            'registerExtension',
-            'hasExtension',
-            'setExtensions',
-            'removeExtension',
-            'addExtension',
-            'getExtensions',
-            'getExtension',
-            'setCompiler',
-            'getCompiler',
-            'addProcess',
-            'compile'
-        );
-        $container = $this->getMock(
-            '\Water\Library\DependencyInjection\ContainerBuilderInterface',
-            $methods
-        );
+        $container = $this->getMock('\Water\Library\DependencyInjection\ContainerBuilder');
 
         $definitionMock = $this->getMockBuilder(
                                    '\Water\Library\DependencyInjection\Definition',
@@ -70,15 +37,9 @@ class FrameworkExtensionTest extends \PHPUnit_Framework_TestCase
         $definitionMock->expects($this->any())
                        ->method('setArguments')
                        ->will($this->returnSelf());
-
         $container->expects($this->any())
                   ->method('register')
                   ->will($this->returnValue($definitionMock));
-
-        $container->expects($this->any())
-                  ->method('getParameter')
-                  ->with($this->equalTo('application_config'))
-                  ->will($this->returnValue(array('framework' => array('exception_action' => 'SomeController::someAction()'))));
 
         return $container;
     }
@@ -86,7 +47,26 @@ class FrameworkExtensionTest extends \PHPUnit_Framework_TestCase
     public function testFrameworkExtension()
     {
         $extension = new FrameworkExtension();
+        $container = $this->getContainerBuilderMock();
+        $container->expects($this->any())
+                  ->method('getParameter')
+                  ->with($this->equalTo('application_config'))
+                  ->will($this->returnValue(
+                      array('framework' => array('exception_action' => 'SomeController::someAction()'))
+                  ));
 
-        $extension->extend($this->getContainerBuilderMock());
+        $extension->extend($container);
+    }
+
+    public function testDefaultExceptionListener()
+    {
+        $extension = new FrameworkExtension();
+        $container = $this->getContainerBuilderMock();
+        $container->expects($this->any())
+                  ->method('getParameter')
+                  ->with($this->equalTo('application_config'))
+                  ->will($this->returnValue(array()));
+
+        $extension->extend($container);
     }
 }

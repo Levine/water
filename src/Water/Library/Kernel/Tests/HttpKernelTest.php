@@ -128,7 +128,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
             array('_controller' => function () { return true; })
         ));
 
-        $this->assertInstanceOf('\Water\Library\Kernel\Exception\LogicException', $response);
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('Internal Server Error.', $response->getContent());
     }
 
     public function testHandleControllerNotFoundException()
@@ -136,7 +138,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $kernel   = new HttpKernel(new EventDispatcher(), new ControllerResolver());
         $response = $kernel->handle(Request::create('/', 'GET', array(), array()));
 
-        $this->assertInstanceOf('\Water\Library\Kernel\Exception\ControllerNotFoundException', $response);
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('Internal Server Error.', $response->getContent());
     }
 
     public function testHandleRouteNotFoundException()
@@ -144,7 +148,9 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $kernel   = $this->getHttpKernel();
         $response = $kernel->handle(Request::create('/not/exist'));
 
-        $this->assertInstanceOf('\Water\Library\Kernel\Exception\RouteNotFoundException', $response);
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('Internal Server Error.', $response->getContent());
     }
 
     public function testHandleException()
@@ -168,6 +174,8 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         );
         $response = $kernel->handle(Request::create('/not/exist'));
 
-        $this->assertInstanceOf('\Exception', $response);
+        $this->assertInstanceOf('\Water\Library\Http\Response', $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('Internal Server Error.', $response->getContent());
     }
 }
