@@ -118,9 +118,9 @@ abstract class Kernel
      */
     private function initialize()
     {
-        $this->initializeContainer();
-
         $this->initializeModules();
+
+        $this->initializeContainer();
     }
 
     /**
