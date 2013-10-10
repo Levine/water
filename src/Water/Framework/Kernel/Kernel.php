@@ -124,6 +124,20 @@ abstract class Kernel
     }
 
     /**
+     * Initialize modules.
+     */
+    private function initializeModules()
+    {
+        $modules = array();
+        foreach($this->getModules() as $module) {
+            $moduleId = substr($module->getShortName(), 0, -6);
+            $modules[$moduleId] = $module;
+        }
+
+        $this->modules->fromArray($modules);
+    }
+
+    /**
      * Initialize container.
      */
     private function initializeContainer()
@@ -132,19 +146,6 @@ abstract class Kernel
         $this->container->add('kernel', $this);
         $this->container->add('modules', $this->modules);
         $this->container->setParameters($this->parameters);
-    }
-
-    /**
-     * Initialize modules.
-     */
-    private function initializeModules()
-    {
-        $modules = array();
-        foreach($this->getModules() as $module) {
-            $modules[$module->getShortName()] = $module;
-        }
-
-        $this->modules->fromArray($modules);
     }
 
     /**

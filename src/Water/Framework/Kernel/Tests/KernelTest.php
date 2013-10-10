@@ -35,7 +35,7 @@ class KernelTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Water\Library\DependencyInjection\ContainerBuilderInterface', $kernel->getContainer());
 
         $modules = $kernel->getModules();
-        $this->assertTrue(isset($modules['TestModule']));
+        $this->assertTrue(isset($modules['Test']));
     }
 
     public function testGetHttpKernel()

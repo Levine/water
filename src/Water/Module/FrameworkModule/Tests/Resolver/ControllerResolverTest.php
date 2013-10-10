@@ -61,7 +61,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
 
         $bag->expects($this->any())
             ->method('has')
-            ->with($this->equalTo('SomeModule'))
+            ->with($this->equalTo('Some'))
             ->will($this->returnValue($moduleExist));
 
         $bag->expects($this->any())
@@ -93,7 +93,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
             '/',
             'GET',
             array(),
-            array('_controller' => 'SomeModule:IndexController:indexAction')
+            array('_controller' => 'Some:Index:indexAction')
         ));
     }
 
@@ -106,7 +106,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
             '/',
             'GET',
             array(),
-            array('_controller' => 'SomeModule:IndexController:indexAction')
+            array('_controller' => 'Some:Index:indexAction')
         ));
     }
 
@@ -119,7 +119,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
             '/',
             'GET',
             array(),
-            array('_controller' => 'SomeModule::IndexController::indexAction')
+            array('_controller' => 'Some::Index::indexAction')
         ));
     }
 }
