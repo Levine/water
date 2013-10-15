@@ -4,7 +4,7 @@
  * Date: 09/10/13
  * Time: 17:49
  */
-namespace Water\Module\FrameworkModule\EventListener;
+namespace Water\Module\TemplateModule\EventListener;
 
 use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\EventDispatcher\SubscriberInterface;
@@ -25,6 +25,11 @@ class TemplateListener implements SubscriberInterface
      */
     public function onKernelView(ResponseFromControllerEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
+        $response = $event->getResponse();
+        if (!is_array($response)) {
+            return;
+        }
+
 
     }
 
