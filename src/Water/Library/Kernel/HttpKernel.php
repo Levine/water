@@ -137,7 +137,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * @return \Water\Library\Kernel\Resolver\ControllerResolverInterface
      */
-    public function getControllerResolver()
+    public function getResolver()
     {
         return $this->resolver;
     }

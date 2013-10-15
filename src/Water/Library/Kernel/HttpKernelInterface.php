@@ -35,5 +35,5 @@ interface HttpKernelInterface
     /**
      * @return ControllerResolverInterface
      */
-    public function getControllerResolver();
+    public function getResolver();
 }
