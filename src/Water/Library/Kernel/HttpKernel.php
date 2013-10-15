@@ -85,10 +85,7 @@ class HttpKernel implements HttpKernelInterface
             $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
 
             if (!$event->hasResponse()) {
-                throw new LogicException(sprintf(
-                    'Controller must return "array" or "Response" ("%s" given).',
-                    (is_object($response)) ? get_class($response) : gettype($response)
-                ));
+                throw new LogicException('The controller return can not be converted in Response.');
             }
 
             $response = $event->getResponse();
