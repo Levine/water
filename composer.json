@@ -27,6 +27,10 @@
         "php": "~5.3"
     },
 
+    "replace": {
+        "pombacorp/dependency-injection": "self.version"
+    },
+
     "autoload": {
         "psr-0": {
             "Water": "./src"
