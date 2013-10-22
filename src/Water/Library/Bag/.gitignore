@@ -1,0 +1,10 @@
+# PHPUnit
+/coverage/
+
+# Composer
+/bin/
+/vendor/
+/composer.lock
+
+# PhpStorm
+/.idea
