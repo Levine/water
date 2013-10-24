@@ -28,6 +28,7 @@
     },
 
     "replace": {
+        "pombacorp/bag": "self.version",
         "pombacorp/dependency-injection": "self.version"
     },
 
