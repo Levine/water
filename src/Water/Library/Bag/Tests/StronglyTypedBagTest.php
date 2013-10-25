@@ -7,7 +7,6 @@
 namespace Water\Library\Bag\Tests;
 
 use Water\Library\Bag\StronglyTypedBag;
-use Water\Library\Bag\Type\IntegerType;
 
 /**
  * Class StronglyTypedBagTest
@@ -47,7 +46,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
         new StronglyTypedBag($this->getIntegerTypeMock(), array(1, 2, 'index' => 'value'));
     }
 
@@ -58,7 +57,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
         $bag->append('value');
     }
 
@@ -69,8 +68,20 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
         $bag->set('otherIndex', 'value');
+    }
+
+    public function testMerge()
+    {
+        $bag = new StronglyTypedBag($this->getIntegerTypeMock());
+        $bag->fromArray(array(1, 2));
+        $bag->merge(array(3));
+
+        $this->assertCount(3, $bag);
+
+        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $bag->merge(array('1'));
     }
 
     public function testFromArray()
@@ -80,7 +91,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
         $bag->fromArray(array(1, 2, 'index' => 'value'));
     }
 
@@ -93,7 +104,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $bag);
         $this->assertEquals(2, $bag['index']);
 
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
         $bag[] = 'value';
     }
 }

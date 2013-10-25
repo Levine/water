@@ -55,6 +55,14 @@ interface BagInterface extends ArrayAccess, Countable, IteratorAggregate, Serial
     public function get($index, $default = self::DEFAULT_VALUE);
 
     /**
+     * Merge the current array with input.
+     *
+     * @param array $input
+     * @return BagInterface
+     */
+    public function merge(array $input);
+
+    /**
      * Change values for another array and returns the old array.
      *
      * @param array $input

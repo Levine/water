@@ -76,6 +76,19 @@ class StronglyTypedBag extends SimpleBag
 
     /**
      * {@inheritdoc}
+     */
+    public function merge(array $input)
+    {
+        foreach ($input as $value) {
+            $this->validate($value);
+        }
+
+        parent::merge($input);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      */

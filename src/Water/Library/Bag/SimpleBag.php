@@ -93,6 +93,16 @@ class SimpleBag extends ArrayObject implements BagInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function merge(array $input)
+    {
+        $merge = array_merge((array) $this, $input);
+        $this->fromArray($merge);
+        return $this;
+    }
+
+    /**
      * Override to the local method.
      */
     public function exchangeArray($input)
