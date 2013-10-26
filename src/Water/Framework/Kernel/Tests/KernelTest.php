@@ -6,7 +6,6 @@
  */
 namespace Water\Framework\Kernel\Tests;
 
-use Water\Framework\Kernel\Tests\Module\Resource\TestModule;
 use Water\Framework\Kernel\Tests\Resource\TestKernel;
 use Water\Library\Http\Request;
 
@@ -15,7 +14,6 @@ use Water\Library\Http\Request;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-
 class KernelTest extends \PHPUnit_Framework_TestCase 
 {
     protected function setUp()
@@ -40,8 +38,6 @@ class KernelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetHttpKernel()
     {
-        $request = Request::create('/');
-
         $httpKernelMock = $this->getMockBuilder('Water\Library\Kernel\HttpKernel')
                                ->disableOriginalConstructor()
                                ->getMock();
