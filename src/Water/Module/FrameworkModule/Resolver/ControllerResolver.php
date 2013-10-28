@@ -34,6 +34,9 @@ class ControllerResolver extends BaseControllerResolver
         $this->container = $container;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function createController($controller)
     {
         if (preg_match(
