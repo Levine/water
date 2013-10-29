@@ -24,13 +24,20 @@ class ControllerResolver extends BaseControllerResolver
     protected $container = null;
 
     /**
+     * @var ControllerParserInterface
+     */
+    protected $parser = null;
+
+    /**
      * Constructor.
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface        $container
+     * @param ControllerParserInterface $parser
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, ControllerParserInterface $parser = null)
     {
         $this->container = $container;
+        $this->parser    = ($parser !== null) ? $parser : new ControllerParser($this->container);
     }
 
     /**
@@ -38,36 +45,9 @@ class ControllerResolver extends BaseControllerResolver
      */
     protected function createController($controller)
     {
-        if (preg_match(
-            '/^(?P<module>[a-zA-Z0-9_.-]+)\:(?P<controller>[a-zA-Z0-9_.-]+)\:(?P<method>[a-zA-Z0-9_.-]+)$/',
-            $controller,
-            $matches
-        )) {
-            $modules = $this->container->get('modules');
-            if ($modules->has($matches['module'])) {
-                $controller = $modules->get($matches['module'])->getNamespaceName()
-                            . '\\Controller\\' . $matches['controller'] . 'Controller::'
-                            . $matches['method'];
-            } else {
-                throw new InvalidArgumentException(sprintf(
-                    'No exist module with name "%s". ("%s" given)',
-                    $matches['module'],
-                    $controller
-                ));
-            }
-        }
-
-        if (substr_count($controller, '::') != 1) {
-            throw new InvalidArgumentException(sprintf(
-                'Controller has to be a "array", "invokable class", "function", '
-                . '"<ControllerFullName>::<methodName>" or "<ModuleName>:<ControllerShortName>:<methodName>" '
-                . '("%s" given).',
-                $controller
-            ));
-        }
-
-        $class  = strtok($controller, '::');
-        $method = strtok('::');
+        $controller = $this->parser->parse($controller);
+        $class      = strtok($controller, '::');
+        $method     = strtok('::');
 
         if (!class_exists($class, true)
             || !is_callable($return = array($controller = new $class(), $method))
