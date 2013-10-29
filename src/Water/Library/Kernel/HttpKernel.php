@@ -9,6 +9,7 @@ namespace Water\Library\Kernel;
 use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Response;
 use Water\Library\Http\Request;
+use Water\Library\Kernel\Event\FilterControllerEvent;
 use Water\Library\Kernel\Event\FilterResponseEvent;
 use Water\Library\Kernel\Event\ResponseEvent;
 use Water\Library\Kernel\Event\ResponseFromControllerResultEvent;
@@ -77,6 +78,9 @@ class HttpKernel implements HttpKernelInterface
         if (false === $controller = $this->resolver->getController($request)) {
             throw new ControllerNotFoundException(sprintf('Not found controller for path "%s".', $request->getPath()));
         }
+
+        $event = new FilterControllerEvent($this, $request, $controller);
+        $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
 
         $response = call_user_func_array($controller, $this->resolver->getArguments($request));
 

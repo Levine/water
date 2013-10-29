@@ -8,7 +8,7 @@ namespace Water\Module\TeapotModule\EventListener;
 
 use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\EventDispatcher\SubscriberInterface;
-use Water\Library\Kernel\Event\ResponseEvent;
+use Water\Library\Kernel\Event\ResponseFromControllerResultEvent;
 use Water\Library\Kernel\KernelEvents;
 
 /**
@@ -19,11 +19,11 @@ use Water\Library\Kernel\KernelEvents;
 class TemplateListener implements SubscriberInterface
 {
     /**
-     * @param ResponseEvent            $event
-     * @param string                   $eventName
-     * @param EventDispatcherInterface $dispatcher
+     * @param ResponseFromControllerResultEvent $event
+     * @param string                            $eventName
+     * @param EventDispatcherInterface          $dispatcher
      */
-    public function onKernelView(ResponseEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    public function onKernelView(ResponseFromControllerResultEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
 
     }

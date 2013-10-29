@@ -20,6 +20,12 @@ class KernelEvents
     const REQUEST = 'kernel.request';
 
     /**
+     * Filter controller.
+     * Event passed: \Water\Library\Kernel\Event\FilterControllerEvent
+     */
+    const CONTROLLER = 'kernel.controller';
+
+    /**
      * Generate view.
      * Event passed: \Water\Library\Kernel\Event\ResponseFromControllerResultEvent
      */
