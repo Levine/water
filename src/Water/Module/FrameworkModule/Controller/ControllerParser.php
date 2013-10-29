@@ -44,8 +44,8 @@ class ControllerParser implements ControllerParserInterface
             $modules = $this->container->get('modules');
             if ($modules->has($matches['module'])) {
                 $controller = $modules->get($matches['module'])->getNamespaceName()
-                    . '\\Controller\\' . $matches['controller'] . 'Controller::'
-                    . $matches['method'];
+                            . '\\Controller\\' . $matches['controller'] . 'Controller::'
+                            . $matches['method'];
             } else {
                 throw new InvalidArgumentException(sprintf(
                     'No exist module with name "%s". ("%s" given)',
