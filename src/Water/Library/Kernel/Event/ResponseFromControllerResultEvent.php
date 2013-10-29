@@ -10,25 +10,25 @@ use Water\Library\Kernel\HttpKernelInterface;
 use Water\Library\Http\Request;
 
 /**
- * Class ResponseFromControllerEvent
+ * Class ResponseFromControllerResultEvent
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class ResponseFromControllerEvent extends ResponseEvent
+class ResponseFromControllerResultEvent extends ResponseEvent
 {
     /**
      * @var mixed
      */
-    protected $response = null;
+    protected $controllerResult = null;
 
     /**
      * {@inheritdoc}
      *
-     * @param mixed $response
+     * @param mixed $controllerResult
      */
-    public function __construct(HttpKernelInterface $kernel, Request $request, $response)
+    public function __construct(HttpKernelInterface $kernel, Request $request, $controllerResult)
     {
         parent::__construct($kernel, $request);
-        $this->response = $response;
+        $this->controllerResult = $controllerResult;
     }
 }

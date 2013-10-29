@@ -21,7 +21,7 @@ class KernelEvents
 
     /**
      * Generate view.
-     * Event passed: \Water\Library\Kernel\Event\ResponseFromControllerEvent
+     * Event passed: \Water\Library\Kernel\Event\ResponseFromControllerResultEvent
      */
     const VIEW = 'kernel.view';
 

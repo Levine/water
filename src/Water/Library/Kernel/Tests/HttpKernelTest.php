@@ -9,7 +9,7 @@ namespace Water\Library\Kernel\Tests;
 use Water\Library\EventDispatcher\EventDispatcher;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
-use Water\Library\Kernel\Event\ResponseFromControllerEvent;
+use Water\Library\Kernel\Event\ResponseFromControllerResultEvent;
 use Water\Library\Kernel\EventListener\ExceptionListener;
 use Water\Library\Kernel\EventListener\ResponseListener;
 use Water\Library\Kernel\EventListener\RouterListener;
@@ -103,7 +103,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $kernel = $this->getHttpKernel();
         $kernel->getDispatcher()->addListener(
             KernelEvents::VIEW,
-            function(ResponseFromControllerEvent $event) { $event->setResponse(Response::create('Test')); },
+            function(ResponseFromControllerResultEvent $event) { $event->setResponse(Response::create('Test')); },
             64
         );
 
