@@ -9,7 +9,7 @@ namespace Water\Library\Kernel;
 use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
-use Water\Library\Kernel\Resolver\ControllerResolverInterface;
+use Water\Library\Kernel\Controller\ControllerResolverInterface;
 
 /**
  * Interface HttpKernelInterface

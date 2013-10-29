@@ -15,7 +15,7 @@ use Water\Library\Kernel\Event\ResponseFromControllerEvent;
 use Water\Library\Kernel\Event\ResponseFromExceptionEvent;
 use Water\Library\Kernel\Exception\ControllerNotFoundException;
 use Water\Library\Kernel\Exception\LogicException;
-use Water\Library\Kernel\Resolver\ControllerResolverInterface;
+use Water\Library\Kernel\Controller\ControllerResolverInterface;
 
 /**
  * Class HttpKernel
@@ -135,7 +135,7 @@ class HttpKernel implements HttpKernelInterface
     }
 
     /**
-     * @return \Water\Library\Kernel\Resolver\ControllerResolverInterface
+     * @return \Water\Library\Kernel\Controller\ControllerResolverInterface
      */
     public function getResolver()
     {

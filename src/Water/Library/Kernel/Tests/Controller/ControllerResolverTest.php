@@ -4,12 +4,12 @@
  * Date: 23/09/13
  * Time: 08:20
  */
-namespace Water\Library\Kernel\Tests\Resolver;
+namespace Water\Library\Kernel\Tests\Controller;
 
 use Water\Library\Http\Request;
-use Water\Library\Kernel\Resolver\ControllerResolver;
-use Water\Library\Kernel\Tests\Resolver\Resource\Controller;
-use Water\Library\Kernel\Tests\Resolver\Resource\InvokableClass;
+use Water\Library\Kernel\Controller\ControllerResolver;
+use Water\Library\Kernel\Tests\Controller\Resource\Controller;
+use Water\Library\Kernel\Tests\Controller\Resource\InvokableClass;
 
 /**
  * Class ControllerResolverTest
@@ -48,7 +48,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
         $actual = $resolver->getController($this->getRequest($expected = new InvokableClass()));
         $this->assertEquals($actual, $expected);
 
-        $actual = $resolver->getController($this->getRequest('\Water\Library\Kernel\Tests\Resolver\Resource\InvokableClass'));
+        $actual = $resolver->getController($this->getRequest('\Water\Library\Kernel\Tests\Controller\Resource\InvokableClass'));
         $this->assertEquals(new InvokableClass(), $actual);
 
         $actual = $resolver->getController($this->getRequest($expected = 'is_string'));
@@ -57,7 +57,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
         $actual = $resolver->getController($this->getRequest($expected = array(new Controller(), 'indexAction')));
         $this->assertEquals($expected, $actual);
 
-        $actual = $resolver->getController($this->getRequest('\Water\Library\Kernel\Tests\Resolver\Resource\Controller::indexAction'));
+        $actual = $resolver->getController($this->getRequest('\Water\Library\Kernel\Tests\Controller\Resource\Controller::indexAction'));
         $this->assertEquals(array(new Controller(), 'indexAction'), $actual);
     }
 

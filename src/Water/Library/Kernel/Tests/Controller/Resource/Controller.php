@@ -4,16 +4,16 @@
  * Date: 23/09/13
  * Time: 09:07
  */
-namespace Water\Library\Kernel\Tests\Resolver\Resource;
+namespace Water\Library\Kernel\Tests\Controller\Resource;
 
 /**
- * Class InvokableClass
+ * Class Controller
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class InvokableClass
+class Controller
 {
-    public function __invoke()
+    public function indexAction()
     {
         return true;
     }

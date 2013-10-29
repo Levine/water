@@ -4,13 +4,12 @@
  * Date: 29/09/13
  * Time: 14:44
  */
-namespace Water\Module\FrameworkModule\Resolver;
+namespace Water\Module\FrameworkModule\Controller;
 
 use Water\Library\DependencyInjection\ContainerAwareInterface;
 use Water\Library\DependencyInjection\ContainerInterface;
-use Water\Library\Http\Request;
 use Water\Library\Kernel\Exception\InvalidArgumentException;
-use Water\Library\Kernel\Resolver\ControllerResolver as BaseControllerResolver;
+use Water\Library\Kernel\Controller\ControllerResolver as BaseControllerResolver;
 
 /**
  * Class ControllerResolver

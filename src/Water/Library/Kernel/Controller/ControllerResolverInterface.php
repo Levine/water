@@ -4,7 +4,7 @@
  * Date: 22/09/13
  * Time: 18:43
  */
-namespace Water\Library\Kernel\Resolver;
+namespace Water\Library\Kernel\Controller;
 
 use Water\Library\Http\Request;
 

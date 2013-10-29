@@ -4,7 +4,7 @@
  * Date: 17/09/13
  * Time: 08:43
  */
-namespace Water\Library\Kernel\Resolver;
+namespace Water\Library\Kernel\Controller;
 
 use Water\Library\Http\Request;
 use Water\Library\Kernel\Exception\InvalidArgumentException;

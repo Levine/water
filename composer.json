@@ -24,7 +24,8 @@
     },
 
     "require": {
-        "php": "~5.3"
+        "php": "~5.3",
+        "pombacorp/teapot": "1.0.*@dev"
     },
 
     "replace": {

@@ -4,7 +4,7 @@
  * Date: 03/10/13
  * Time: 16:31
  */
-namespace Water\Module\FrameworkModule\Tests\Resolver\Resource;
+namespace Water\Module\FrameworkModule\Tests\Controller\Resource;
 
 use Water\Library\DependencyInjection\ContainerAware;
 

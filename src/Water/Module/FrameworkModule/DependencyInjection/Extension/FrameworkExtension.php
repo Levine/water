@@ -24,7 +24,7 @@ class FrameworkExtension implements ExtensionInterface
     {
         $appConfig = $container->getParameter('application_config');
 
-        $container->register('resolver', '\Water\Module\FrameworkModule\Resolver\ControllerResolver')
+        $container->register('resolver', '\Water\Module\FrameworkModule\Controller\ControllerResolver')
                   ->setArguments(array('#service_container'));
 
         $container->register('dispatcher', '\Water\Library\EventDispatcher\EventDispatcher');

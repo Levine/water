@@ -4,10 +4,10 @@
  * Date: 03/10/13
  * Time: 16:27
  */
-namespace Water\Module\FrameworkModule\Tests\Resolver;
+namespace Water\Module\FrameworkModule\Tests\Controller;
 
 use Water\Library\Http\Request;
-use Water\Module\FrameworkModule\Resolver\ControllerResolver;
+use Water\Module\FrameworkModule\Controller\ControllerResolver;
 
 /**
  * Class ControllerResolverTest
@@ -78,7 +78,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
             '/',
             'GET',
             array(),
-            array('_controller' => '\Water\Module\FrameworkModule\Tests\Resolver\Resource\TestController::indexAction')
+            array('_controller' => '\Water\Module\FrameworkModule\Tests\Controller\Resource\TestController::indexAction')
         ));
 
         $this->assertAttributeInstanceOf('\Water\Library\DependencyInjection\ContainerInterface', 'container', $controller[0]);

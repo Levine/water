@@ -15,7 +15,7 @@ use Water\Library\Kernel\EventListener\ResponseListener;
 use Water\Library\Kernel\EventListener\RouterListener;
 use Water\Library\Kernel\HttpKernel;
 use Water\Library\Kernel\KernelEvents;
-use Water\Library\Kernel\Resolver\ControllerResolver;
+use Water\Library\Kernel\Controller\ControllerResolver;
 use Water\Library\Router\Route;
 use Water\Library\Router\RouteCollection;
 use Water\Library\Router\Router;
