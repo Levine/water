@@ -6,7 +6,6 @@
  */
 namespace Water\Framework\Kernel\Module;
 
-use Water\Library\DependencyInjection\ContainerAwareInterface;
 use Water\Library\DependencyInjection\Extension\ExtensionInterface;
 
 /**
@@ -45,6 +44,11 @@ interface ModuleInterface
      * @return string
      */
     public function getPath();
+
+    /**
+     * @return string
+     */
+    public function getResourcePath();
 
     /**
      * @return ExtensionInterface|null

@@ -35,6 +35,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Water\Framework\Kernel\Tests\Module\Resource\TestModule', $module->getName());
         $this->assertEquals(__DIR__ . '/Resource/TestModule.php', $module->getFileName());
         $this->assertEquals(__DIR__ . '/Resource', $module->getPath());
+        $this->assertEquals(__DIR__ . '/Resource/Resource', $module->getResourcePath());
         $this->assertInstanceOf('\ReflectionClass', $module->getReflection());
     }
 

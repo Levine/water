@@ -36,11 +36,8 @@ class ControllerParser implements ControllerParserInterface
      */
     public function parse($controller)
     {
-        if (preg_match(
-            '/^(?P<module>[a-zA-Z0-9_.-]+)\:(?P<controller>[a-zA-Z0-9_.-]+)\:(?P<method>[a-zA-Z0-9_.-]+)$/',
-            $controller,
-            $matches
-        )) {
+        $pattern = '/^(?P<module>[a-zA-Z0-9_.-]+)\:(?P<controller>[a-zA-Z0-9_.-]+)\:(?P<method>[a-zA-Z0-9_.-]+)$/';
+        if (preg_match($pattern, $controller, $matches)) {
             $modules = $this->container->get('modules');
             if ($modules->has($matches['module'])) {
                 $controller = $modules->get($matches['module'])->getNamespaceName()

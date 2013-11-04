@@ -83,6 +83,14 @@ abstract class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
+    public function getResourcePath()
+    {
+        return $this->getPath() . '/Resource';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getExtension()
     {
         $class = str_replace('Module', 'Extension', $this->getShortName());

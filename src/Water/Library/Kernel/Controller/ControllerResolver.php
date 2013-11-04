@@ -54,7 +54,8 @@ class ControllerResolver implements ControllerResolverInterface
     {
         if (substr_count($controller, '::') != 1) {
             throw new InvalidArgumentException(sprintf(
-                'Controller has to be a "array", "invokable class", "function" or "<ControllerName>::<methodName>" ("%s" given).',
+                'Controller has to be a "array", "invokable class", "function" '
+                . 'or "<ControllerName>::<methodName>" ("%s" given).',
                 $controller
             ));
         }
