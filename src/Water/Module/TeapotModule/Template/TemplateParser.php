@@ -35,13 +35,13 @@ class TemplateParser implements TemplateParserInterface
      */
     public function parse($template)
     {
-        $pattern = '/^(?P<module>[a-zA-Z0-9_.-]+)\:\:(?P<layout>[a-zA-Z0-9_.-]+)$/';
+        $pattern = '/^(?P<module>[a-zA-Z0-9_.-]+)\:\:(?P<template>[a-zA-Z0-9_.-]+)$/';
         if (preg_match($pattern, $template, $matches)) {
             $modules = $this->container->get('modules');
             if ($modules->has($matches['module'])) {
                 $template = $modules->get($matches['module'])->getResourcePath()
                           . '/view/template/'
-                          . $matches['layout'] . '.php';
+                          . $matches['template'] . '.php';
             }
 
             goto end;

@@ -46,18 +46,15 @@ class TemplateListener implements SubscriberInterface
      */
     public function onKernelController(FilterControllerEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
-        $resource = $event->getRequest()->getResource();
+        $resource   = $event->getRequest()->getResource();
+        $controller = $event->getController();
 
-        if (
-            $resource->has('_template')
-            || !$resource->has('_controller')
-            || !is_array($controller = $resource->get('_controller'))
-        ) {
+        if ($resource->has('_template') || !is_array($controller)) {
             return;
         }
 
-        $class  = strtok($controller, '::');
-        $method = strtok('::');
+        $class  = $controller[0];
+        $method = $controller[1];
 
         $refController = new ReflectionClass($class);
         $modules       = $this->container->get('modules');

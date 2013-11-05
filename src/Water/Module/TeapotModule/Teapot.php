@@ -25,7 +25,7 @@ class Teapot extends BasicTeapot
     /**
      * {@inheritdoc}
      *
-     * @param TemplateParserInterface   $parser
+     * @param TemplateParserInterface $parser
      */
     public function __construct(ContainerBuilderInterface $helpers = null, TemplateParserInterface $parser = null)
     {
