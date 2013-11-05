@@ -20,43 +20,11 @@ use Water\Library\View\View;
 abstract class Controller extends ContainerAware
 {
     /**
-     * @param string $name
-     * @return string
-     */
-    public function generateUrl($name)
-    {
-        return $this->container->get('router')->generate($name);
-    }
-
-    /**
-     * @param string $fileName
-     * @param array  $parameters
-     * @return Response
-     */
-    public function render($fileName, $parameters = array())
-    {
-        // TODO - review.
-        $view = new View();
-        return Response::create($view->render($fileName, (array) $parameters));
-    }
-
-    /**
      * @return Request
      */
     public function getRequest()
     {
         return $this->container->get('request');
-    }
-
-    /**
-     * Redirect to specified url.
-     *
-     * @param string $url
-     * @return RedirectResponse
-     */
-    public function redirect($url)
-    {
-        return new RedirectResponse($url);
     }
 
     /**
@@ -69,5 +37,54 @@ abstract class Controller extends ContainerAware
             return $this->container->get('doctrine')->get($name);
         }
         return null;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return $this->container->has($name);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function get($name)
+    {
+        return $this->container->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function generateUrl($name)
+    {
+        return $this->container->get('router')->generate($name);
+    }
+
+    /**
+     * @param string $template
+     * @param array  $parameters
+     * @return Response
+     */
+    public function render($template, $parameters = array())
+    {
+        $content = $this->container->get('template_render')->render($template, (array) $parameters);
+        return Response::create($content);
+    }
+
+    /**
+     * Redirect to specified url.
+     *
+     * @param string $url
+     * @return RedirectResponse
+     */
+    public function redirect($url)
+    {
+        return new RedirectResponse($url);
     }
 }
