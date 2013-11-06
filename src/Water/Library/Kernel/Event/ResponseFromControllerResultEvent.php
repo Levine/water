@@ -31,4 +31,12 @@ class ResponseFromControllerResultEvent extends ResponseEvent
         parent::__construct($kernel, $request);
         $this->controllerResult = $controllerResult;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getControllerResult()
+    {
+        return $this->controllerResult;
+    }
 }

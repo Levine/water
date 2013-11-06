@@ -9,7 +9,7 @@ namespace Water\Module\TeapotModule\Tests;
 use Water\Module\TeapotModule\Teapot;
 
 /**
- * Test Suite TeapotTest
+ * Class TeapotTest
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */

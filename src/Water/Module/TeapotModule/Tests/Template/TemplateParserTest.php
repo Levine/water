@@ -9,7 +9,7 @@ namespace Water\Module\TeapotModule\Tests\Template;
 use Water\Module\TeapotModule\Template\TemplateParser;
 
 /**
- * Test Suite TemplateParserTest
+ * Class TemplateParserTest
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */

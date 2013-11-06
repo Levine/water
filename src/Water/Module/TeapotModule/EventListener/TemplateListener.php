@@ -16,6 +16,7 @@ use Water\Library\Http\Response;
 use Water\Library\Kernel\Event\FilterControllerEvent;
 use Water\Library\Kernel\Event\ResponseFromControllerResultEvent;
 use Water\Library\Kernel\KernelEvents;
+use Water\Module\TeapotModule\Exception\InvalidArgumentException;
 
 /**
  * Class TemplateListener
@@ -72,7 +73,7 @@ class TemplateListener implements SubscriberInterface
      * @param ModuleBag       $modules
      * @return ModuleInterface
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function getModule(ReflectionClass $refController, ModuleBag $modules)
     {
@@ -83,10 +84,7 @@ class TemplateListener implements SubscriberInterface
             }
         }
 
-        /**
-         * FIXME - create a TeapotException.
-         */
-        throw new \InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(sprintf(
             'The controller "%s" not belongs to any registered module.',
             $refController->getName()
         ));
@@ -110,7 +108,7 @@ class TemplateListener implements SubscriberInterface
             return;
         }
 
-        $content = $templateRender->render($resource->get('_template'));
+        $content = $templateRender->render($resource->get('_template'), $event->getControllerResult());
         $event->setResponse(Response::create($content));
     }
 

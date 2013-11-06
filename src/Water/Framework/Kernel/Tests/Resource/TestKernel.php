@@ -8,7 +8,6 @@ namespace Water\Framework\Kernel\Tests\Resource;
 
 use Water\Framework\Kernel\Kernel;
 use Water\Framework\Kernel\Tests\Resource\Module\TestModule;
-use Water\Library\DependencyInjection\ContainerBuilderInterface;
 
 /**
  * Class TestKernel
