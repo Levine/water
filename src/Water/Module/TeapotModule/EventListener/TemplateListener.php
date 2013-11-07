@@ -50,44 +50,16 @@ class TemplateListener implements SubscriberInterface
         $resource   = $event->getRequest()->getResource();
         $controller = $event->getController();
 
-        if ($resource->has('_template') || !is_array($controller)) {
+        if (
+            $resource->has('_template')
+            || !is_array($controller)
+            || !$this->container->has('template.finder')
+        ) {
             return;
         }
 
-        $class  = $controller[0];
-        $method = $controller[1];
-
-        $refController = new ReflectionClass($class);
-        $modules       = $this->container->get('modules');
-        $module        = $this->getModule($refController, $modules);
-
-        $template = $module->getShortName() . '::'
-                  . str_replace('Controller', '', $refController->getShortName()) . '::'
-                  . $method;
-
+        $template = $this->container->get('template.finder')->find($controller);
         $resource->set('_template', $template);
-    }
-
-    /**
-     * @param ReflectionClass $refController
-     * @param ModuleBag       $modules
-     * @return ModuleInterface
-     *
-     * @throws InvalidArgumentException
-     */
-    private function getModule(ReflectionClass $refController, ModuleBag $modules)
-    {
-        $namespace = $refController->getNamespaceName();
-        foreach ($modules as $module) {
-            if (strpos($namespace, $module->getNamespaceName()) === 0) {
-                return $module;
-            }
-        }
-
-        throw new InvalidArgumentException(sprintf(
-            'The controller "%s" not belongs to any registered module.',
-            $refController->getName()
-        ));
     }
 
     /**
@@ -103,7 +75,7 @@ class TemplateListener implements SubscriberInterface
             return;
         }
 
-        $templateRender = $this->container->get('template_render');
+        $templateRender = $this->container->get('template');
         if (!is_object($templateRender) && !method_exists($templateRender, 'render')) {
             return;
         }

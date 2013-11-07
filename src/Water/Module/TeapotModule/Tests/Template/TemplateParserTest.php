@@ -13,7 +13,7 @@ use Water\Module\TeapotModule\Template\TemplateParser;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class TemplateParserTest extends \PHPUnit_Framework_TestCase 
+class TemplateParserTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
