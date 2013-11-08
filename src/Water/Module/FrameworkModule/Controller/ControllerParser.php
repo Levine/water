@@ -7,7 +7,6 @@
 namespace Water\Module\FrameworkModule\Controller;
 
 use Water\Library\DependencyInjection\ContainerInterface;
-use Water\Library\Kernel\Exception\InvalidArgumentException;
 
 /**
  * Class ControllerParser
@@ -44,7 +43,7 @@ class ControllerParser implements ControllerParserInterface
                             . '\\Controller\\' . $matches['controller'] . 'Controller::'
                             . $matches['method'];
             } else {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'No exist module with name "%s". ("%s" given)',
                     $matches['module'],
                     $controller
@@ -53,7 +52,7 @@ class ControllerParser implements ControllerParserInterface
         }
 
         if (substr_count($controller, '::') != 1) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Controller has to be a "array", "invokable class", "function", '
                 . '"<ControllerFullName>::<methodName>" or "<ModuleName>:<ControllerShortName>:<methodName>" '
                 . '("%s" given).',

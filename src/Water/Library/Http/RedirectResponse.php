@@ -7,7 +7,6 @@
 namespace Water\Library\Http;
 
 use Water\Library\Http\Bag\HeaderBag;
-use Water\Library\Http\Exception\InvalidArgumentException;
 
 /**
  * Class RedirectResponse
@@ -50,12 +49,12 @@ class RedirectResponse extends Response
      * @param string $url
      * @return RedirectResponse
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function setTargetUrl($url)
     {
         if (empty($url)) {
-            throw new InvalidArgumentException("Url parameters can't be empty.");
+            throw new \InvalidArgumentException("Url parameters can't be empty.");
         }
 
         $htmlUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');

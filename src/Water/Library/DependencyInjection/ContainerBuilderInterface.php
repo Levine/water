@@ -10,7 +10,6 @@ use Water\Library\DependencyInjection\Bag\DefinitionBag;
 use Water\Library\DependencyInjection\Bag\ExtensionBag;
 use Water\Library\DependencyInjection\Compiler\CompilerInterface;
 use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
-use Water\Library\DependencyInjection\Exception\InvalidArgumentException;
 use Water\Library\DependencyInjection\Exception\NotExistParameterException;
 use Water\Library\DependencyInjection\Exception\NotExistServiceException;
 use Water\Library\DependencyInjection\Extension\ExtensionInterface;
@@ -85,7 +84,7 @@ interface ContainerBuilderInterface extends ContainerInterface
      * @param array $extensions
      * @return array
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function setExtensions(array $extensions);
 
@@ -135,7 +134,7 @@ interface ContainerBuilderInterface extends ContainerInterface
      *
      * @throws NotExistParameterException
      * @throws NotExistServiceException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @throws \ReflectionException
      */
     public function compile();

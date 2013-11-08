@@ -46,7 +46,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         new StronglyTypedBag($this->getIntegerTypeMock(), array(1, 2, 'index' => 'value'));
     }
 
@@ -57,7 +57,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $bag->append('value');
     }
 
@@ -68,7 +68,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $bag->set('otherIndex', 'value');
     }
 
@@ -80,7 +80,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $bag->merge(array('1'));
     }
 
@@ -91,7 +91,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $bag);
 
-        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $bag->fromArray(array(1, 2, 'index' => 'value'));
     }
 
@@ -104,7 +104,7 @@ class StronglyTypedBagTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $bag);
         $this->assertEquals(2, $bag['index']);
 
-        $this->setExpectedException('\Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $bag[] = 'value';
     }
 }

@@ -42,7 +42,7 @@ class RedirectResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testSetTargetUrlException()
     {
-        $this->setExpectedException('\Water\Library\Http\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         new RedirectResponse('');
     }
 }

@@ -43,13 +43,13 @@ class ClassTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testClassTypeClassNotExistException()
     {
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         new ClassType('NotExistClass');
     }
 
     public function testClassTypeInvalidTypeException()
     {
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         new ClassType(0);
     }
 }

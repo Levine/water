@@ -6,8 +6,6 @@
  */
 namespace Water\Library\Http;
 
-use Water\Library\Http\Exception\InvalidArgumentException;
-
 /**
  * Class FileDownloadResponse
  *
@@ -27,12 +25,12 @@ class FileDownloadResponse extends Response
      * @param int    $statusCode
      * @param array  $headers
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($filename, $statusCode = 200, array $headers = array())
     {
         if (!is_file($filename)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 ''
             ));
         }
@@ -45,12 +43,12 @@ class FileDownloadResponse extends Response
      * @param string $filename
      * @return FileDownloadResponse
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function setFilename($filename)
     {
         if (!is_file($filename)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 ''
             ));
         }

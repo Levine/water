@@ -15,7 +15,6 @@ use Water\Library\Kernel\Event\ResponseEvent;
 use Water\Library\Kernel\Event\ResponseFromControllerResultEvent;
 use Water\Library\Kernel\Event\ResponseFromExceptionEvent;
 use Water\Library\Kernel\Exception\ControllerNotFoundException;
-use Water\Library\Kernel\Exception\LogicException;
 use Water\Library\Kernel\Controller\ControllerResolverInterface;
 
 /**
@@ -64,7 +63,7 @@ class HttpKernel implements HttpKernelInterface
      * @return Response
      *
      * @throws ControllerNotFoundException
-     * @throws LogicException
+     * @throws \LogicException
      */
     protected function handleRequest(Request $request)
     {
@@ -89,7 +88,7 @@ class HttpKernel implements HttpKernelInterface
             $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
 
             if (!$event->hasResponse()) {
-                throw new LogicException('The controller return can not be converted in Response.');
+                throw new \LogicException('The controller return can not be converted in Response.');
             }
 
             $response = $event->getResponse();

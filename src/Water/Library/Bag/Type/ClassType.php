@@ -6,8 +6,6 @@
  */
 namespace Water\Library\Bag\Type;
 
-use Water\Library\Bag\Exception\InvalidArgumentException;
-
 /**
  * Class ClassType
  *
@@ -25,7 +23,7 @@ class ClassType implements TypeInterface
      *
      * @param string $type
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($type)
     {
@@ -33,13 +31,13 @@ class ClassType implements TypeInterface
             $type = get_class($type);
         } elseif (is_string($type)){
             if (!class_exists($type, true)) {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'The type "%s" not exists.',
                     $type
                 ));
             }
         } else {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'The type need to be string or object, "%s" given.',
                 gettype($type)
             ));

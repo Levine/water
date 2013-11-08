@@ -7,7 +7,6 @@
 namespace Water\Library\Kernel\Controller;
 
 use Water\Library\Http\Request;
-use Water\Library\Kernel\Exception\InvalidArgumentException;
 
 /**
  * Class ControllerResolver
@@ -48,12 +47,12 @@ class ControllerResolver implements ControllerResolverInterface
      * @param string $controller
      * @return object
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     protected function createController($controller)
     {
         if (substr_count($controller, '::') != 1) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Controller has to be a "array", "invokable class", "function" '
                 . 'or "<ControllerName>::<methodName>" ("%s" given).',
                 $controller
@@ -66,7 +65,7 @@ class ControllerResolver implements ControllerResolverInterface
         if (!class_exists($class, true)
             || !is_callable($controller = array(new $class(), $method))
         ) {
-            throw new InvalidArgumentException("Controller isn't a valid class or isn't callable.");
+            throw new \InvalidArgumentException("Controller isn't a valid class or isn't callable.");
         }
 
         return $controller;

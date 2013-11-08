@@ -6,7 +6,6 @@
  */
 namespace Water\Library\Bag;
 
-use Water\Library\Bag\Exception\InvalidArgumentException;
 use Water\Library\Bag\Type\TypeInterface;
 
 /**
@@ -40,12 +39,12 @@ class StronglyTypedBag extends SimpleBag
 
     /**
      * @param mixed $value
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function validate($value)
     {
         if (!$this->type->valid($value)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'It is a Strongly Typed Bag, pass only "%s" values',
                 $this->type->getType()
             ));
@@ -53,7 +52,7 @@ class StronglyTypedBag extends SimpleBag
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function append($value)
     {
@@ -65,7 +64,7 @@ class StronglyTypedBag extends SimpleBag
     /**
      * {@inheritdoc}
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function set($index, $value)
     {
@@ -90,7 +89,7 @@ class StronglyTypedBag extends SimpleBag
     /**
      * {@inheritdoc}
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function fromArray(array $input)
     {

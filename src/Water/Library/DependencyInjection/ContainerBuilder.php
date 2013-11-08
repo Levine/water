@@ -8,12 +8,9 @@ namespace Water\Library\DependencyInjection;
 
 use Water\Library\DependencyInjection\Bag\DefinitionBag;
 use Water\Library\DependencyInjection\Bag\ExtensionBag;
-use Water\Library\DependencyInjection\Bag\ParameterBag;
-use Water\Library\DependencyInjection\Bag\ServiceBag;
 use Water\Library\DependencyInjection\Compiler\Compiler;
 use Water\Library\DependencyInjection\Compiler\CompilerInterface;
 use Water\Library\DependencyInjection\Compiler\Process\ProcessInterface;
-use Water\Library\DependencyInjection\Exception\InvalidArgumentException;
 use Water\Library\DependencyInjection\Exception\NotExistServiceException;
 use Water\Library\DependencyInjection\Extension\ExtensionInterface;
 
@@ -242,7 +239,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      * @return mixed
      *
      * @throws NotExistServiceException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @throws \ReflectionException
      */
     private function createService($id)
@@ -260,7 +257,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         }
 
         if (!class_exists($class, true)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Not exist class "%s" definition in service id "%s"',
                 $class,
                 $id
@@ -293,7 +290,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      * @param Definition $definition
      * @return object
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      */
     private function createInstantiableClass($id, $class, Definition $definition)
@@ -303,7 +300,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
             $service = $reflectionClass->newInstance();
         } else {
             if ($reflectionMethod->getNumberOfRequiredParameters() > count($arguments = $definition->getArguments())) {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'Insufficient arguments to instance the service "%s" specified by id "%s"',
                     $class,
                     $id
@@ -322,7 +319,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      * @param Definition $definition
      * @return object
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function createFactoryClass($id, $class, Definition $definition)
     {
@@ -338,7 +335,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         }
 
         if (!class_exists($factoryClass, true) || !method_exists($factoryClass, $factoryMethod)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Not exist factory "%s::%s()" defined in service id "%s"',
                 $factoryClass,
                 $factoryMethod,
@@ -350,7 +347,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         $reflectionMethod = $reflectionClass->getMethod($factoryMethod);
 
         if (!$reflectionMethod->isStatic()){
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'The factory method have to be static function. ("%s::%s()" defined in service id "%s" given)',
                 $factoryClass,
                 $factoryMethod,
@@ -362,7 +359,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
         $service   = call_user_func_array(array($factoryClass, $factoryMethod), $arguments);
 
         if (!is_a($service, $class)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'The service id "%s" return by factory "%s::%s()", do not return a specified service "%s".',
                 $id,
                 $factoryClass,
@@ -382,7 +379,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      * @param string $class
      * @return array
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function prepareArguments(array $arguments, $id, $class)
     {
@@ -394,7 +391,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
                     continue;
                 }
 
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'Not found parameter index "%s". It was used in the service id "%s", '
                     . 'when try to instance the class "%s"',
                     $index,
@@ -409,7 +406,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
                     continue;
                 }
 
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'Not found service id "%s". It was used as a argument in the service id "%s", '
                     . 'when try to instance the class "%s"',
                     $index,

@@ -32,7 +32,7 @@ class InterfaceTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($type->valid(new \stdClass()));
         $this->assertEquals('\ArrayAccess', $type->getType());
 
-        $this->setExpectedException('Water\Library\Bag\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         new InterfaceType('\stdClass');
     }
 }

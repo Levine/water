@@ -73,7 +73,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
     {
         $resolver = new ControllerResolver();
 
-        $this->setExpectedException('\Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $resolver->getController($this->getRequest('\Water\Library\Kernel\Tests\Resolver\Resource\Controller:indexAction'));
     }
 
@@ -81,7 +81,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
     {
         $resolver = new ControllerResolver();
 
-        $this->setExpectedException('\Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $resolver->getController($this->getRequest('\Water\Library\Kernel\Tests\Resolver\Resource\ClassNotExist::indexAction'));
     }
 

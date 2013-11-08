@@ -88,7 +88,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
     {
         $resolver = new ControllerResolver($this->getContainerMock(true));
 
-        $this->setExpectedException('Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $resolver->getController(Request::create(
             '/',
             'GET',
@@ -101,7 +101,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
     {
         $resolver = new ControllerResolver($this->getContainerMock(false));
 
-        $this->setExpectedException('Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $resolver->getController(Request::create(
             '/',
             'GET',
@@ -114,7 +114,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
     {
         $resolver = new ControllerResolver($this->getContainerMock(true));
 
-        $this->setExpectedException('Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $resolver->getController(Request::create(
             '/',
             'GET',

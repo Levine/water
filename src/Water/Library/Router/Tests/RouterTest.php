@@ -38,7 +38,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedHomeResource, $router->match('/'));
         $this->assertEquals($expectedBlogResource, $router->match('/blog'));
 
-        $this->setExpectedException('\Water\Library\Router\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
 
         $router = new Router($routes, array('matcher_class' => 'NotExistClass'));
         $router->match('/');
@@ -55,7 +55,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/', $router->generate('home'));
         $this->assertEquals('/blog', $router->generate('blog'));
 
-        $this->setExpectedException('\Water\Library\Router\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
 
         $router = new Router($routes, array('generator_class' => 'NotExistClass'));
         $router->generate('home');

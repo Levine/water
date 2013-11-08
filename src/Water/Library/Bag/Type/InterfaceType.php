@@ -6,8 +6,6 @@
  */
 namespace Water\Library\Bag\Type;
 
-use Water\Library\Bag\Exception\InvalidArgumentException;
-
 /**
  * Class InterfaceType
  *
@@ -25,12 +23,12 @@ class InterfaceType implements TypeInterface
      *
      * @param string $type
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($type)
     {
         if (!interface_exists($type, true)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'The type "%s" not exists.',
                 $type
             ));

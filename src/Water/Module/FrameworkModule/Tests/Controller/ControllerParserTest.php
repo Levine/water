@@ -88,7 +88,7 @@ class ControllerParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new ControllerParser($this->getContainerMock(false));
 
-        $this->setExpectedException('Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $parser->parse('Some:Index:indexAction');
     }
 
@@ -96,7 +96,7 @@ class ControllerParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new ControllerParser($this->getContainerMock(true));
 
-        $this->setExpectedException('Water\Library\Kernel\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $parser->parse('TestController::indexAction::invalidArgument');
     }
 }

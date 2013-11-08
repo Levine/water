@@ -130,10 +130,14 @@ abstract class Kernel
     {
         $modules = array();
         foreach($this->getModules() as $module) {
-            $moduleId = substr($module->getShortName(), 0, -6);
-            $modules[$moduleId] = $module;
+            if (!preg_match('/^(?P<module>.+)Module$/', $module->getShortName(), $matches)) {
+                throw new \InvalidArgumentException(sprintf(
+                    'The class "%s" is do not has a valid module name. The module name has to end with Module.',
+                    $module->getName()
+                ));
+            }
+            $modules[$matches['module']] = $module;
         }
-
         $this->modules->fromArray($modules);
     }
 

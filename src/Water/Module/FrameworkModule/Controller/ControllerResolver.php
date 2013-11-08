@@ -8,7 +8,6 @@ namespace Water\Module\FrameworkModule\Controller;
 
 use Water\Library\DependencyInjection\ContainerAwareInterface;
 use Water\Library\DependencyInjection\ContainerInterface;
-use Water\Library\Kernel\Exception\InvalidArgumentException;
 use Water\Library\Kernel\Controller\ControllerResolver as BaseControllerResolver;
 
 /**
@@ -52,7 +51,7 @@ class ControllerResolver extends BaseControllerResolver
         if (!class_exists($class, true)
             || !is_callable($return = array($controller = new $class(), $method))
         ) {
-            throw new InvalidArgumentException("Controller isn't a valid class or isn't callable.");
+            throw new \InvalidArgumentException("Controller isn't a valid class or isn't callable.");
         }
 
         if ($controller instanceof ContainerAwareInterface) {

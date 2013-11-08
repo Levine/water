@@ -175,7 +175,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
         $container->register('service', 'NotExistClass');
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -184,7 +184,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
         $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor');
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -201,7 +201,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
                   ->setFactoryMethod('%service_factory.method%')
                   ->addArgument('%attr%');
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -218,7 +218,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
                   ->setFactoryMethod('%service_factory.method%')
                   ->addArgument('%attr%');
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -235,7 +235,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
             ->setFactoryMethod('%service_factory.method%')
             ->addArgument('%attr%');
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -252,7 +252,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
                   ->setFactoryMethod('%service_factory.method%')
                   ->addArgument('%attr%');
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -263,7 +263,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
                   ->setArguments(array('%attr%', '#service_without_constructor'));
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
@@ -275,7 +275,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $container->register('service', '\Water\Library\DependencyInjection\Tests\Resource\Fixture\TestServiceWithConstructor')
                   ->setArguments(array('%attr%', '#service_without_constructor'));
 
-        $this->setExpectedException('\Water\Library\DependencyInjection\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $container->get('service');
     }
 
