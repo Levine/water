@@ -7,6 +7,9 @@
 namespace Water\Module\TeapotModule\Tests\Template;
 
 use Water\Module\TeapotModule\Template\TemplateFinder;
+use Water\Module\TeapotModule\Tests\Fixture\Module\OtherModule\Controller\ControllerInvalid;
+use Water\Module\TeapotModule\Tests\Fixture\Module\OtherModule\Controller\OtherTestController;
+use Water\Module\TeapotModule\Tests\Fixture\Module\PombaCorpModule\Controller\TestController;
 
 /**
  * Test Suite Class TemplateFinderTest
@@ -28,7 +31,7 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
     public function testFind()
     {
         $finder = new TemplateFinder($this->getContainerMock(array('modules' => $this->getModules())));
-        $actual = $finder->find(array(new Fixture\PombaCorpModule\Controller\TestController(), 'index'));
+        $actual = $finder->find(array(new TestController(), 'index'));
 
         $this->assertEquals('PombaCorp::Test::index', $actual);
     }
@@ -38,7 +41,7 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
         $finder = new TemplateFinder($this->getContainerMock(array('modules' => $this->getModules())));
 
         $this->setExpectedException('\InvalidArgumentException');
-        $finder->find(array(new Fixture\OtherModule\ControllerInvalid(), 'index'));
+        $finder->find(array(new ControllerInvalid(), 'index'));
     }
 
     public function testFindNotRegisteredModuleExcpetion()
@@ -46,7 +49,7 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
         $finder = new TemplateFinder($this->getContainerMock(array('modules' => $this->getModules())));
 
         $this->setExpectedException('\InvalidArgumentException');
-        $finder->find(array(new Fixture\OtherModule\Controller\TestController(), 'index'));
+        $finder->find(array(new OtherTestController(), 'index'));
     }
 
     private function getContainerMockBuilder()
@@ -107,8 +110,8 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
     private function getModules()
     {
         return $this->getModuleBagMock(array(
-            'NotExist'  => $this->getModuleMock('Water\Module\TeapotModule\Tests\Template\Fixture\NotExistModule', 'NotExistModule'),
-            'PombaCorp' => $this->getModuleMock('Water\Module\TeapotModule\Tests\Template\Fixture\PombaCorpModule', 'PombaCorpModule'),
+            'NotExist'  => $this->getModuleMock('Water\Module\TeapotModule\Tests\Fixture\Module\NotExistModule', 'NotExistModule'),
+            'PombaCorp' => $this->getModuleMock('Water\Module\TeapotModule\Tests\Fixture\Module\PombaCorpModule', 'PombaCorpModule'),
         ));
     }
 }

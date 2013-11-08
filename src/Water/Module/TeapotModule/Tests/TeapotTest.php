@@ -39,11 +39,11 @@ class TeapotTest extends \PHPUnit_Framework_TestCase
         $parser->expects($this->any())
                ->method('parse')
                ->with($this->equalTo('TestModule::Index::index'))
-               ->will($this->returnValue(__DIR__ . '/Resource/view/test.php'));
+               ->will($this->returnValue(__DIR__ . '/Fixture/view/test.php'));
 
         $teapot = new Teapot(null, $parser);
         $teapot->extend('TestModule::Index::index');
-        $this->assertAttributeContains(__DIR__ . '/Resource/view/test.php', 'extendStack', $teapot);
+        $this->assertAttributeContains(__DIR__ . '/Fixture/view/test.php', 'extendStack', $teapot);
     }
 }
  

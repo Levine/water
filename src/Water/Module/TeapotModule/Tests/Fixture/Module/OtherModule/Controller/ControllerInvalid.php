@@ -4,7 +4,7 @@
  * Date: 07/11/13
  * Time: 15:36
  */
-namespace Water\Module\TeapotModule\Tests\Template\Fixture\OtherModule;
+namespace Water\Module\TeapotModule\Tests\Fixture\Module\OtherModule\Controller;
 
 /**
  * Class ControllerInvalid

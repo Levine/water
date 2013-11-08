@@ -2,9 +2,9 @@
 /**
  * User: Ivan C. Sanches
  * Date: 07/11/13
- * Time: 15:49
+ * Time: 15:14
  */
-namespace Water\Module\TeapotModule\Tests\Template\Fixture\OtherModule\Controller;
+namespace Water\Module\TeapotModule\Tests\Fixture\Module\PombaCorpModule\Controller;
 
 /**
  * Class TestController
