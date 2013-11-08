@@ -6,9 +6,6 @@
  */
 namespace Water\Module\TeapotModule\EventListener;
 
-use \ReflectionClass;
-use Water\Framework\Kernel\Bag\ModuleBag;
-use Water\Framework\Kernel\Module\ModuleInterface;
 use Water\Library\DependencyInjection\ContainerInterface;
 use Water\Library\EventDispatcher\EventDispatcherInterface;
 use Water\Library\EventDispatcher\SubscriberInterface;
@@ -16,7 +13,6 @@ use Water\Library\Http\Response;
 use Water\Library\Kernel\Event\FilterControllerEvent;
 use Water\Library\Kernel\Event\ResponseFromControllerResultEvent;
 use Water\Library\Kernel\KernelEvents;
-use Water\Module\TeapotModule\Exception\InvalidArgumentException;
 
 /**
  * Class TemplateListener

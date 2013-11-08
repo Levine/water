@@ -10,7 +10,6 @@ use \ReflectionClass;
 use Water\Framework\Kernel\Bag\ModuleBag;
 use Water\Framework\Kernel\Module\ModuleInterface;
 use Water\Library\DependencyInjection\ContainerInterface;
-use Water\Module\TeapotModule\Exception\InvalidArgumentException;
 
 /**
  * Class TemplateFinder
@@ -36,6 +35,8 @@ class TemplateFinder implements TemplateFinderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
      */
     public function find(array $controller)
     {
@@ -43,7 +44,7 @@ class TemplateFinder implements TemplateFinderInterface
         $method = $controller[1];
 
         if (!preg_match('/Controller\\\(?P<controller>.+)Controller$/', $class, $match)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'The class "%s" does not look like a controller class '
                 . '(Example: <ModuleNamespace>\\Controller\\<ControllerName>Controller).',
                 $class
@@ -63,7 +64,7 @@ class TemplateFinder implements TemplateFinderInterface
      * @param ModuleBag $modules
      * @return ModuleInterface
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function getModule($class, ModuleBag $modules)
     {
@@ -75,7 +76,7 @@ class TemplateFinder implements TemplateFinderInterface
             }
         }
 
-        throw new InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(sprintf(
             'The controller "%s" not belongs to any registered module.',
             $refController->getName()
         ));

@@ -37,7 +37,7 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
     {
         $finder = new TemplateFinder($this->getContainerMock(array('modules' => $this->getModules())));
 
-        $this->setExpectedException('\Water\Module\TeapotModule\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $finder->find(array(new Fixture\OtherModule\ControllerInvalid(), 'index'));
     }
 
@@ -45,7 +45,7 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
     {
         $finder = new TemplateFinder($this->getContainerMock(array('modules' => $this->getModules())));
 
-        $this->setExpectedException('\Water\Module\TeapotModule\Exception\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $finder->find(array(new Fixture\OtherModule\Controller\TestController(), 'index'));
     }
 
@@ -67,12 +67,12 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
     private function getContainerMock(array $services)
     {
         $container = $this->getContainerMockBuilder()
-            ->getMock();
+                          ->getMock();
         foreach ($services as $id => $service) {
             $container->expects($this->any())
-                ->method('get')
-                ->with($this->equalTo($id))
-                ->will($this->returnValue($service));
+                      ->method('get')
+                      ->with($this->equalTo($id))
+                      ->will($this->returnValue($service));
         }
         return $container;
     }
@@ -80,26 +80,26 @@ class TemplateFinderTest extends \PHPUnit_Framework_TestCase
     private function getModuleBagMock(array $modules)
     {
         $modules = $this->getModuleBagMockBuilder()
-            ->setConstructorArgs(array($modules))
-            ->setMethods(array('getIterator'))
-            ->getMock();
+                        ->setConstructorArgs(array($modules))
+                        ->setMethods(array('getIterator'))
+                        ->getMock();
         $modules->expects($this->any())
-            ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator($modules)));
+                ->method('getIterator')
+                ->will($this->returnValue(new \ArrayIterator($modules)));
         return $modules;
     }
 
     private function getModuleMock($namespace, $shortName)
     {
         $module = $this->getModuleMockBuilder()
-            ->setMethods(array('getNamespaceName', 'getShortName'))
-            ->getMock();
+                       ->setMethods(array('getNamespaceName', 'getShortName'))
+                       ->getMock();
         $module->expects($this->any())
-            ->method('getNamespaceName')
-            ->will($this->returnValue($namespace));
+               ->method('getNamespaceName')
+               ->will($this->returnValue($namespace));
         $module->expects($this->any())
-            ->method('getShortName')
-            ->will($this->returnValue($shortName));
+               ->method('getShortName')
+               ->will($this->returnValue($shortName));
 
         return $module;
     }
