@@ -67,6 +67,15 @@ abstract class Controller extends ContainerAware
 
     /**
      * @param string $template
+     */
+    public function setTemplate($template)
+    {
+        $request = $this->getRequest();
+        $request->getResource()->set('_template', $template);
+    }
+
+    /**
+     * @param string $template
      * @param array  $parameters
      * @return Response
      */
