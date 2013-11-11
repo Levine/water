@@ -10,7 +10,6 @@ use Water\Library\DependencyInjection\ContainerAware;
 use Water\Library\Http\RedirectResponse;
 use Water\Library\Http\Request;
 use Water\Library\Http\Response;
-use Water\Library\View\View;
 
 /**
  * Class Controller
@@ -73,7 +72,7 @@ abstract class Controller extends ContainerAware
      */
     public function render($template, $parameters = array())
     {
-        $content = $this->container->get('template_render')->render($template, (array) $parameters);
+        $content = $this->container->get('template.render')->render($template, (array) $parameters);
         return Response::create($content);
     }
 

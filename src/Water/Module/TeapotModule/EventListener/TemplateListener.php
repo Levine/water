@@ -71,7 +71,7 @@ class TemplateListener implements SubscriberInterface
             return;
         }
 
-        $templateRender = $this->container->get('template');
+        $templateRender = $this->container->get('template.render');
         if (!is_object($templateRender) && !method_exists($templateRender, 'render')) {
             return;
         }
