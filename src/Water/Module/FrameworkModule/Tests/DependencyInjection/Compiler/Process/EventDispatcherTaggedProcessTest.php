@@ -54,7 +54,8 @@ class EventDispatcherTaggedProcessTest extends \PHPUnit_Framework_TestCase
             'setCompiler',
             'getCompiler',
             'addProcess',
-            'compile'
+            'compile',
+            'isCompiled',
         );
         $container = $this->getMock(
             '\Water\Library\DependencyInjection\ContainerBuilderInterface',

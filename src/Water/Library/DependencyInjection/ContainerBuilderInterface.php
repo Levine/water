@@ -138,4 +138,11 @@ interface ContainerBuilderInterface extends ContainerInterface
      * @throws \ReflectionException
      */
     public function compile();
+
+    /**
+     * Return if the container is compiled or not.
+     *
+     * @return bool
+     */
+    public function isCompiled();
 }

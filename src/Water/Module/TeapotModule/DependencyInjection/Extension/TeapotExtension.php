@@ -22,6 +22,7 @@ class TeapotExtension implements ExtensionInterface
     public function extend(ContainerBuilderInterface $container)
     {
         $container->addParameter('template.render.class', '\Water\Module\TeapotModule\Teapot');
+        $container->addParameter('template.helpers.class', '\Water\Library\DependencyInjection\ContainerBuilder');
         $container->addParameter('template.listener.class', '\Water\Module\TeapotModule\EventListener\TemplateListener');
         $container->addParameter('template.finder.class', '\Water\Module\TeapotModule\Template\TemplateFinder');
         $container->addParameter('template.parser.class', '\Water\Module\TeapotModule\Template\TemplateParser');
@@ -36,7 +37,8 @@ class TeapotExtension implements ExtensionInterface
         $container->register('template.parser', '%template.parser.class%')
                   ->setArguments(array('#service_container'));
 
+        $container->register('template.helpers', '%template.helpers.class%');
         $container->register('template.render', '%template.render.class%')
-                  ->setArguments(array('#service_container', '#template.parser'));
+                  ->setArguments(array('#template.helpers', '#template.parser'));
     }
 }

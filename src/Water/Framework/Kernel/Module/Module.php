@@ -96,7 +96,8 @@ abstract class Module implements ModuleInterface
         $class = str_replace('Module', 'Extension', $this->getShortName());
         $class = $this->getNamespaceName() . '\\DependencyInjection\\Extension\\' . $class;
 
-        if (class_exists($class)
+        if (
+            class_exists($class, true)
             && is_a($extension = new $class(), 'Water\Library\DependencyInjection\Extension\ExtensionInterface')
         ) {
             return $extension;

@@ -7,6 +7,8 @@
 namespace Water\Module\TeapotModule;
 
 use Water\Framework\Kernel\Module\Module;
+use Water\Library\DependencyInjection\ContainerBuilderInterface;
+use Water\Module\TeapotModule\DependencyInjection\Compiler\Process\RegisterHelpersProcess;
 
 /**
  * Class TeapotModule
@@ -15,4 +17,11 @@ use Water\Framework\Kernel\Module\Module;
  */
 class TeapotModule extends Module
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilderInterface $container)
+    {
+        $container->addProcess(new RegisterHelpersProcess());
+    }
 } 

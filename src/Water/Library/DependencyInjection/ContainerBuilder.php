@@ -57,6 +57,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function register($id, $class, array $args = array())
     {
+        $this->compiled = false;
         $this->addDefinition($id, $definition = new Definition($class, $args));
         return $definition;
     }
@@ -74,6 +75,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function setDefinitions(array $definitions)
     {
+        $this->compiled = false;
         return $this->definitions->fromArray($definitions);
     }
 
@@ -82,6 +84,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function addDefinition($id, Definition $definition)
     {
+        $this->compiled = false;
         $this->definitions->set($id, $definition);
         return $this;
     }
@@ -121,6 +124,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function registerExtension($id, ExtensionInterface $extension)
     {
+        $this->compiled = false;
         $this->addExtension($id, $extension);
         return $extension;
     }
@@ -138,6 +142,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function removeExtension($id)
     {
+        $this->compiled = false;
         $this->extensions->remove($id);
         return $this;
     }
@@ -147,6 +152,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function setExtensions(array $extensions)
     {
+        $this->compiled = false;
         return $this->extensions->fromArray($extensions);
     }
 
@@ -155,6 +161,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function addExtension($id, ExtensionInterface $extension)
     {
+        $this->compiled = false;
         $this->extensions->set($id, $extension);
         return $this;
     }
@@ -180,6 +187,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function setCompiler(CompilerInterface $compileProcessor)
     {
+        $this->compiled = false;
         $this->compileProcessor = $compileProcessor;
     }
 
@@ -199,6 +207,7 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function addProcess(ProcessInterface $process)
     {
+        $this->compiled = false;
         $this->getCompiler()->addProcess($process);
         return $this;
     }
@@ -208,8 +217,19 @@ class ContainerBuilder extends Container implements ContainerBuilderInterface
      */
     public function compile()
     {
-        $this->getCompiler()->compile($this);
+        if (!$this->isCompiled()) {
+            $this->getCompiler()->compile($this);
+            $this->compiled = true;
+        }
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isCompiled()
+    {
+        return $this->compiled;
     }
 
     public function has($id)
