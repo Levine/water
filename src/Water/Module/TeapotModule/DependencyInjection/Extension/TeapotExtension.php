@@ -49,7 +49,7 @@ class TeapotExtension implements ExtensionInterface
 
         $templateHelper = $container->register('template.helpers', '%template.helpers.class%');
         $modules        = $container->get('modules');
-        foreach ($modules as $module) {
+        foreach ($modules as $name => $module) {
             $helperExtension = $this->getHelperExtension($module);
 
             if ($helperExtension === null) {
@@ -60,7 +60,7 @@ class TeapotExtension implements ExtensionInterface
                 $helperExtension->setContainer($container);
             }
 
-            $templateHelper->addMethodCall('addExtension', array($helperExtension));
+            $templateHelper->addMethodCall('addExtension', array($name . '.helperExtensions', $helperExtension));
         }
     }
 
