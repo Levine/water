@@ -6,6 +6,7 @@
  */
 namespace Water\Module\TeapotModule\DependencyInjection\Extension;
 
+use Water\Framework\Kernel\Module\ModuleInterface;
 use Water\Library\DependencyInjection\ContainerBuilderInterface;
 use Water\Library\DependencyInjection\Extension\ExtensionInterface;
 
