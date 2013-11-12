@@ -3,7 +3,8 @@
     "description": "Library Water - Dependency Injection.",
     "license": "GPL-3.0",
     "type": "library",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "keywords": [
         "pombacorp",
         "water",

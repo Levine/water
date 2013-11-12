@@ -9,11 +9,11 @@ namespace Water\Library\Router\Generator;
 use Water\Library\Router\RouteCollection;
 
 /**
- * Interface GeneratorInterface
+ * Interface UrlGeneratorInterface
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-interface GeneratorInterface
+interface UrlGeneratorInterface
 {
     /**
      * Constructor.
