@@ -16,13 +16,6 @@ use Water\Library\Router\RouteCollection;
 interface UrlGeneratorInterface
 {
     /**
-     * Constructor.
-     *
-     * @param RouteCollection $routes
-     */
-    public function __construct(RouteCollection $routes);
-
-    /**
      * Return the URL specified by name. Otherwise, return ''.
      *
      * @param string $name

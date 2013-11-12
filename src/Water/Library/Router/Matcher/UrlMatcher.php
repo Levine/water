@@ -6,6 +6,8 @@
  */
 namespace Water\Library\Router\Matcher;
 
+use Water\Library\Http\Request;
+use Water\Library\Router\Context\RequestContext;
 use Water\Library\Router\RouteCollection;
 
 /**
@@ -13,7 +15,7 @@ use Water\Library\Router\RouteCollection;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class UrlMatcher implements MatcherInterface
+class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
 {
     /**
      * @var RouteCollection
@@ -21,11 +23,20 @@ class UrlMatcher implements MatcherInterface
     private $routes = null;
 
     /**
-     * {@inheritdoc}
+     * @var RequestContext
      */
-    public function __construct(RouteCollection $routes)
+    private $context = null;
+
+    /**
+     * Constructor.
+     *
+     * @param RouteCollection $routes
+     * @param RequestContext  $context
+     */
+    public function __construct(RouteCollection $routes, RequestContext $context)
     {
-        $this->routes = $routes;
+        $this->routes  = $routes;
+        $this->context = $context;
     }
 
     /**
@@ -39,5 +50,13 @@ class UrlMatcher implements MatcherInterface
             }
         }
         return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function matchFromRequest(Request $request)
+    {
+
     }
 }

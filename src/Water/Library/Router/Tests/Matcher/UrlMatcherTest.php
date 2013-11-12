@@ -5,6 +5,7 @@
  * Time: 14:53
  */
 namespace Water\Library\Router\Tests\Matcher;
+use Water\Library\Router\Context\RequestContext;
 use Water\Library\Router\Matcher\UrlMatcher;
 use Water\Library\Router\Route;
 use Water\Library\Router\RouteCollection;
@@ -31,7 +32,7 @@ class UrlMatcherTest extends \PHPUnit_Framework_TestCase
         $routes = new RouteCollection();
         $routes->add('home', new Route('/', $expectedResource = array('_controller' => 'IndexController::index()')));
 
-        $urlMatcher = new UrlMatcher($routes);
+        $urlMatcher = new UrlMatcher($routes, new RequestContext());
         $this->assertEquals($expectedResource, $urlMatcher->match('/'));
 
         $this->assertFalse($urlMatcher->match('/blog'));

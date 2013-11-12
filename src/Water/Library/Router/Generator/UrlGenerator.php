@@ -13,7 +13,7 @@ use Water\Library\Router\RouteCollection;
  *
  * @author Ivan C. Sanches <ics89@hotmail.com>
  */
-class UrlGenerator implements GeneratorInterface
+class UrlGenerator implements UrlGeneratorInterface
 {
     /**
      * @var RouteCollection

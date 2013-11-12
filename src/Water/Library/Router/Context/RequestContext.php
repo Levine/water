@@ -24,11 +24,13 @@ class RequestContext
     private $method = 'GET';
 
     /**
+     * Constructor.
+     *
      * @param string $path
      * @param string $method
      * @param string $host
      * @param string $scheme
-     * @param int $port
+     * @param int    $port
      */
     public function __construct($path = '/', $method = 'GET', $host = 'localhost', $scheme = 'http', $port = 80)
     {
@@ -49,9 +51,27 @@ class RequestContext
     }
 
     /**
+     * Create a RequestContext from Request.
+     *
+     * @param Request $request
+     * @return RequestContext
+     */
+    public static function createFromRequest(Request $request)
+    {
+        return new static(
+            $request->getPath(),
+            $request->getMethod(),
+            $request->getHost(),
+            $request->getScheme(),
+            $request->getPort()
+        );
+    }
+
+    /**
      * Define the RequestContext using a Water\Library\Http\Request.
      *
      * @param Request $request
+     * @return RequestContext
      */
     public function fromRequest(Request $request)
     {
@@ -60,8 +80,8 @@ class RequestContext
         $this->port   = $request->getPort();
         $this->path   = $request->getPath();
         $this->query  = $request->getQuery();
-
         $this->method = $request->getMethod();
+        return $this;
     }
 
     // @codeCoverageIgnoreStart
